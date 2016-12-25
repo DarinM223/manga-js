@@ -11,17 +11,13 @@ import MainContainer from './containers/MainContainer.js'
 
 injectTapEventPlugin()
 
-function App () {
-  return <MainContainer />
-}
-
 const history = syncHistoryWithStore(hashHistory, store)
 
 ReactDOM.render(
   <MuiThemeProvider>
     <Provider store={store}>
       <Router history={history}>
-        <Route path='/' component={App} />
+        <Route path='/' component={MainContainer} />
       </Router>
     </Provider>
   </MuiThemeProvider>,

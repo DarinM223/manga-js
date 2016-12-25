@@ -2,12 +2,92 @@ import React from 'react'
 import AppBar from 'material-ui/AppBar'
 import ActionNoteAdd from 'material-ui/svg-icons/action/note-add'
 import IconButton from 'material-ui/IconButton'
+import Dialog from 'material-ui/Dialog'
+import FlatButton from 'material-ui/FlatButton'
+import TextField from 'material-ui/TextField'
 
-export default function Header () {
-  return (
-    <AppBar
-      title='Manga list'
-      iconElementRight={<IconButton><ActionNoteAdd /></IconButton>}
-    />
-  )
+const EMPTY_TEXT = 'EMPTY_TEXT'
+const INVALID_URL = 'INVALID_URL'
+const NO_ERROR = 'NO_ERROR'
+
+export default class Header extends React.Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      open: false,
+      text: '',
+      error: NO_ERROR
+    }
+
+    this.handleClose = () => {
+      this.setState({ open: false })
+    }
+
+    this.handleOpen = () => {
+      this.setState({ open: true })
+    }
+
+    this.handleChange = (e) => {
+      e.preventDefault()
+      this.setState({ text: e.target.value })
+    }
+
+    this.submit = () => {
+      if (this.state.text.trim().length === 0) {
+        this.setState({ error: EMPTY_TEXT })
+        return
+      }
+
+      // TODO(DarinM223): check for invalid url
+
+      this.handleClose()
+    }
+  }
+
+  render () {
+    const actions = [
+      <FlatButton
+        label='Add anime'
+        keyboardFocused={false}
+        onTouchTap={this.submit}
+      />
+    ]
+
+    let errorText = null
+    switch (this.state.error) {
+      case NO_ERROR:
+        errorText = ''
+        break
+      case EMPTY_TEXT:
+        errorText = 'Please enter the url of the manga into the text field'
+        break
+      case INVALID_URL:
+        errorText = 'Please enter a valid manga url into the text field'
+        break
+    }
+
+    return (
+      <div>
+        <AppBar
+          title='Manga list'
+          iconElementRight={<IconButton><ActionNoteAdd /></IconButton>}
+          onRightIconButtonTouchTap={this.handleOpen}
+        />
+        <Dialog
+          title='Enter the url of the manga to add'
+          actions={actions}
+          modal={false}
+          open={this.state.open}
+          onRequestClose={this.handleClose}
+        >
+          <div>Paste the url of the manga to add in the text field below:</div>
+          <TextField
+            id='text-field-default'
+            errorText={errorText}
+            onChange={this.handleChange}
+          />
+        </Dialog>
+      </div>
+    )
+  }
 }
