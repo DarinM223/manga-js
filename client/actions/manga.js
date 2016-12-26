@@ -4,9 +4,9 @@ export const UPDATE_PAGE = 'UPDATE_PAGE'
 
 // TODO(DarinM223): implement these helper functions.
 
-function addManga () {
+export function addManga (url) {
   return (dispatch) => {
-    // TODO(DarinM223): add anime to database.
+    console.log(`Adding manga with url: ${url}`)
 
     dispatch({
       type: ADD_MANGA
@@ -14,7 +14,7 @@ function addManga () {
   }
 }
 
-function removeManga () {
+export function removeManga () {
   return (dispatch) => {
     // TODO(DarinM223): remove anime from database.
 
@@ -24,7 +24,7 @@ function removeManga () {
   }
 }
 
-function updatePage () {
+export function updatePage () {
   return (dispatch) => {
     // TODO(DarinM223): update page in database.
 

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { PropTypes } from 'react'
 import AppBar from 'material-ui/AppBar'
 import ActionNoteAdd from 'material-ui/svg-icons/action/note-add'
 import IconButton from 'material-ui/IconButton'
@@ -10,7 +10,7 @@ const EMPTY_TEXT = 'EMPTY_TEXT'
 const INVALID_URL = 'INVALID_URL'
 const NO_ERROR = 'NO_ERROR'
 
-export default class Header extends React.Component {
+export default class HeaderComponent extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
@@ -20,7 +20,7 @@ export default class Header extends React.Component {
     }
 
     this.handleClose = () => {
-      this.setState({ open: false })
+      this.setState({ open: false, text: '' })
     }
 
     this.handleOpen = () => {
@@ -40,6 +40,7 @@ export default class Header extends React.Component {
 
       // TODO(DarinM223): check for invalid url
 
+      this.props.onAddManga(this.state.text)
       this.handleClose()
     }
   }
@@ -90,4 +91,8 @@ export default class Header extends React.Component {
       </div>
     )
   }
+}
+
+HeaderComponent.propTypes = {
+  onAddManga: PropTypes.func.isRequired
 }

@@ -1,5 +1,5 @@
 import React from 'react'
-import Header from './Header.js'
+import HeaderContainer from '../containers/HeaderContainer.js'
 
 const styles = {
   divStyle: {
@@ -17,7 +17,7 @@ const styles = {
 export default function NoMangaComponent () {
   return (
     <div style={styles.divStyle}>
-      <Header />
+      <HeaderContainer />
       <div style={styles.textStyle}>
         <p>You don't have any manga yet. Try adding some by clicking the upper right button!</p>
       </div>

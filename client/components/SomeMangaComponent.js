@@ -3,7 +3,7 @@ import { List, ListItem } from 'material-ui/List'
 import Avatar from 'material-ui/Avatar'
 import Subheader from 'material-ui/Subheader'
 import Divider from 'material-ui/Divider'
-import Header from './Header.js'
+import HeaderContainer from '../containers/HeaderContainer.js'
 
 function mangaComponent (manga) {
   const title = `${manga.title} (${manga.currentChapter}/${manga.totalChapters})`
@@ -59,7 +59,7 @@ export default function SomeMangaComponent ({ manga }) {
 
   return (
     <div>
-      <Header />
+      <HeaderContainer />
       {mangaList}
     </div>
   )
