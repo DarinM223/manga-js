@@ -27,7 +27,7 @@ export function mangaURL (mangaName, chapterNum = null, pageNum = null) {
 export function parseMangaData (body) {
   const $ = cheerio.load(body)
 
-  const name = $('#mangaproperties h1').text().trim()
+  const title = $('#mangaproperties h1').text().trim()
   const description = $('#readmangasum p').text().trim()
   const image = $('#mangaimg img').attr('src')
 
@@ -35,8 +35,10 @@ export function parseMangaData (body) {
 
   return {
     type: 'mangareader',
-    name: name,
+    title: title,
+    name: '', // TODO(DarinM223): parse name and add to here.
     description: description,
+    new: true,
     image: image
   }
 }

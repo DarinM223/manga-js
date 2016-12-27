@@ -6,7 +6,8 @@ import Divider from 'material-ui/Divider'
 import HeaderContainer from '../containers/HeaderContainer.js'
 
 function mangaComponent (manga) {
-  const title = `${manga.title} (${manga.currentChapter}/${manga.totalChapters})`
+  // const title = `${manga.title} (${manga.currentChapter}/${manga.totalChapters})`
+  const title = manga.title // TODO(DarinM223): add chapters later
   return (
     <div>
       <ListItem

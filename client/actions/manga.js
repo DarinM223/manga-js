@@ -6,11 +6,14 @@ export const UPDATE_PAGE = 'UPDATE_PAGE'
 
 export function addManga (url) {
   return (dispatch) => {
-    console.log(`Adding manga with url: ${url}`)
+    // TODO(DarinM223): also add to database.
+    const scraper = require('../../utils/scraper.js')
+    const adapter = require('../../utils/sites/mangareader.js')
 
-    dispatch({
-      type: ADD_MANGA
-    })
+    scraper.scrape(url, adapter).then((manga) => dispatch({
+      type: ADD_MANGA,
+      manga: manga
+    }))
   }
 }
 
