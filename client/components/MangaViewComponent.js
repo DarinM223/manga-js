@@ -1,2 +1,2 @@
-function MangaViewComponent (manga) {
+export function MangaViewComponent (manga) {
 }

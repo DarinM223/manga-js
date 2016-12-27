@@ -1,39 +1,43 @@
 import fetch from 'node-fetch'
 
 /**
- * Downloads a specific page of the manga.
+ * Returns the image URL of a specific page of the manga.
  * @param {string} mangaName
  * @param {number} chapterNum
  * @param {number} pageNum
  * @param {Adapter} adapter
- * @return {ImageData} // TODO(DarinM223): figure out what fetch(imageURL) returns.
+ * @return {string} the image url of the page.
  */
-export function downloadPage (mangaName, chapterNum, pageNum, adapter) {
+export function pageImageURL (mangaName, chapterNum, pageNum, adapter) {
   return fetch(adapter.mangaURL(mangaName, chapterNum, pageNum))
     .then((res) => res.text())
-    .then((body) => Promise.resolve(adapter.parsePageImage(body)))
-    .then((imageURL) => fetch(imageURL))
+    .then((body) => adapter.parsePageImage(body))
 }
 
 /**
  * Downloads a specific chapter for the manga.
+ * @param {string} mangaName
+ * @param {object} chapter
+ * @param {Adapter} adapter
+ * @return {Promise<[string]>} an array of image urls for each page in the chapter.
  */
 export function downloadChapter (mangaName, chapter, adapter) {
   let promises = []
   for (const page of chapter.pages) {
-    promises.push(downloadPage(mangaName, chapter.num, page.num, adapter))
+    promises.push(pageImageURL(mangaName, chapter.num, page.num, adapter))
   }
 
   return Promise.all(promises)
 }
 
 /**
- * Returns the data for the manga given the manga name.
+ * Returns the data for the manga given the url to the manga.
  * @param {string} mangaName
  * @param {Adapter} adapter
+ * @return {Manga} the manga data that was parsed.
  */
-export function scrape (mangaName, adapter) {
-  return fetch(adapter.mangaURL(mangaName))
+export function scrape (url, adapter) {
+  return fetch(url)
     .then((res) => res.text())
-    .then((body) => adapter.parseBody(body))
+    .then((body) => adapter.parseMangaData(body))
 }

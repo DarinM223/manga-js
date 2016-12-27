@@ -10,11 +10,11 @@ import cheerio from 'cheerio'
  */
 export function mangaURL (mangaName, chapterNum = null, pageNum = null) {
   if (chapterNum !== null && pageNum !== null) {
-    return `http://www.mangareader.net/${mangaName}`
+    return `http://www.mangareader.net/${mangaName}/${chapterNum}/${pageNum}`
   } else if (chapterNum !== null) {
     return `http://www.mangareader.net/${mangaName}/${chapterNum}`
   } else {
-    return `http://www.mangareader.net/${mangaName}/${chapterNum}/${pageNum}`
+    return `http://www.mangareader.net/${mangaName}`
   }
 }
 
@@ -27,8 +27,18 @@ export function mangaURL (mangaName, chapterNum = null, pageNum = null) {
 export function parseMangaData (body) {
   const $ = cheerio.load(body)
 
-  // TODO(DarinM223): parse the body for the manga image.
+  const name = $('#mangaproperties h1').text().trim()
+  const description = $('#readmangasum p').text().trim()
+  const image = $('#mangaimg img').attr('src')
+
   // TODO(DarinM223): parse the body for the manga chapters.
+
+  return {
+    type: 'mangareader',
+    name: name,
+    description: description,
+    image: image
+  }
 }
 
 /**
@@ -38,6 +48,5 @@ export function parseMangaData (body) {
  */
 export function parsePageImage (body) {
   const $ = cheerio.load(body)
-
-  // TODO(DarinM223): parse the body for the image URL.
+  return $('#img').attr('src')
 }
