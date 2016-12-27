@@ -2,7 +2,7 @@
 
 // TODO(DarinM223): mock fetch call to not use network.
 
-test('properly scrapes one punch man manga in mangareader', () => {
+test('properly scrapes one punch man manga data', () => {
   const adapter = require('../utils/sites/mangareader.js')
   const scraper = require('../utils/scraper.js')
 
@@ -19,10 +19,32 @@ test('properly scrapes one punch man manga in mangareader', () => {
     })
 })
 
-test('properly parses page image url', () => {
+test('properly scrapes one punch man chapter 1', () => {
   const adapter = require('../utils/sites/mangareader.js')
   const scraper = require('../utils/scraper.js')
 
-  return scraper.pageImageURL('onepunch-man', 1, 1, adapter)
-    .then((imageURL) => expect(imageURL).toEqual('http://i3.mangareader.net/onepunch-man/1/onepunch-man-3798615.jpg'))
+  const imageFileName = (url) => url.substring(url.lastIndexOf('/') + 1, url.length)
+
+  return scraper.scrapeChapter('http://www.mangareader.net/onepunch-man/1', adapter)
+    .then((imageURLs) => expect(imageURLs.map(imageFileName)).toEqual([
+      'onepunch-man-3798615.jpg',
+      'onepunch-man-3798617.jpg',
+      'onepunch-man-3798619.jpg',
+      'onepunch-man-3798621.jpg',
+      'onepunch-man-3798623.jpg',
+      'onepunch-man-3798625.jpg',
+      'onepunch-man-3798627.jpg',
+      'onepunch-man-3798629.jpg',
+      'onepunch-man-3798631.jpg',
+      'onepunch-man-3798633.jpg',
+      'onepunch-man-3798635.jpg',
+      'onepunch-man-3798637.jpg',
+      'onepunch-man-3798639.jpg',
+      'onepunch-man-3798641.jpg',
+      'onepunch-man-3798643.jpg',
+      'onepunch-man-3798645.jpg',
+      'onepunch-man-3798647.jpg',
+      'onepunch-man-3798649.jpg',
+      'onepunch-man-3798651.jpg'
+    ]))
 })

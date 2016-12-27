@@ -48,7 +48,7 @@ export default class HeaderComponent extends React.Component {
   render () {
     const actions = [
       <FlatButton
-        label='Add anime'
+        label='Add manga'
         keyboardFocused={false}
         onTouchTap={this.submit}
       />

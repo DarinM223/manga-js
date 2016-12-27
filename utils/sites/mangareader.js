@@ -44,6 +44,23 @@ export function parseMangaData (body) {
 }
 
 /**
+ * Parses the html body and returns an array of URLs to the pages of the chapter.
+ * @param {string} body
+ * @return {[string]} the page links in the chapter.
+ */
+export function parsePageLinks (body) {
+  const $ = cheerio.load(body)
+
+  let links = []
+  $('#pageMenu option').each(function (idx, option) {
+    const url = `http://www.mangareader.net${option.attribs.value}`
+    links.push(url)
+  })
+
+  return links
+}
+
+/**
  * Parses the html body and returns the URL of the image for the page of manga.
  * @param {string} body
  * @return {string} the image URL of the page.
