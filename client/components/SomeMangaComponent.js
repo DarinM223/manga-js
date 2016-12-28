@@ -4,18 +4,19 @@ import Avatar from 'material-ui/Avatar'
 import Subheader from 'material-ui/Subheader'
 import Divider from 'material-ui/Divider'
 import HeaderContainer from '../containers/HeaderContainer.js'
+import { Link } from 'react-router'
 
 function mangaComponent (manga) {
   const title = manga.get('title')
 
   return (
-    <div>
+    <Link to={'/manga/' + manga.get('name')} style={{ textDecoration: 'none' }}>
       <ListItem
         primaryText={title}
         secondaryText={manga.get('description')}
         leftAvatar={<Avatar src={manga.get('image')} />}
       />
-    </div>
+    </Link>
   )
 }
 

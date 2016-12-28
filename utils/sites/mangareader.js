@@ -34,17 +34,17 @@ export function parseMangaData (mangaName, body) {
   let chapters = []
   $('#listing tr').each(function (idx, element) {
     if (idx !== 0) {
-      let url = null
-      let date = null
+      let [name, url, date] = [null, null, null]
       $(element).find('td').each(function (idx, element) {
         if (idx === 0) {
+          name = $(element).find('a').text()
           url = `http://www.mangareader.net${$(element).find('a').attr('href')}`
         } else if (idx === 1) {
           date = $(element).text().trim()
         }
       })
 
-      chapters.push({ url, date, loaded: false })
+      chapters.push({ name, url, date, loaded: false })
     }
   })
 

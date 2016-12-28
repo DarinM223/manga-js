@@ -4,7 +4,7 @@ import Immutable from 'immutable'
 const initState = Immutable.fromJS({
   'schooldays': {
     type: 'mangareader',
-    name: '',
+    name: 'schooldays',
     title: 'School Days',
     description: 'Nice boat',
     image: 'https://myanimelist.cdn-dena.com/images/anime/13/17594.webp',

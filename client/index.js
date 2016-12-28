@@ -9,6 +9,7 @@ import ReduxToastr from 'react-redux-toastr'
 import injectTapEventPlugin from 'react-tap-event-plugin'
 
 import MainContainer from './containers/MainContainer.js'
+import MangaViewContainer from './containers/MangaViewContainer.js'
 
 injectTapEventPlugin()
 
@@ -28,6 +29,7 @@ ReactDOM.render(
       <MuiThemeProvider>
         <Router history={history}>
           <Route path='/' component={MainContainer} />
+          <Route path='/manga/:name' component={MangaViewContainer} />
         </Router>
       </MuiThemeProvider>
     </div>
