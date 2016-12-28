@@ -9,7 +9,7 @@ import SomeMangaComponent from './SomeMangaComponent.js'
  * if there is manga saved.
  */
 export default function MainComponent ({ manga }) {
-  if (manga.length === 0) {
+  if (Object.keys(manga).length === 0) {
     return <NoMangaComponent />
   } else {
     return <SomeMangaComponent manga={manga} />
@@ -17,5 +17,5 @@ export default function MainComponent ({ manga }) {
 }
 
 MainComponent.propTypes = {
-  manga: PropTypes.array.isRequired
+  manga: PropTypes.object.isRequired
 }

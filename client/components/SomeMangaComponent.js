@@ -26,14 +26,15 @@ export default function SomeMangaComponent ({ manga }) {
 
   // TODO(DarinM223): make this cleaner ;-;
 
-  for (const m of manga) {
+  Object.keys(manga).forEach(key => {
+    const m = manga[key]
     const component = mangaComponent(m)
     if (m.new) {
       newMangaComponents.push(component)
     } else {
       oldMangaComponents.push(component)
     }
-  }
+  })
 
   if (newMangaComponents.length === 0) {
     mangaList = (
@@ -67,5 +68,5 @@ export default function SomeMangaComponent ({ manga }) {
 }
 
 SomeMangaComponent.propTypes = {
-  manga: PropTypes.array.isRequired
+  manga: PropTypes.object.isRequired
 }

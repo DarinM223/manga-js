@@ -26,7 +26,9 @@ export function scrapeChapter (url, adapter) {
  * @return {Manga} the manga data that was parsed.
  */
 export function scrape (url, adapter) {
+  const mangaName = url.substring(url.lastIndexOf('/') + 1, url.length)
+
   return fetch(url)
     .then((res) => res.text())
-    .then((body) => adapter.parseMangaData(body))
+    .then((body) => adapter.parseMangaData(mangaName, body))
 }

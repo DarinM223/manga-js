@@ -24,7 +24,7 @@ export function mangaURL (mangaName, chapterNum = null, pageNum = null) {
  * @param {string} body
  * @return {object} the manga as a nested object.
  */
-export function parseMangaData (body) {
+export function parseMangaData (mangaName, body) {
   const $ = cheerio.load(body)
 
   const title = $('#mangaproperties h1').text().trim()
@@ -51,7 +51,7 @@ export function parseMangaData (body) {
   return {
     type: 'mangareader',
     title,
-    name: '', // TODO(DarinM223): parse name and add to here.
+    name: mangaName,
     description,
     new: true,
     image,

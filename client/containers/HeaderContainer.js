@@ -2,10 +2,13 @@ import { connect } from 'react-redux'
 import HeaderComponent from '../components/HeaderComponent.js'
 import { addManga } from '../actions/manga.js'
 
-const mapStateToProps = (state) => ({})
+const mapStateToProps = (state) => ({
+  manga: state.manga.toJS()
+})
+
 const mapDispatchToProps = (dispatch) => ({
-  onAddManga (url) {
-    dispatch(addManga(url))
+  onAddManga (url, mangaList) {
+    dispatch(addManga(url, mangaList))
   }
 })
 

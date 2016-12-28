@@ -40,7 +40,7 @@ export default class HeaderComponent extends React.Component {
 
       // TODO(DarinM223): check for invalid url
 
-      this.props.onAddManga(this.state.text)
+      this.props.onAddManga(this.state.text, this.props.manga)
       this.handleClose()
     }
   }
@@ -94,5 +94,6 @@ export default class HeaderComponent extends React.Component {
 }
 
 HeaderComponent.propTypes = {
+  manga: PropTypes.object.isRequired,
   onAddManga: PropTypes.func.isRequired
 }
