@@ -44,7 +44,7 @@ export function parseMangaData (mangaName, body) {
         }
       })
 
-      chapters.push({ name, url, date, loaded: false })
+      chapters.push({ name, url, date, loaded: false, currentPage: 0, pages: [] })
     }
   })
 

@@ -10,6 +10,7 @@ import injectTapEventPlugin from 'react-tap-event-plugin'
 
 import MainContainer from './containers/MainContainer.js'
 import MangaViewContainer from './containers/MangaViewContainer.js'
+import ChapterViewContainer from './containers/ChapterViewContainer.js'
 
 injectTapEventPlugin()
 
@@ -30,6 +31,7 @@ ReactDOM.render(
         <Router history={history}>
           <Route path='/' component={MainContainer} />
           <Route path='/manga/:name' component={MangaViewContainer} />
+          <Route path='/chapter/:mangaName/:chapterNum' component={ChapterViewContainer} />
         </Router>
       </MuiThemeProvider>
     </div>

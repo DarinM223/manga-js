@@ -5,9 +5,14 @@ import ActionGetApp from 'material-ui/svg-icons/action/get-app'
 import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back'
 import IconButton from 'material-ui/IconButton'
 
-function chapterComponent (chapter) {
+function chapterComponent (manga, chapterNum, onCellClicked) {
+  const chapter = manga.get('chapters').get(chapterNum)
+  const cellClicked = () => {
+    onCellClicked(manga, chapterNum)
+  }
+
   return (
-    <TableRow>
+    <TableRow onDoubleClick={cellClicked}>
       <TableRowColumn>{chapter.get('name')}</TableRowColumn>
       <TableRowColumn>{chapter.get('date')}</TableRowColumn>
       <TableRowColumn><IconButton><ActionGetApp /></IconButton></TableRowColumn>
@@ -15,13 +20,13 @@ function chapterComponent (chapter) {
   )
 }
 
-export default function MangaViewComponent ({ manga, name, back }) {
+export default function MangaViewComponent ({ manga, name, back, onCellClicked }) {
   const specificManga = manga.get(name)
 
   let chapterComponents = []
-  specificManga.get('chapters').forEach((chapter) => {
-    chapterComponents.push(chapterComponent(chapter))
-  })
+  for (let chapterNum = 0; chapterNum < specificManga.get('chapters').count(); chapterNum++) {
+    chapterComponents.push(chapterComponent(specificManga, chapterNum, onCellClicked))
+  }
 
   return (
     <div>
@@ -48,5 +53,6 @@ export default function MangaViewComponent ({ manga, name, back }) {
 MangaViewComponent.propTypes = {
   manga: PropTypes.object.isRequired,
   name: PropTypes.string.isRequired,
-  back: PropTypes.func.isRequired
+  back: PropTypes.func.isRequired,
+  onCellClicked: PropTypes.func.isRequired
 }

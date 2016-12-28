@@ -1,5 +1,6 @@
 import { connect } from 'react-redux'
 import MangaViewComponent from '../components/MangaViewComponent.js'
+import { loadChapter } from '../actions/manga.js'
 import { goBack } from 'react-router-redux'
 
 const mapStateToProps = (state, ownProps) => ({
@@ -10,6 +11,10 @@ const mapStateToProps = (state, ownProps) => ({
 const mapDispatchToProps = (dispatch) => ({
   back () {
     dispatch(goBack())
+  },
+
+  onCellClicked (manga, chapterNum) {
+    dispatch(loadChapter(manga, chapterNum))
   }
 })
 
