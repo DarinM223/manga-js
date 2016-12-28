@@ -6,14 +6,14 @@ import Divider from 'material-ui/Divider'
 import HeaderContainer from '../containers/HeaderContainer.js'
 
 function mangaComponent (manga) {
-  // const title = `${manga.title} (${manga.currentChapter}/${manga.totalChapters})`
-  const title = manga.title // TODO(DarinM223): add chapters later
+  const title = manga.get('title')
+
   return (
     <div>
       <ListItem
         primaryText={title}
-        secondaryText={manga.description}
-        leftAvatar={<Avatar src={manga.image} />}
+        secondaryText={manga.get('description')}
+        leftAvatar={<Avatar src={manga.get('image')} />}
       />
     </div>
   )
@@ -26,15 +26,15 @@ export default function SomeMangaComponent ({ manga }) {
 
   // TODO(DarinM223): make this cleaner ;-;
 
-  Object.keys(manga).forEach(key => {
-    const m = manga[key]
+  for (const name of manga.keys()) {
+    const m = manga.get(name)
     const component = mangaComponent(m)
-    if (m.new) {
+    if (m.get('new')) {
       newMangaComponents.push(component)
     } else {
       oldMangaComponents.push(component)
     }
-  })
+  }
 
   if (newMangaComponents.length === 0) {
     mangaList = (

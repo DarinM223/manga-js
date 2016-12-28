@@ -3,7 +3,7 @@ import HeaderComponent from '../components/HeaderComponent.js'
 import { addManga } from '../actions/manga.js'
 
 const mapStateToProps = (state) => ({
-  manga: state.manga.toJS()
+  manga: state.manga
 })
 
 const mapDispatchToProps = (dispatch) => ({

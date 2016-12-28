@@ -13,13 +13,14 @@ export function addManga (url, mangaList) {
   return (dispatch) => {
     // TODO(DarinM223): also add to database.
     scraper.scrape(url, adapter).then((manga) => {
-      if (manga.name in mangaList) {
+      if (mangaList.has(manga.name)) {
         dispatch(actions.add({
           type: 'error',
           title: 'Manga already exists',
           message: 'The manga with the given name already exists in the list',
           options: {
-            showCloseButton: true
+            showCloseButton: true,
+            timeOut: 3000
           }
         }))
       } else {
