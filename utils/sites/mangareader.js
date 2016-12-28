@@ -31,15 +31,31 @@ export function parseMangaData (body) {
   const description = $('#readmangasum p').text().trim()
   const image = $('#mangaimg img').attr('src')
 
-  // TODO(DarinM223): parse the body for the manga chapters.
+  let chapters = []
+  $('#listing tr').each(function (idx, element) {
+    if (idx !== 0) {
+      let url = null
+      let date = null
+      $(element).find('td').each(function (idx, element) {
+        if (idx === 0) {
+          url = `http://www.mangareader.net${$(element).find('a').attr('href')}`
+        } else if (idx === 1) {
+          date = $(element).text().trim()
+        }
+      })
+
+      chapters.push({ url, date, loaded: false })
+    }
+  })
 
   return {
     type: 'mangareader',
-    title: title,
+    title,
     name: '', // TODO(DarinM223): parse name and add to here.
-    description: description,
+    description,
     new: true,
-    image: image
+    image,
+    chapters
   }
 }
 

@@ -8,6 +8,9 @@ test('properly scrapes one punch man manga data', () => {
 
   return scraper.scrape('http://www.mangareader.net/onepunch-man', adapter)
     .then((manga) => {
+      expect(manga.chapters.length).not.toEqual(0)
+      delete manga.chapters
+
       expect(manga).toEqual({
         type: 'mangareader',
         name: '',
