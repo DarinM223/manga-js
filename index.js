@@ -1,13 +1,14 @@
 // Entry point for Electron application.
 
-const { app, BrowserWindow } = require('electron')
+const { app, ipcMain, BrowserWindow } = require('electron')
 const path = require('path')
 const url = require('url')
+const fs = require('fs')
 
 // Global reference to the main window.
 let mainWindow = null
 
-function createWindow () {
+const createWindow = () => {
   mainWindow = new BrowserWindow({ width: 800, height: 600 })
 
   mainWindow.loadURL(url.format({
@@ -20,6 +21,31 @@ function createWindow () {
 
   mainWindow.on('closed', function () {
     mainWindow = null
+  })
+
+  const initPath = path.join(app.getPath('userData'), 'init.json')
+
+  ipcMain.on('save-state', (event, state) => {
+    fs.open(initPath, 'a', (err, fd) => {
+      if (err) return console.log(err)
+      fs.close(fd, (err) => {
+        if (err) return console.log(err)
+
+        fs.writeFile(initPath, state, 'utf-8', (err) => {
+          if (err) return console.log(err)
+        })
+      })
+    })
+  })
+
+  ipcMain.on('load-state', (event, arg) => {
+    fs.readFile(initPath, 'utf-8', (err, state) => {
+      if (err) {
+        event.returnValue = null
+        return console.log(err)
+      }
+      event.returnValue = state
+    })
   })
 }
 
@@ -39,4 +65,3 @@ app.on('activate', function () {
   }
 })
 
-// TODO(DarinM223): rest of the code here.

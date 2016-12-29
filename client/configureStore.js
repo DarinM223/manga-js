@@ -3,14 +3,27 @@ import { routerMiddleware, routerReducer } from 'react-router-redux'
 import { reducer as toastrReducer } from 'react-redux-toastr'
 import thunk from 'redux-thunk'
 import { manga } from './reducers/manga.js'
+import { saveState, loadState } from './storage.js'
 import { hashHistory } from 'react-router'
+import throttle from 'lodash/throttle'
 
 const middleware = routerMiddleware(hashHistory)
-export const store = createStore(
-  combineReducers({
-    manga,
-    routing: routerReducer,
-    toastr: toastrReducer
-  }),
-  applyMiddleware(thunk, middleware)
-)
+
+export default function configureStore () {
+  const persistedState = loadState()
+  const store = createStore(
+    combineReducers({
+      manga,
+      routing: routerReducer,
+      toastr: toastrReducer
+    }),
+    persistedState,
+    applyMiddleware(thunk, middleware)
+  )
+
+  store.subscribe(throttle(() => {
+    saveState(store.getState())
+  }), 1000)
+
+  return store
+}

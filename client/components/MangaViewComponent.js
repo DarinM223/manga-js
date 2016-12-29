@@ -35,7 +35,7 @@ export default function MangaViewComponent ({ manga, name, back, onCellClicked }
         iconElementLeft={<IconButton onClick={back}><NavigationArrowBack /></IconButton>}
         style={{ position: 'fixed' }}
       />
-      <br />
+      <br /><br /><br /><br />
       <Table>
         <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
           <TableRow>
