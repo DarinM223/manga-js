@@ -11,8 +11,8 @@ export const LOAD_CHAPTER = 'LOAD_CHAPTER'
 function errorNotify (title, message) {
   return actions.add({
     type: 'error',
-    title: title,
-    message: message,
+    title,
+    message,
     options: {
       showCloseButton: true,
       timeOut: 3000
@@ -32,7 +32,7 @@ export function addManga (url, mangaList) {
       } else {
         dispatch({
           type: ADD_MANGA,
-          manga: manga
+          manga
         })
       }
     })
@@ -49,13 +49,12 @@ export function removeManga () {
   }
 }
 
-export function updatePage () {
-  return (dispatch) => {
-    // TODO(DarinM223): update page in database.
-
-    dispatch({
-      type: UPDATE_PAGE
-    })
+export function updatePage (manga, chapterNum, amount) {
+  return {
+    type: UPDATE_PAGE,
+    mangaName: manga.get('name'),
+    chapterNum: chapterNum,
+    amount
   }
 }
 
@@ -78,7 +77,7 @@ export function loadChapter (manga, chapterNum) {
           dispatch({
             type: LOAD_CHAPTER,
             mangaName: manga.get('name'),
-            chapterNum: chapterNum,
+            chapterNum,
             pages: links
           })
           dispatch(push(chapterRoute))

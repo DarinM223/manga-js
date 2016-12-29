@@ -9,7 +9,7 @@ import SomeMangaComponent from './SomeMangaComponent.js'
  * if there is manga saved.
  */
 export default function MainComponent ({ manga }) {
-  if (Object.keys(manga).length === 0) {
+  if (manga.count() === 0) {
     return <NoMangaComponent />
   } else {
     return <SomeMangaComponent manga={manga} />

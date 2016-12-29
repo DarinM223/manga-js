@@ -1,6 +1,7 @@
 import { connect } from 'react-redux'
 import ChapterViewComponent from '../components/ChapterViewComponent.js'
 import { goBack } from 'react-router-redux'
+import { updatePage } from '../actions/manga.js'
 
 const mapStateToProps = (state, ownProps) => ({
   manga: state.manga,
@@ -11,6 +12,10 @@ const mapStateToProps = (state, ownProps) => ({
 const mapDispatchToProps = (dispatch) => ({
   back () {
     dispatch(goBack())
+  },
+
+  onImageClicked (mangaName, chapterNum) {
+    dispatch(updatePage(mangaName, chapterNum, 1))
   }
 })
 
