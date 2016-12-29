@@ -16,6 +16,10 @@ const mapDispatchToProps = (dispatch) => ({
 
   onImageClicked (mangaName, chapterNum) {
     dispatch(updatePage(mangaName, chapterNum, 1))
+  },
+
+  onPrevClicked (mangaName, chapterNum) {
+    dispatch(updatePage(mangaName, chapterNum, -1))
   }
 })
 

@@ -33,7 +33,9 @@ export default function MangaViewComponent ({ manga, name, back, onCellClicked }
       <AppBar
         title={specificManga.get('title')}
         iconElementLeft={<IconButton onClick={back}><NavigationArrowBack /></IconButton>}
+        style={{ position: 'fixed' }}
       />
+      <br />
       <Table>
         <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
           <TableRow>
