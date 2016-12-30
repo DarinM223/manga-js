@@ -55,7 +55,8 @@ export function parseMangaData (mangaName, body) {
     description,
     new: true,
     image,
-    chapters
+    chapters,
+    currentChapter: 0
   }
 }
 

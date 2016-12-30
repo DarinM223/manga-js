@@ -29,13 +29,21 @@ const styles = {
 
 function chapterComponent (manga, chapterNum, onCellClicked) {
   const chapter = manga.get('chapters').get(chapterNum)
+  const currentChapter = manga.get('currentChapter')
   const cellClicked = () => {
     onCellClicked(manga, chapterNum)
   }
 
+  let chapterName = chapter.get('name')
+  // Add star to chapter name if it's the current chapter.
+  if (currentChapter === chapterNum) {
+    chapterName += ' '
+    chapterName += String.fromCharCode('9734')
+  }
+
   return (
     <TableRow onDoubleClick={cellClicked}>
-      <TableRowColumn>{chapter.get('name')}</TableRowColumn>
+      <TableRowColumn>{chapterName}</TableRowColumn>
       <TableRowColumn>{chapter.get('date')}</TableRowColumn>
       <TableRowColumn><IconButton><ActionGetApp /></IconButton></TableRowColumn>
     </TableRow>

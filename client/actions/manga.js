@@ -4,6 +4,7 @@ import { push } from 'react-router-redux'
 export const ADD_MANGA = 'ADD_MANGA'
 export const REMOVE_MANGA = 'REMOVE_MANGA'
 export const UPDATE_PAGE = 'UPDATE_PAGE'
+export const UPDATE_CHAPTER = 'UPDATE_CHAPTER'
 export const LOAD_CHAPTER = 'LOAD_CHAPTER'
 
 // TODO(DarinM223): implement these helper functions.
@@ -47,8 +48,16 @@ export function updatePage (manga, chapterNum, amount) {
   return {
     type: UPDATE_PAGE,
     mangaName: manga.get('name'),
-    chapterNum: chapterNum,
+    chapterNum,
     amount
+  }
+}
+
+export function updateChapter (mangaName, chapterNum) {
+  return {
+    type: UPDATE_CHAPTER,
+    mangaName,
+    chapterNum
   }
 }
 
@@ -60,8 +69,10 @@ export function loadChapter (manga, chapterNum) {
   return (dispatch) => {
     const chapter = manga.get('chapters').get(chapterNum)
     const chapterURL = chapter.get('url')
+
     if (chapter.get('loaded')) {
       dispatch(push(chapterRoute))
+      dispatch(updateChapter(manga.get('name'), chapterNum))
     } else {
       // Load chapter, then dispatch to update state, then dispatch to update router.
       scraper.scrapeChapter(chapterURL, adapter).then((links) => {
@@ -75,6 +86,7 @@ export function loadChapter (manga, chapterNum) {
             pages: links
           })
           dispatch(push(chapterRoute))
+          dispatch(updateChapter(manga.get('name'), chapterNum))
         }
       })
     }

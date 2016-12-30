@@ -17,7 +17,8 @@ test('properly scrapes one punch man manga data', () => {
         title: 'Onepunch-Man Manga',
         description: 'Follows the life of an average hero who manages to win all battles with only one punch. This ability seems to frustrate him as he no longer feels the thrill and adrenaline of fighting a tough battle, which leads to him questioning his past desire of being strong.',
         image: 'http://s1.mangareader.net/cover/onepunch-man/onepunch-man-l0.jpg',
-        new: true
+        new: true,
+        currentChapter: 0
       })
     })
 })

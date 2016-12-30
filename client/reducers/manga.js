@@ -1,4 +1,4 @@
-import { ADD_MANGA, REMOVE_MANGA, UPDATE_PAGE, LOAD_CHAPTER } from '../actions/manga.js'
+import { ADD_MANGA, REMOVE_MANGA, UPDATE_PAGE, LOAD_CHAPTER, UPDATE_CHAPTER } from '../actions/manga.js'
 import Immutable from 'immutable'
 
 const initState = Immutable.fromJS({})
@@ -23,6 +23,8 @@ export function manga (state = initState, action) {
           newPage
         )
       }
+    case UPDATE_CHAPTER:
+      return state.setIn([action.mangaName, 'currentChapter'], action.chapterNum)
     case LOAD_CHAPTER:
       return state
         .setIn([action.mangaName, 'chapters', action.chapterNum, 'pages'], Immutable.fromJS(action.pages))
