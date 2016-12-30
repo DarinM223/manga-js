@@ -30,22 +30,16 @@ export function addManga (url, mangaList) {
       if (mangaList.has(manga.name)) {
         dispatch(errorNotify('Manga already exists', 'The manga with the given name already exists in the list'))
       } else {
-        dispatch({
-          type: ADD_MANGA,
-          manga
-        })
+        dispatch({ type: ADD_MANGA, manga })
       }
     })
   }
 }
 
-export function removeManga () {
+export function removeManga (mangaName) {
   return (dispatch) => {
-    // TODO(DarinM223): remove anime from database.
-
-    dispatch({
-      type: REMOVE_MANGA
-    })
+    dispatch({ type: REMOVE_MANGA, name: mangaName })
+    dispatch(push('/'))
   }
 }
 

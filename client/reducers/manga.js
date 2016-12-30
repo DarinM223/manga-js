@@ -9,7 +9,7 @@ export function manga (state = initState, action) {
       const manga = Immutable.fromJS(action.manga)
       return state.set(action.manga.name, manga)
     case REMOVE_MANGA:
-      return state
+      return state.delete(action.name)
     case UPDATE_PAGE:
       const totalPages = state.getIn([action.mangaName, 'chapters', action.chapterNum, 'pages']).count()
       const currentPage = state.getIn([action.mangaName, 'chapters', action.chapterNum, 'currentPage'])
