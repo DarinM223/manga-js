@@ -1,4 +1,5 @@
 import cheerio from 'cheerio'
+import { NOT_LOADED } from '../constants.js'
 
 /**
  * Returns the URL for the given manga. If chapterNum or pageNum is also
@@ -44,7 +45,7 @@ export function parseMangaData (mangaName, body) {
         }
       })
 
-      chapters.push({ name, url, date, loaded: false, currentPage: 0, pages: [] })
+      chapters.push({ name, url, date, loadState: NOT_LOADED, currentPage: 0, pages: [] })
     }
   })
 
