@@ -1,12 +1,21 @@
 import { actions } from 'react-redux-toastr'
 import { push } from 'react-router-redux'
-import { NOT_LOADED, LOADED, LOADING } from '../../utils/constants.js'
+
+import {
+  NOT_LOADED,
+  LOADED,
+  LOADING,
+  NOT_DOWNLOADED,
+  DOWNLOADING,
+  DOWNLOADED
+} from '../../utils/constants.js'
 
 export const ADD_MANGA = 'ADD_MANGA'
 export const REMOVE_MANGA = 'REMOVE_MANGA'
 export const UPDATE_PAGE = 'UPDATE_PAGE'
 export const UPDATE_CHAPTER = 'UPDATE_CHAPTER'
 export const LOAD_CHAPTER = 'LOAD_CHAPTER'
+export const SET_DOWNLOAD_STATE = 'SET_DOWNLOAD_STATE'
 export const SET_LOADING = 'SET_LOADING'
 
 function errorNotify (title, message) {
@@ -63,6 +72,54 @@ export function updateChapter (mangaName, chapterNum) {
 export function setLoading (mangaName, chapterNum) {
   return {
     type: SET_LOADING,
+    mangaName,
+    chapterNum
+  }
+}
+
+// TODO(DarinM223): hack to store the timeouts to clear, remove when actual downloading code is implemented.
+const downloadingTimeouts = {}
+
+export function downloadChapter (mangaName, chapterNum) {
+  // TODO(DarinM223): send download request to main process before dispatching the SET_DOWNLOAD_STATE.
+  return (dispatch) => {
+    dispatch({
+      type: SET_DOWNLOAD_STATE,
+      state: DOWNLOADING,
+      mangaName,
+      chapterNum
+    })
+
+    // TODO(DarinM223): Simulates async with setTimeout, replace with actual async call.
+    const timeout = setTimeout(() => dispatch({
+      type: SET_DOWNLOAD_STATE,
+      state: DOWNLOADED,
+      mangaName,
+      chapterNum
+    }), 2000)
+    downloadingTimeouts[`${mangaName}#${chapterNum}`] = timeout
+  }
+}
+
+export function cancelDownloadChapter (mangaName, chapterNum) {
+  // TODO(DarinM223): send cancel download request to main process before dispatching the SET_DOWNLOAD_STATE.
+
+  // TODO(DarinM223): hack to 'clear' the timeout, remove when actual downloading code is implemented.
+  clearTimeout(downloadingTimeouts[`${mangaName}#${chapterNum}`])
+
+  return {
+    type: SET_DOWNLOAD_STATE,
+    state: NOT_DOWNLOADED,
+    mangaName,
+    chapterNum
+  }
+}
+
+export function deleteDownloadedChapter (mangaName, chapterNum) {
+  // TODO(DarinM223): send delete download request to main process before dispatching the SET_DOWNLOAD_STATE.
+  return {
+    type: SET_DOWNLOAD_STATE,
+    state: NOT_DOWNLOADED,
     mangaName,
     chapterNum
   }

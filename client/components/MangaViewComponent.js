@@ -2,11 +2,15 @@ import React, { PropTypes } from 'react'
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table'
 import AppBar from 'material-ui/AppBar'
 import ActionGetApp from 'material-ui/svg-icons/action/get-app'
+import ActionDelete from 'material-ui/svg-icons/action/delete'
 import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back'
+import NavigationCancel from 'material-ui/svg-icons/navigation/cancel'
 import IconButton from 'material-ui/IconButton'
 import FlatButton from 'material-ui/FlatButton'
 import RaisedButton from 'material-ui/RaisedButton'
 import Dialog from 'material-ui/Dialog'
+
+import { NOT_DOWNLOADED, DOWNLOADING, DOWNLOADED } from '../../utils/constants.js'
 
 const styles = {
   container: {
@@ -27,11 +31,22 @@ const styles = {
   }
 }
 
-function chapterComponent (manga, chapterNum, onCellClicked) {
+function chapterComponent (manga, chapterNum, props) {
+  const mangaName = manga.get('name')
   const chapter = manga.get('chapters').get(chapterNum)
   const currentChapter = manga.get('currentChapter')
+  const downloadState = chapter.get('downloadState')
   const cellClicked = () => {
-    onCellClicked(manga, chapterNum)
+    props.onCellClicked(manga, chapterNum)
+  }
+  const downloadClicked = () => {
+    props.onDownloadClicked(mangaName, chapterNum)
+  }
+  const cancelDownloadClicked = () => {
+    props.onCancelDownloadClicked(mangaName, chapterNum)
+  }
+  const deleteDownloadClicked = () => {
+    props.onDeleteDownloadClicked(mangaName, chapterNum)
   }
 
   let chapterName = chapter.get('name')
@@ -41,11 +56,24 @@ function chapterComponent (manga, chapterNum, onCellClicked) {
     chapterName += String.fromCharCode('9734')
   }
 
+  let downloadComponent = null
+  switch (downloadState) {
+    case NOT_DOWNLOADED:
+      downloadComponent = <IconButton onClick={downloadClicked}><ActionGetApp /></IconButton>
+      break
+    case DOWNLOADING:
+      downloadComponent = <IconButton onClick={cancelDownloadClicked}><NavigationCancel /></IconButton>
+      break
+    case DOWNLOADED:
+      downloadComponent = <IconButton onClick={deleteDownloadClicked}><ActionDelete /></IconButton>
+      break
+  }
+
   return (
     <TableRow onDoubleClick={cellClicked}>
       <TableRowColumn>{chapterName}</TableRowColumn>
       <TableRowColumn>{chapter.get('date')}</TableRowColumn>
-      <TableRowColumn><IconButton><ActionGetApp /></IconButton></TableRowColumn>
+      <TableRowColumn>{downloadComponent}</TableRowColumn>
     </TableRow>
   )
 }
@@ -103,7 +131,7 @@ export default class MangaViewComponent extends React.Component {
 
     let chapterComponents = []
     for (let chapterNum = 0; chapterNum < specificManga.get('chapters').count(); chapterNum++) {
-      chapterComponents.push(chapterComponent(specificManga, chapterNum, this.props.onCellClicked))
+      chapterComponents.push(chapterComponent(specificManga, chapterNum, this.props))
     }
 
     const confirmText = `Are you sure you want to delete ${specificManga.get('title')}?`
@@ -147,5 +175,8 @@ MangaViewComponent.propTypes = {
   name: PropTypes.string.isRequired,
   back: PropTypes.func.isRequired,
   onCellClicked: PropTypes.func.isRequired,
+  onDownloadClicked: PropTypes.func.isRequired,
+  onCancelDownloadClicked: PropTypes.func.isRequired,
+  onDeleteDownloadClicked: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired
 }

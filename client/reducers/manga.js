@@ -8,7 +8,8 @@ import {
   UPDATE_PAGE,
   LOAD_CHAPTER,
   UPDATE_CHAPTER,
-  SET_LOADING
+  SET_LOADING,
+  SET_DOWNLOAD_STATE
 } from '../actions/manga.js'
 
 const initState = Immutable.fromJS({})
@@ -33,6 +34,8 @@ export function manga (state = initState, action) {
       })
     case SET_LOADING:
       return state.setIn([action.mangaName, 'chapters', action.chapterNum, 'loadState'], LOADING)
+    case SET_DOWNLOAD_STATE:
+      return state.setIn([action.mangaName, 'chapters', action.chapterNum, 'downloadState'], action.state)
     case UPDATE_CHAPTER:
       return state.setIn([action.mangaName, 'currentChapter'], action.chapterNum)
     case LOAD_CHAPTER:
