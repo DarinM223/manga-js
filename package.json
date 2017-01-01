@@ -11,6 +11,7 @@
   "license": "GNU GPL 3",
   "devDependencies": {
     "babel-jest": "^18.0.0",
+    "babel-plugin-transform-object-rest-spread": "^6.20.2",
     "electron": "^1.4.13",
     "jest": "^18.0.0",
     "react-test-renderer": "^15.4.1"

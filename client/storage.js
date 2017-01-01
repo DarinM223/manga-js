@@ -14,7 +14,7 @@ export function loadState () {
       Immutable.fromJS(state.manga),
       Immutable.fromJS(state.log)
     )
-    return Object.assign({}, state, { manga, log })
+    return { ...state, manga, log }
   } catch (e) {
     console.log(e)
     return undefined
@@ -25,9 +25,10 @@ export function saveState (state) {
   try {
     const manga = state.manga.toJS()
     const log = state.log.toJS()
-    const savedState = Object.assign({}, state, { manga, log })
+    const savedState = { ...state, manga, log }
     const serializedState = JSON.stringify(savedState)
     ipcRenderer.send('save-state', serializedState)
   } catch (e) {
+    console.log(e)
   }
 }
