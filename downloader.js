@@ -1,8 +1,13 @@
-function downloadChapter (args) {
-  console.log('Received download chapter')
-  return new Promise((resolve, reject) => {
-    setTimeout(() => resolve('Downloaded :)'), 2000)
-  })
+function downloadChapter (event, args) {
+  console.log('Received: ', args)
+  event.sender.send('recv-download-chapter', Object.assign({}, args, { err: null }))
+
+  setTimeout(() => {
+    event.sender.send(
+      'recv-downloaded',
+      Object.assign({}, args, { err: null, result: 'Downloaded :)' })
+    )
+  }, 2000)
 }
 
 function cancelDownload (args) {

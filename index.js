@@ -55,7 +55,7 @@ const createWindow = () => {
     retrieveChapter
   } = require('./downloader.js')
 
-  ipcMain.on('download-chapter', (event, args) => returnAsync(args, downloadChapter(args), event, 'recv-download-chapter'))
+  ipcMain.on('download-chapter', (event, args) => downloadChapter(event, args))
   ipcMain.on('cancel-download', (event, args) => returnAsync(args, cancelDownload(args), event, 'recv-cancel-download'))
   ipcMain.on('delete-download', (event, args) => returnAsync(args, deleteDownload(args), event, 'recv-delete-download'))
   ipcMain.on('retrieve-chapter', (event, args) => returnAsync(args, retrieveChapter(args), event, 'recv-retrieve-chapter'))

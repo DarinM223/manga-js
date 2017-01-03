@@ -9,8 +9,9 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(loadChapter(manga, chapterNum))
   },
 
-  onDownload (mangaName, chapterNum) {
-    dispatch(downloadChapter(mangaName, chapterNum))
+  onDownload (manga, chapterNum) {
+    dispatch(loadChapter(manga, chapterNum, true))
+      .then(() => dispatch(downloadChapter(manga.get('name'), chapterNum)))
   }
 })
 

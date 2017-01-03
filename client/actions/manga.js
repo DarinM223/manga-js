@@ -1,13 +1,7 @@
 import { actions } from 'react-redux-toastr'
 import { push } from 'react-router-redux'
-import { ipcRenderer } from 'electron'
 
-import {
-  NOT_LOADED,
-  LOADED,
-  LOADING,
-  DOWNLOADING
-} from '../../utils/constants.js'
+import { NOT_LOADED, LOADED, LOADING } from '../../utils/constants.js'
 
 export const ADD_MANGA = 'ADD_MANGA'
 export const REMOVE_MANGA = 'REMOVE_MANGA'
@@ -15,6 +9,7 @@ export const UPDATE_PAGE = 'UPDATE_PAGE'
 export const UPDATE_CHAPTER = 'UPDATE_CHAPTER'
 export const LOAD_CHAPTER = 'LOAD_CHAPTER'
 export const SET_DOWNLOAD_STATE = 'SET_DOWNLOAD_STATE'
+export const DOWNLOAD_CHAPTER = 'DOWNLOAD_CHAPTER'
 export const SET_LOADING = 'SET_LOADING'
 
 function errorNotify (title, message) {
@@ -77,17 +72,14 @@ export function setLoading (mangaName, chapterNum) {
 }
 
 export function downloadChapter (mangaName, chapterNum) {
-  ipcRenderer.send('download-chapter', { mangaName, chapterNum })
-
   return {
-    type: SET_DOWNLOAD_STATE,
-    state: DOWNLOADING,
+    type: DOWNLOAD_CHAPTER,
     mangaName,
     chapterNum
   }
 }
 
-export function loadChapter (manga, chapterNum) {
+export function loadChapter (manga, chapterNum, background = false) {
   const scraper = require('../../utils/scraper.js')
   const adapter = require('../../utils/sites/mangareader.js')
 
@@ -100,8 +92,10 @@ export function loadChapter (manga, chapterNum) {
 
     switch (loadState) {
       case LOADED:
-        dispatch(push(chapterRoute))
-        dispatch(updateChapter(mangaName, chapterNum))
+        if (!background) {
+          dispatch(push(chapterRoute))
+          dispatch(updateChapter(mangaName, chapterNum))
+        }
         break
       case LOADING:
         // Ignore action if the chapter is already loading.
@@ -110,7 +104,7 @@ export function loadChapter (manga, chapterNum) {
         dispatch(setLoading(mangaName, chapterNum))
 
         // Load chapter, then dispatch to update state, then dispatch to update router.
-        scraper.scrapeChapter(chapterURL, adapter).then((links) => {
+        return scraper.scrapeChapter(chapterURL, adapter).then((links) => {
           if (links.length === 0) {
             dispatch(errorNotify('Chapter is empty', 'The chapter being loaded has no pages'))
           } else {
@@ -120,11 +114,14 @@ export function loadChapter (manga, chapterNum) {
               chapterNum,
               pages: links
             })
-            dispatch(push(chapterRoute))
-            dispatch(updateChapter(mangaName, chapterNum))
+            if (!background) {
+              dispatch(push(chapterRoute))
+              dispatch(updateChapter(mangaName, chapterNum))
+            }
           }
         })
-        break
     }
+
+    return Promise.resolve()
   }
 }
