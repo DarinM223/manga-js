@@ -1,12 +1,7 @@
 import { connect } from 'react-redux'
 import ChapterCellComponent from '../components/ChapterCellComponent.js'
 
-import {
-  cancelDownloadChapter,
-  deleteDownloadedChapter,
-  downloadChapter,
-  loadChapter
-} from '../actions/manga.js'
+import { downloadChapter, loadChapter } from '../actions/manga.js'
 
 const mapStateToProps = () => ({})
 const mapDispatchToProps = (dispatch) => ({
@@ -16,14 +11,6 @@ const mapDispatchToProps = (dispatch) => ({
 
   onDownload (mangaName, chapterNum) {
     dispatch(downloadChapter(mangaName, chapterNum))
-  },
-
-  onCancelDownload (mangaName, chapterNum) {
-    dispatch(cancelDownloadChapter(mangaName, chapterNum))
-  },
-
-  onDeleteDownload (mangaName, chapterNum) {
-    dispatch(deleteDownloadedChapter(mangaName, chapterNum))
   }
 })
 

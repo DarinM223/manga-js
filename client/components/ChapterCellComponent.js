@@ -4,6 +4,7 @@ import IconButton from 'material-ui/IconButton'
 import ActionGetApp from 'material-ui/svg-icons/action/get-app'
 import ActionDelete from 'material-ui/svg-icons/action/delete'
 import NavigationCancel from 'material-ui/svg-icons/navigation/cancel'
+import { ipcRenderer } from 'electron'
 
 import { NOT_DOWNLOADED, DOWNLOADING, DOWNLOADED } from '../../utils/constants.js'
 
@@ -15,8 +16,12 @@ export default function ChapterCellComponent ({ manga, chapterNum, onDoubleClick
 
   const cellClicked = () => onDoubleClick(manga, chapterNum)
   const downloadClicked = () => onDownload(mangaName, chapterNum)
-  const cancelDownloadClicked = () => onCancelDownload(mangaName, chapterNum)
-  const deleteDownloadClicked = () => onDeleteDownload(mangaName, chapterNum)
+  const cancelDownloadClicked = () => {
+    ipcRenderer.send('cancel-download', { mangaName, chapterNum })
+  }
+  const deleteDownloadClicked = () => {
+    ipcRenderer.send('delete-download', { mangaName, chapterNum })
+  }
 
   let chapterName = chapter.get('name')
   // Add star to chapter name if it's the current chapter.
@@ -51,7 +56,5 @@ ChapterCellComponent.propTypes = {
   manga: PropTypes.object.isRequired,
   chapterNum: PropTypes.number.isRequired,
   onDoubleClick: PropTypes.func.isRequired,
-  onDownload: PropTypes.func.isRequired,
-  onCancelDownload: PropTypes.func.isRequired,
-  onDeleteDownload: PropTypes.func.isRequired
+  onDownload: PropTypes.func.isRequired
 }

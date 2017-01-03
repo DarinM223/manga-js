@@ -1,13 +1,12 @@
 import { actions } from 'react-redux-toastr'
 import { push } from 'react-router-redux'
+import { ipcRenderer } from 'electron'
 
 import {
   NOT_LOADED,
   LOADED,
   LOADING,
-  NOT_DOWNLOADED,
-  DOWNLOADING,
-  DOWNLOADED
+  DOWNLOADING
 } from '../../utils/constants.js'
 
 export const ADD_MANGA = 'ADD_MANGA'
@@ -77,49 +76,12 @@ export function setLoading (mangaName, chapterNum) {
   }
 }
 
-// TODO(DarinM223): hack to store the timeouts to clear, remove when actual downloading code is implemented.
-const downloadingTimeouts = {}
-
 export function downloadChapter (mangaName, chapterNum) {
-  // TODO(DarinM223): send download request to main process before dispatching the SET_DOWNLOAD_STATE.
-  return (dispatch) => {
-    dispatch({
-      type: SET_DOWNLOAD_STATE,
-      state: DOWNLOADING,
-      mangaName,
-      chapterNum
-    })
-
-    // TODO(DarinM223): Simulates async with setTimeout, replace with actual async call.
-    const timeout = setTimeout(() => dispatch({
-      type: SET_DOWNLOAD_STATE,
-      state: DOWNLOADED,
-      mangaName,
-      chapterNum
-    }), 2000)
-    downloadingTimeouts[`${mangaName}#${chapterNum}`] = timeout
-  }
-}
-
-export function cancelDownloadChapter (mangaName, chapterNum) {
-  // TODO(DarinM223): send cancel download request to main process before dispatching the SET_DOWNLOAD_STATE.
-
-  // TODO(DarinM223): hack to 'clear' the timeout, remove when actual downloading code is implemented.
-  clearTimeout(downloadingTimeouts[`${mangaName}#${chapterNum}`])
+  ipcRenderer.send('download-chapter', { mangaName, chapterNum })
 
   return {
     type: SET_DOWNLOAD_STATE,
-    state: NOT_DOWNLOADED,
-    mangaName,
-    chapterNum
-  }
-}
-
-export function deleteDownloadedChapter (mangaName, chapterNum) {
-  // TODO(DarinM223): send delete download request to main process before dispatching the SET_DOWNLOAD_STATE.
-  return {
-    type: SET_DOWNLOAD_STATE,
-    state: NOT_DOWNLOADED,
+    state: DOWNLOADING,
     mangaName,
     chapterNum
   }

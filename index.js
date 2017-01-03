@@ -47,6 +47,18 @@ const createWindow = () => {
       event.returnValue = state
     })
   })
+
+  const {
+    downloadChapter,
+    cancelDownload,
+    deleteDownload,
+    retrieveChapter
+  } = require('./downloader.js')
+
+  ipcMain.on('download-chapter', (event, args) => returnAsync(args, downloadChapter(args), event, 'recv-download-chapter'))
+  ipcMain.on('cancel-download', (event, args) => returnAsync(args, cancelDownload(args), event, 'recv-cancel-download'))
+  ipcMain.on('delete-download', (event, args) => returnAsync(args, deleteDownload(args), event, 'recv-delete-download'))
+  ipcMain.on('retrieve-chapter', (event, args) => returnAsync(args, retrieveChapter(args), event, 'recv-retrieve-chapter'))
 }
 
 app.on('ready', createWindow)
@@ -65,3 +77,11 @@ app.on('activate', function () {
   }
 })
 
+/**
+ * Sends the return value when the promise completes.
+ */
+function returnAsync (args, promise, event, channel) {
+  promise
+    .then((result) => event.sender.send(channel, Object.assign({}, args, { err: null, result })))
+    .catch((err) => event.sender.send(channel, Object.assign({}, args, { err, result: null })))
+}

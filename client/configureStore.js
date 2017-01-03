@@ -8,6 +8,8 @@ import { saveState, loadState } from './storage.js'
 import { hashHistory } from 'react-router'
 import throttle from 'lodash/throttle'
 
+import { listenForIpc } from './ipcListener.js'
+
 const middleware = routerMiddleware(hashHistory)
 
 export default function configureStore () {
@@ -22,6 +24,8 @@ export default function configureStore () {
     persistedState,
     applyMiddleware(thunk, middleware)
   )
+
+  listenForIpc(store)
 
   store.subscribe(throttle(() => {
     saveState(store.getState())
