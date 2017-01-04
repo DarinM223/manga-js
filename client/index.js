@@ -7,10 +7,14 @@ import { syncHistoryWithStore } from 'react-router-redux'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import ReduxToastr from 'react-redux-toastr'
 import injectTapEventPlugin from 'react-tap-event-plugin'
+import { ipcRenderer } from 'electron'
 
 import MainContainer from './containers/MainContainer.js'
 import MangaViewContainer from './containers/MangaViewContainer.js'
 import ChapterViewContainer from './containers/ChapterViewContainer.js'
+
+// Start the image downloader queue on the main process.
+ipcRenderer.sendSync('start')
 
 injectTapEventPlugin()
 

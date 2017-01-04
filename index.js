@@ -3,7 +3,10 @@
 const { app, ipcMain, BrowserWindow } = require('electron')
 const path = require('path')
 const url = require('url')
-const fs = require('fs')
+const bluebird = require('bluebird')
+const fs = bluebird.promisifyAll(require('fs'))
+
+const { startQueue } = require('./persistentQueue.js')
 
 // Global reference to the main window.
 let mainWindow = null
@@ -26,26 +29,16 @@ const createWindow = () => {
   const initPath = path.join(app.getPath('userData'), 'init.json')
 
   ipcMain.on('save-state', (event, state) => {
-    fs.open(initPath, 'a', (err, fd) => {
-      if (err) return console.log(err)
-      fs.close(fd, (err) => {
-        if (err) return console.log(err)
-
-        fs.writeFile(initPath, state, 'utf-8', (err) => {
-          if (err) return console.log(err)
-        })
-      })
-    })
+    fs.openAsync(initPath, 'a')
+      .then((fd) => fs.closeAsync(fd))
+      .then(() => fs.writeFileAsync(initPath, state, 'utf-8'))
+      .catch((err) => console.log(err))
   })
 
   ipcMain.on('load-state', (event, arg) => {
-    fs.readFile(initPath, 'utf-8', (err, state) => {
-      if (err) {
-        event.returnValue = null
-        return console.log(err)
-      }
-      event.returnValue = state
-    })
+    fs.readFileAsync(initPath, 'utf-8')
+      .then((state) => { event.returnValue = state })
+      .catch((err) => { console.log(err); event.returnValue = null })
   })
 
   const {
@@ -55,10 +48,16 @@ const createWindow = () => {
     retrieveChapter
   } = require('./downloader.js')
 
-  ipcMain.on('download-chapter', (event, args) => downloadChapter(event, args))
-  ipcMain.on('cancel-download', (event, args) => returnAsync(args, cancelDownload(args), event, 'recv-cancel-download'))
-  ipcMain.on('delete-download', (event, args) => returnAsync(args, deleteDownload(args), event, 'recv-delete-download'))
-  ipcMain.on('retrieve-chapter', (event, args) => returnAsync(args, retrieveChapter(args), event, 'recv-retrieve-chapter'))
+  ipcMain.on('start', (event, args) => {
+    startQueue(app.getPath('userData'), 'queue.json', event.sender).then((queue) => {
+      ipcMain.on('download-chapter', (event, args) => downloadChapter(event, args, queue))
+      ipcMain.on('cancel-download', (event, args) => returnAsync(args, cancelDownload(args), event, 'recv-cancel-download'))
+      ipcMain.on('delete-download', (event, args) => returnAsync(args, deleteDownload(args), event, 'recv-delete-download'))
+      ipcMain.on('retrieve-chapter', (event, args) => returnAsync(args, retrieveChapter(args), event, 'recv-retrieve-chapter'))
+
+      event.returnValue = null
+    })
+  })
 }
 
 app.on('ready', createWindow)

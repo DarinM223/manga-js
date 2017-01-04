@@ -17,14 +17,12 @@ export const listenForIpc = (store) => {
 
   ipcRenderer.on('recv-downloaded', (event, args) => {
     console.log('Received: ', args)
-    if (args.err === null) {
-      store.dispatch({
-        type: SET_DOWNLOAD_STATE,
-        state: DOWNLOADED,
-        mangaName: args.mangaName,
-        chapterNum: args.chapterNum
-      })
-    }
+    store.dispatch({
+      type: SET_DOWNLOAD_STATE,
+      state: DOWNLOADED,
+      mangaName: args.mangaName,
+      chapterNum: args.chapterNum
+    })
   })
 
   ipcRenderer.on('recv-cancel-download', (event, args) => {
