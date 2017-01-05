@@ -18,13 +18,20 @@ function downloadChapter (event, args, queue) {
   })
 }
 
-function deleteDownload (args, queue) {
+function deleteChapter (args, queue) {
   const path = queue.chapterPath(args.mangaName, args.chapterNum)
+
+  return fse.removeAsync(path)
+}
+
+function deleteManga (args, queue) {
+  const path = queue.mangaPath(args.mangaName)
 
   return fse.removeAsync(path)
 }
 
 module.exports = {
   downloadChapter,
-  deleteDownload
+  deleteChapter,
+  deleteManga
 }

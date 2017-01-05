@@ -60,8 +60,12 @@ class DownloadQueue {
     return result
   }
 
+  mangaPath (mangaName) {
+    return path.join(this.path, mangaName)
+  }
+
   chapterPath (mangaName, chapterNum) {
-    return path.join(this.path, mangaName, chapterNum + '')
+    return path.join(this.mangaPath(mangaName), chapterNum + '')
   }
 
   imagePath (mangaName, chapterNum, url) {

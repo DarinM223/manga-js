@@ -58,12 +58,13 @@ const createWindow = () => {
       .catch((err) => { console.log(err); event.returnValue = null })
   })
 
-  const { downloadChapter, deleteDownload } = require('./downloader.js')
+  const { downloadChapter, deleteChapter, deleteManga } = require('./downloader.js')
 
   ipcMain.on('start', (event, args) => {
     startQueue(app.getPath('userData'), 'queue.json', event.sender).then((queue) => {
       ipcMain.on('download-chapter', (event, args) => downloadChapter(event, args, queue))
-      ipcMain.on('delete-download', (event, args) => returnAsync(args, deleteDownload(args, queue), event, 'recv-delete-download'))
+      ipcMain.on('delete-chapter', (event, args) => returnAsync(args, deleteChapter(args, queue), event, 'recv-delete-chapter'))
+      ipcMain.on('delete-manga', (event, args) => deleteManga(args, queue))
 
       event.returnValue = null
     })

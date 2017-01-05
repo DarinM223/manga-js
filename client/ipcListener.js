@@ -34,7 +34,7 @@ export const listenForIpc = (store) => {
     }
   })
 
-  ipcRenderer.on('recv-delete-download', (event, args) => {
+  ipcRenderer.on('recv-delete-chapter', (event, args) => {
     console.log('Received: ', args)
     if (args.err === null) {
       store.dispatch({

@@ -16,7 +16,7 @@ export default function ChapterCellComponent ({ manga, chapterNum, onDoubleClick
   const cellClicked = () => onDoubleClick(manga, chapterNum)
   const downloadClicked = () => onDownload(manga, chapterNum)
   const deleteDownloadClicked = () => {
-    ipcRenderer.send('delete-download', { mangaName, chapterNum })
+    ipcRenderer.send('delete-chapter', { mangaName, chapterNum })
   }
 
   let chapterName = chapter.get('name')
