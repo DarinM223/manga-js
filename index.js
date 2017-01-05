@@ -1,6 +1,6 @@
 // Entry point for Electron application.
 
-const { app, ipcMain, BrowserWindow } = require('electron')
+const { app, protocol, ipcMain, BrowserWindow } = require('electron')
 const path = require('path')
 const url = require('url')
 const bluebird = require('bluebird')
@@ -8,11 +8,28 @@ const fs = bluebird.promisifyAll(require('fs'))
 
 const { startQueue } = require('./utils/downloadQueue.js')
 
+// protocol.registerStandardSchemes(['manga'])
+
 // Global reference to the main window.
 let mainWindow = null
 
 const createWindow = () => {
-  mainWindow = new BrowserWindow({ width: 800, height: 600 })
+  // Manga protocol is accessed through manga:// and allows the client to view locally downloaded files.
+  protocol.registerFileProtocol('manga', (request, callback) => {
+    const url = request.url.substr(8)
+    const urlPath = path.join(app.getPath('userData'), path.normalize(url))
+    callback({ path: urlPath })
+  }, (err) => {
+    if (err) console.error('Failed to register protocol')
+  })
+
+  mainWindow = new BrowserWindow({
+    width: 800,
+    height: 600,
+    webPreferences: {
+      webSecurity: false
+    }
+  })
 
   mainWindow.loadURL(url.format({
     pathname: path.join(__dirname, 'index.html'),
@@ -41,13 +58,12 @@ const createWindow = () => {
       .catch((err) => { console.log(err); event.returnValue = null })
   })
 
-  const { downloadChapter, deleteDownload, retrievePage } = require('./downloader.js')
+  const { downloadChapter, deleteDownload } = require('./downloader.js')
 
   ipcMain.on('start', (event, args) => {
     startQueue(app.getPath('userData'), 'queue.json', event.sender).then((queue) => {
       ipcMain.on('download-chapter', (event, args) => downloadChapter(event, args, queue))
       ipcMain.on('delete-download', (event, args) => returnAsync(args, deleteDownload(args), event, 'recv-delete-download'))
-      ipcMain.on('retrieve-page', (event, args) => returnAsync(args, retrievePage(args), event, 'recv-retrieve-page'))
 
       event.returnValue = null
     })

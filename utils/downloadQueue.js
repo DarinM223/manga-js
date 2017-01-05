@@ -59,11 +59,15 @@ class DownloadQueue {
     return result
   }
 
+  imagePath (url) {
+    const encodedURL = encodeURIComponent(url)
+    return path.join(this.path, encodedURL)
+  }
+
   downloadImage (url) {
     return fetch(url).then((res) => {
       return new Promise((resolve, reject) => {
-        const encodedURL = encodeURIComponent(url)
-        const imagePath = path.join(this.path, encodedURL)
+        const imagePath = this.imagePath(url)
         const dest = fs.createWriteStream(imagePath)
         const stream = res.body
 
@@ -75,8 +79,7 @@ class DownloadQueue {
   }
 
   getDownloadedImage (url) {
-    const encodedURL = encodeURIComponent(url)
-    const imagePath = path.join(this.path, encodedURL)
+    const imagePath = this.imagePath(url)
 
     return new Promise((resolve, reject) => {
       return fs.readFileAsync(imagePath, 'utf-8')

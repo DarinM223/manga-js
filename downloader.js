@@ -1,5 +1,4 @@
 function downloadChapter (event, args, queue) {
-  console.log('Received: ', args)
   event.sender.send('recv-download-chapter', Object.assign({}, args, { err: null }))
 
   const [mangaName, chapterNum] = [args.mangaName, args.chapterNum]
@@ -23,13 +22,7 @@ function deleteDownload (args) {
   })
 }
 
-function retrievePage (args, queue) {
-  console.log('Received retrieve page')
-  return queue.getDownloadedImage(args.url)
-}
-
 module.exports = {
   downloadChapter,
-  deleteDownload,
-  retrievePage
+  deleteDownload
 }
