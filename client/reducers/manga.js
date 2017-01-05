@@ -1,7 +1,7 @@
 import Immutable from 'immutable'
 import { ipcRenderer } from 'electron'
 
-import { LOADING, LOADED } from '../../utils/constants.js'
+import { LOADING, LOADED, DOWNLOADED } from '../../utils/constants.js'
 
 import {
   ADD_MANGA,
@@ -38,7 +38,12 @@ export function manga (state = initState, action) {
     case SET_LOADING:
       return state.setIn([action.mangaName, 'chapters', action.chapterNum, 'loadState'], LOADING)
     case SET_DOWNLOAD_STATE:
-      return state.setIn([action.mangaName, 'chapters', action.chapterNum, 'download', 'state'], action.state)
+      let newState = state
+      // Clear progress once downloaded.
+      if (action.state === DOWNLOADED) {
+        newState = newState.setIn([action.mangaName, 'chapters', action.chapterNum, 'download', 'progress'], 0)
+      }
+      return newState.setIn([action.mangaName, 'chapters', action.chapterNum, 'download', 'state'], action.state)
     case DOWNLOADED_PAGE:
       return state.setIn([action.mangaName, 'chapters', action.chapterNum, 'download', 'progress'], action.curr)
     case DOWNLOAD_CHAPTER:

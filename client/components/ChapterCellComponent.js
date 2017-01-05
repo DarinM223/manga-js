@@ -3,6 +3,7 @@ import { TableRow, TableRowColumn } from 'material-ui/Table'
 import IconButton from 'material-ui/IconButton'
 import ActionGetApp from 'material-ui/svg-icons/action/get-app'
 import ActionDelete from 'material-ui/svg-icons/action/delete'
+import CircularProgress from 'material-ui/CircularProgress'
 import { ipcRenderer } from 'electron'
 
 import { NOT_DOWNLOADED, DOWNLOADING, DOWNLOADED } from '../../utils/constants.js'
@@ -34,7 +35,7 @@ export default function ChapterCellComponent ({ manga, chapterNum, onDoubleClick
     case DOWNLOADING:
       const total = chapter.get('pages').count()
       const progress = chapter.get('download').get('progress')
-      downloadComponent = <p>Downloaded {progress + 1}/{total}</p>
+      downloadComponent = <CircularProgress mode='determinate' value={progress} max={total} size={20} style={{ marginLeft: '15px' }} />
       break
     case DOWNLOADED:
       downloadComponent = <IconButton onClick={deleteDownloadClicked}><ActionDelete /></IconButton>
