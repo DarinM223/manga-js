@@ -50,7 +50,10 @@ export function parseMangaData (mangaName, body) {
         url,
         date,
         loadState: NOT_LOADED,
-        downloadState: NOT_DOWNLOADED,
+        download: {
+          state: NOT_DOWNLOADED,
+          progress: 0
+        },
         currentPage: 0,
         pages: []
       })

@@ -3,7 +3,6 @@ import { TableRow, TableRowColumn } from 'material-ui/Table'
 import IconButton from 'material-ui/IconButton'
 import ActionGetApp from 'material-ui/svg-icons/action/get-app'
 import ActionDelete from 'material-ui/svg-icons/action/delete'
-import NavigationCancel from 'material-ui/svg-icons/navigation/cancel'
 import { ipcRenderer } from 'electron'
 
 import { NOT_DOWNLOADED, DOWNLOADING, DOWNLOADED } from '../../utils/constants.js'
@@ -12,13 +11,10 @@ export default function ChapterCellComponent ({ manga, chapterNum, onDoubleClick
   const mangaName = manga.get('name')
   const chapter = manga.get('chapters').get(chapterNum)
   const currentChapter = manga.get('currentChapter')
-  const downloadState = chapter.get('downloadState')
+  const downloadState = chapter.get('download').get('state')
 
   const cellClicked = () => onDoubleClick(manga, chapterNum)
   const downloadClicked = () => onDownload(manga, chapterNum)
-  const cancelDownloadClicked = () => {
-    ipcRenderer.send('cancel-download', { mangaName, chapterNum })
-  }
   const deleteDownloadClicked = () => {
     ipcRenderer.send('delete-download', { mangaName, chapterNum })
   }
@@ -36,7 +32,9 @@ export default function ChapterCellComponent ({ manga, chapterNum, onDoubleClick
       downloadComponent = <IconButton onClick={downloadClicked}><ActionGetApp /></IconButton>
       break
     case DOWNLOADING:
-      downloadComponent = <IconButton onClick={cancelDownloadClicked}><NavigationCancel /></IconButton>
+      const total = chapter.get('pages').count()
+      const progress = chapter.get('download').get('progress')
+      downloadComponent = <p>Downloaded {progress + 1}/{total}</p>
       break
     case DOWNLOADED:
       downloadComponent = <IconButton onClick={deleteDownloadClicked}><ActionDelete /></IconButton>

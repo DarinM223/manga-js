@@ -9,6 +9,7 @@ import {
   UPDATE_PAGE,
   LOAD_CHAPTER,
   DOWNLOAD_CHAPTER,
+  DOWNLOADED_PAGE,
   UPDATE_CHAPTER,
   SET_LOADING,
   SET_DOWNLOAD_STATE
@@ -37,7 +38,9 @@ export function manga (state = initState, action) {
     case SET_LOADING:
       return state.setIn([action.mangaName, 'chapters', action.chapterNum, 'loadState'], LOADING)
     case SET_DOWNLOAD_STATE:
-      return state.setIn([action.mangaName, 'chapters', action.chapterNum, 'downloadState'], action.state)
+      return state.setIn([action.mangaName, 'chapters', action.chapterNum, 'download', 'state'], action.state)
+    case DOWNLOADED_PAGE:
+      return state.setIn([action.mangaName, 'chapters', action.chapterNum, 'download', 'progress'], action.curr)
     case DOWNLOAD_CHAPTER:
       // Sends ipc call with the chapter's pages.
       const [mangaName, chapterNum] = [action.mangaName, action.chapterNum]

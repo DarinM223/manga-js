@@ -17,7 +17,7 @@ const path = require('path')
  * ]
  */
 
-class PersistentQueue {
+class DownloadQueue {
   constructor (path, file, sender, data = null) {
     this.path = path
     this.file = file
@@ -29,6 +29,7 @@ class PersistentQueue {
       this.queue = JSON.parse(data)
     }
 
+    this.running = true
     this.start()
   }
 
@@ -42,9 +43,10 @@ class PersistentQueue {
   enqueue (data) {
     this.queue.push(data)
 
-    // Restart queue if it went empty.
-    if (this.queue.length <= 1) {
-      this.start()
+    // Restart queue if it stopped.
+    if (!this.running) {
+      this.running = true
+      setTimeout(this.start.bind(this), 0)
     }
   }
 
@@ -58,13 +60,18 @@ class PersistentQueue {
   }
 
   downloadImage (url) {
-    return fetch(url)
-      .then((res) => {
+    return fetch(url).then((res) => {
+      return new Promise((resolve, reject) => {
         const encodedURL = encodeURIComponent(url)
         const imagePath = path.join(this.path, encodedURL)
         const dest = fs.createWriteStream(imagePath)
-        res.body.pipe(dest)
+        const stream = res.body
+
+        stream.pipe(dest)
+        stream.on('end', resolve)
+        stream.on('error', reject)
       })
+    })
   }
 
   getDownloadedImage (url) {
@@ -85,6 +92,7 @@ class PersistentQueue {
   start () {
     const top = this.dequeue()
     if (top === null) {
+      this.running = false
       return Promise.resolve()
     }
 
@@ -97,11 +105,7 @@ class PersistentQueue {
         return Promise.resolve()
       })
       .then(() => {
-        if (top.curr >= top.total - 1) {
-          const [mangaName, chapterNum] = [top.mangaName, top.chapterNum]
-          this.reply({ mangaName, chapterNum })
-        }
-
+        this.reply(Object.assign({}, top))
         return this.write()
       })
       .then(() => this.start())
@@ -113,10 +117,10 @@ function startQueue (queuePath, file, sender) {
   return fs.openAsync(completePath, 'a')
     .then((fd) => fs.closeAsync(fd))
     .then(() => fs.readFileAsync(completePath, 'utf-8'))
-    .then((data) => new PersistentQueue(queuePath, file, sender, data.trim()))
+    .then((data) => new DownloadQueue(queuePath, file, sender, data.trim()))
 }
 
 module.exports = {
-  PersistentQueue,
+  DownloadQueue,
   startQueue
 }

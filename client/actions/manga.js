@@ -10,6 +10,7 @@ export const UPDATE_CHAPTER = 'UPDATE_CHAPTER'
 export const LOAD_CHAPTER = 'LOAD_CHAPTER'
 export const SET_DOWNLOAD_STATE = 'SET_DOWNLOAD_STATE'
 export const DOWNLOAD_CHAPTER = 'DOWNLOAD_CHAPTER'
+export const DOWNLOADED_PAGE = 'DOWNLOADED_PAGE'
 export const SET_LOADING = 'SET_LOADING'
 
 function errorNotify (title, message) {

@@ -6,7 +6,7 @@ const url = require('url')
 const bluebird = require('bluebird')
 const fs = bluebird.promisifyAll(require('fs'))
 
-const { startQueue } = require('./persistentQueue.js')
+const { startQueue } = require('./utils/downloadQueue.js')
 
 // Global reference to the main window.
 let mainWindow = null
@@ -41,19 +41,13 @@ const createWindow = () => {
       .catch((err) => { console.log(err); event.returnValue = null })
   })
 
-  const {
-    downloadChapter,
-    cancelDownload,
-    deleteDownload,
-    retrieveChapter
-  } = require('./downloader.js')
+  const { downloadChapter, deleteDownload, retrievePage } = require('./downloader.js')
 
   ipcMain.on('start', (event, args) => {
     startQueue(app.getPath('userData'), 'queue.json', event.sender).then((queue) => {
       ipcMain.on('download-chapter', (event, args) => downloadChapter(event, args, queue))
-      ipcMain.on('cancel-download', (event, args) => returnAsync(args, cancelDownload(args), event, 'recv-cancel-download'))
       ipcMain.on('delete-download', (event, args) => returnAsync(args, deleteDownload(args), event, 'recv-delete-download'))
-      ipcMain.on('retrieve-chapter', (event, args) => returnAsync(args, retrieveChapter(args), event, 'recv-retrieve-chapter'))
+      ipcMain.on('retrieve-page', (event, args) => returnAsync(args, retrievePage(args), event, 'recv-retrieve-page'))
 
       event.returnValue = null
     })

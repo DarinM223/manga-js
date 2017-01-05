@@ -16,13 +16,6 @@ function downloadChapter (event, args, queue) {
   })
 }
 
-function cancelDownload (args) {
-  console.log('Received cancel download')
-  return new Promise((resolve, reject) => {
-    resolve('Canceled XD')
-  })
-}
-
 function deleteDownload (args) {
   console.log('Received delete download')
   return new Promise((resolve, reject) => {
@@ -30,16 +23,13 @@ function deleteDownload (args) {
   })
 }
 
-function retrieveChapter (args) {
-  console.log('Received retrieve chapter')
-  return new Promise((resolve, reject) => {
-    resolve('Retrieved >:)')
-  })
+function retrievePage (args, queue) {
+  console.log('Received retrieve page')
+  return queue.getDownloadedImage(args.url)
 }
 
 module.exports = {
   downloadChapter,
-  cancelDownload,
   deleteDownload,
-  retrieveChapter
+  retrievePage
 }
