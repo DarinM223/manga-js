@@ -1,5 +1,6 @@
 const bluebird = require('bluebird')
 const fs = bluebird.promisifyAll(require('fs'))
+const fse = bluebird.promisifyAll(require('fs-extra'))
 const fetch = require('node-fetch')
 const path = require('path')
 
@@ -59,15 +60,19 @@ class DownloadQueue {
     return result
   }
 
-  imagePath (url) {
-    const encodedURL = encodeURIComponent(url)
-    return path.join(this.path, encodedURL)
+  chapterPath (mangaName, chapterNum) {
+    return path.join(this.path, mangaName, chapterNum + '')
   }
 
-  downloadImage (url) {
+  imagePath (mangaName, chapterNum, url) {
+    const encodedURL = encodeURIComponent(url)
+    return path.join(this.chapterPath(mangaName, chapterNum), encodedURL)
+  }
+
+  downloadImage (mangaName, chapterNum, url) {
     return fetch(url).then((res) => {
       return new Promise((resolve, reject) => {
-        const imagePath = this.imagePath(url)
+        const imagePath = this.imagePath(mangaName, chapterNum, url)
         const dest = fs.createWriteStream(imagePath)
         const stream = res.body
 
@@ -78,8 +83,8 @@ class DownloadQueue {
     })
   }
 
-  getDownloadedImage (url) {
-    const imagePath = this.imagePath(url)
+  getDownloadedImage (mangaName, chapterNum, url) {
+    const imagePath = this.imagePath(mangaName, chapterNum, url)
 
     return new Promise((resolve, reject) => {
       return fs.readFileAsync(imagePath, 'utf-8')
@@ -99,10 +104,11 @@ class DownloadQueue {
       return Promise.resolve()
     }
 
-    return this.getDownloadedImage(top.url)
+    return fse.mkdirsAsync(this.chapterPath(top.mangaName, top.chapterNum))
+      .then(() => this.getDownloadedImage(top.mangaName, top.chapterNum, top.url))
       .then((data) => {
         if (data === null) {
-          return this.downloadImage(top.url)
+          return this.downloadImage(top.mangaName, top.chapterNum, top.url)
         }
 
         return Promise.resolve()

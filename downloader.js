@@ -1,3 +1,6 @@
+const bluebird = require('bluebird')
+const fse = bluebird.promisifyAll(require('fs-extra'))
+
 function downloadChapter (event, args, queue) {
   event.sender.send('recv-download-chapter', Object.assign({}, args, { err: null }))
 
@@ -15,11 +18,10 @@ function downloadChapter (event, args, queue) {
   })
 }
 
-function deleteDownload (args) {
-  console.log('Received delete download')
-  return new Promise((resolve, reject) => {
-    resolve('Deleted :(')
-  })
+function deleteDownload (args, queue) {
+  const path = queue.chapterPath(args.mangaName, args.chapterNum)
+
+  return fse.removeAsync(path)
 }
 
 module.exports = {

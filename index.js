@@ -63,7 +63,7 @@ const createWindow = () => {
   ipcMain.on('start', (event, args) => {
     startQueue(app.getPath('userData'), 'queue.json', event.sender).then((queue) => {
       ipcMain.on('download-chapter', (event, args) => downloadChapter(event, args, queue))
-      ipcMain.on('delete-download', (event, args) => returnAsync(args, deleteDownload(args), event, 'recv-delete-download'))
+      ipcMain.on('delete-download', (event, args) => returnAsync(args, deleteDownload(args, queue), event, 'recv-delete-download'))
 
       event.returnValue = null
     })

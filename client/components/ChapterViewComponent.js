@@ -3,6 +3,7 @@ import AppBar from 'material-ui/AppBar'
 import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back'
 import ContentUndo from 'material-ui/svg-icons/content/undo'
 import IconButton from 'material-ui/IconButton'
+import path from 'path'
 
 import { NOT_DOWNLOADED, DOWNLOADING, DOWNLOADED } from '../../utils/constants.js'
 
@@ -22,7 +23,7 @@ export default function ChapterViewComponent ({ manga, mangaName, chapterNum, ba
       imagePath = onlineURL
       break
     case DOWNLOADED:
-      imagePath = 'manga://' + encodeURIComponent(onlineURL)
+      imagePath = 'manga://' + path.join(specificManga.get('name'), chapterNum + '', encodeURIComponent(onlineURL))
       break
   }
 
