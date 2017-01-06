@@ -1,31 +1,22 @@
 const bluebird = require('bluebird')
 const fse = bluebird.promisifyAll(require('fs-extra'))
+const loc = require('./utils/location.js')
 
-function downloadChapter (event, args, queue) {
+function downloadChapter (event, args, worker) {
   event.sender.send('recv-download-chapter', Object.assign({}, args, { err: null }))
 
-  const [mangaName, chapterNum] = [args.mangaName, args.chapterNum]
-
-  // Enqueue download tasks for each image.
-  args.pages.forEach((url, i) => {
-    queue.enqueue({
-      mangaName,
-      chapterNum,
-      url,
-      total: args.pages.length,
-      curr: i
-    })
-  })
+  // Send the download chapter message to the downloader process.
+  worker.send(args)
 }
 
-function deleteChapter (args, queue) {
-  const path = queue.chapterPath(args.mangaName, args.chapterNum)
+function deleteChapter (basePath, args) {
+  const path = loc.chapterPath(basePath, args.mangaName, args.chapterNum)
 
   return fse.removeAsync(path)
 }
 
-function deleteManga (args, queue) {
-  const path = queue.mangaPath(args.mangaName)
+function deleteManga (basePath, args) {
+  const path = loc.mangaPath(basePath, args.mangaName)
 
   return fse.removeAsync(path)
 }

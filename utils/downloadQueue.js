@@ -2,6 +2,7 @@ const bluebird = require('bluebird')
 const fs = bluebird.promisifyAll(require('fs'))
 const fse = bluebird.promisifyAll(require('fs-extra'))
 const fetch = require('node-fetch')
+const loc = require('./location.js')
 const path = require('path')
 
 /*
@@ -19,10 +20,10 @@ const path = require('path')
  */
 
 class DownloadQueue {
-  constructor (path, file, sender, data = null) {
+  constructor (path, file, send, data = null) {
     this.path = path
     this.file = file
-    this.sender = sender
+    this.send = send
 
     if (data === null || data.length === 0) {
       this.queue = []
@@ -60,23 +61,10 @@ class DownloadQueue {
     return result
   }
 
-  mangaPath (mangaName) {
-    return path.join(this.path, mangaName)
-  }
-
-  chapterPath (mangaName, chapterNum) {
-    return path.join(this.mangaPath(mangaName), chapterNum + '')
-  }
-
-  imagePath (mangaName, chapterNum, url) {
-    const encodedURL = encodeURIComponent(url)
-    return path.join(this.chapterPath(mangaName, chapterNum), encodedURL)
-  }
-
   downloadImage (mangaName, chapterNum, url) {
     return fetch(url).then((res) => {
       return new Promise((resolve, reject) => {
-        const imagePath = this.imagePath(mangaName, chapterNum, url)
+        const imagePath = loc.imagePath(this.path, mangaName, chapterNum, url)
         const dest = fs.createWriteStream(imagePath)
         const stream = res.body
 
@@ -87,18 +75,19 @@ class DownloadQueue {
     })
   }
 
-  getDownloadedImage (mangaName, chapterNum, url) {
-    const imagePath = this.imagePath(mangaName, chapterNum, url)
+  isDownloadedImage (mangaName, chapterNum, url) {
+    const imagePath = loc.imagePath(this.path, mangaName, chapterNum, url)
 
     return new Promise((resolve, reject) => {
-      return fs.readFileAsync(imagePath, 'utf-8')
-        .then((data) => resolve(data))
-        .catch(() => resolve(null))
+      return fs.openAsync(imagePath, 'r')
+        .then((fd) => fs.closeAsync(fd))
+        .then(() => resolve(true))
+        .catch(() => resolve(false))
     })
   }
 
   reply (msg) {
-    this.sender.send('recv-downloaded', msg)
+    this.send(msg)
   }
 
   start () {
@@ -108,10 +97,10 @@ class DownloadQueue {
       return Promise.resolve()
     }
 
-    return fse.mkdirsAsync(this.chapterPath(top.mangaName, top.chapterNum))
-      .then(() => this.getDownloadedImage(top.mangaName, top.chapterNum, top.url))
-      .then((data) => {
-        if (data === null) {
+    return fse.mkdirsAsync(loc.chapterPath(this.path, top.mangaName, top.chapterNum))
+      .then(() => this.isDownloadedImage(top.mangaName, top.chapterNum, top.url))
+      .then((downloaded) => {
+        if (!downloaded) {
           return this.downloadImage(top.mangaName, top.chapterNum, top.url)
         }
 
@@ -125,12 +114,12 @@ class DownloadQueue {
   }
 }
 
-function startQueue (queuePath, file, sender) {
+function startQueue (queuePath, file, send) {
   const completePath = path.join(queuePath, file)
   return fs.openAsync(completePath, 'a')
     .then((fd) => fs.closeAsync(fd))
     .then(() => fs.readFileAsync(completePath, 'utf-8'))
-    .then((data) => new DownloadQueue(queuePath, file, sender, data.trim()))
+    .then((data) => new DownloadQueue(queuePath, file, send, data.trim()))
 }
 
 module.exports = {
