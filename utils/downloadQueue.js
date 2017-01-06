@@ -29,25 +29,64 @@ class Downloader {
       this.map = {}
     } else {
       this.map = JSON.parse(data)
+      this.restore()
     }
   }
 
-  addChapterTask (mangaName, chapterNum, chapterPages) {
-    console.log('Adding chapter task')
-    // Execute promises.
-    Promise.all(chapterPages.map((page) => downloadPagePromise(this.path, mangaName, chapterNum, page)))
-      .then(() => this.finish(mangaName, chapterNum))
+  restore () {
+    Object.keys(this.map).forEach((mangaName) => {
+      Object.keys(this.map[mangaName]).forEach((chapterNum) => {
+        Object.keys(this.map[mangaName][chapterNum].pages).forEach((page) => {
+          downloadPagePromise(this.path, mangaName, chapterNum, page, this)
+        })
+      })
+    })
   }
 
-  finish (mangaName, chapterNum) {
-    console.log('Finished')
+  addChapterTask (mangaName, chapterNum, chapterPages) {
+    if (!(mangaName in this.map)) {
+      this.map[mangaName] = {}
+    }
+    if (!(chapterNum in this.map[mangaName])) {
+      this.map[mangaName][chapterNum] = {}
+    }
+
+    const pages = {}
+    chapterPages.forEach((page) => {
+      pages[page] = false
+    })
+
+    this.map[mangaName][chapterNum] = {
+      mangaName,
+      chapterNum,
+      total: chapterPages.length,
+      downloaded: 0,
+      pages: pages
+    }
+
+    // Execute promises.
+    this.write()
+      .then(() => Promise.all(chapterPages.map((page) => downloadPagePromise(this.path, mangaName, chapterNum, page, this))))
+  }
+
+  update (mangaName, chapterNum, url) {
+    this.map[mangaName][chapterNum].downloaded++
+    delete this.map[mangaName][chapterNum].pages[url]
+
     this.send({
       mangaName,
       chapterNum,
-      url: '',
-      total: 1,
-      curr: 1
+      url: url,
+      total: this.map[mangaName][chapterNum].total,
+      curr: this.map[mangaName][chapterNum].downloaded
     })
+
+    return this.write()
+  }
+
+  write () {
+    const mapPath = path.join(this.path, this.file)
+    return fs.writeFileAsync(mapPath, JSON.stringify(this.map), 'utf-8')
   }
 }
 
@@ -77,7 +116,7 @@ function downloadImage (basePath, mangaName, chapterNum, url) {
   })
 }
 
-function downloadPagePromise (basePath, mangaName, chapterNum, url) {
+function downloadPagePromise (basePath, mangaName, chapterNum, url, downloader) {
   console.log('Downloading page promise')
   return fse.mkdirsAsync(loc.chapterPath(basePath, mangaName, chapterNum))
     .then(() => isDownloaded(basePath, mangaName, chapterNum, url))
@@ -88,6 +127,7 @@ function downloadPagePromise (basePath, mangaName, chapterNum, url) {
 
       return Promise.resolve()
     })
+    .then(() => downloader.update(mangaName, chapterNum, url))
 }
 
 function startDownloader (mapPath, file, send) {
