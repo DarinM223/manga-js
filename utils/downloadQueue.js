@@ -19,6 +19,85 @@ const path = require('path')
  * ]
  */
 
+class Downloader {
+  constructor (path, file, send, data = null) {
+    this.path = path
+    this.file = file
+    this.send = send
+
+    if (data === null || Object.keys(data).length === 0) {
+      this.map = {}
+    } else {
+      this.map = JSON.parse(data)
+    }
+  }
+
+  addChapterTask (mangaName, chapterNum, chapterPages) {
+    console.log('Adding chapter task')
+    // Execute promises.
+    Promise.all(chapterPages.map((page) => downloadPagePromise(this.path, mangaName, chapterNum, page)))
+      .then(() => this.finish(mangaName, chapterNum))
+  }
+
+  finish (mangaName, chapterNum) {
+    console.log('Finished')
+    this.send({
+      mangaName,
+      chapterNum,
+      url: '',
+      total: 1,
+      curr: 1
+    })
+  }
+}
+
+function isDownloaded (basePath, mangaName, chapterNum, url) {
+  const imagePath = loc.imagePath(basePath, mangaName, chapterNum, url)
+
+  return new Promise((resolve, reject) => {
+    return fs.openAsync(imagePath, 'r')
+      .then((fd) => fs.closeAsync(fd))
+      .then(() => resolve(true))
+      .catch(() => resolve(false))
+  })
+}
+
+function downloadImage (basePath, mangaName, chapterNum, url) {
+  console.log('Downloading image')
+  return fetch(url).then((res) => {
+    return new Promise((resolve, reject) => {
+      const imagePath = loc.imagePath(basePath, mangaName, chapterNum, url)
+      const dest = fs.createWriteStream(imagePath)
+      const stream = res.body
+
+      stream.pipe(dest)
+      stream.on('end', resolve)
+      stream.on('error', reject)
+    })
+  })
+}
+
+function downloadPagePromise (basePath, mangaName, chapterNum, url) {
+  console.log('Downloading page promise')
+  return fse.mkdirsAsync(loc.chapterPath(basePath, mangaName, chapterNum))
+    .then(() => isDownloaded(basePath, mangaName, chapterNum, url))
+    .then((downloaded) => {
+      if (!downloaded) {
+        return downloadImage(basePath, mangaName, chapterNum, url)
+      }
+
+      return Promise.resolve()
+    })
+}
+
+function startDownloader (mapPath, file, send) {
+  const completePath = path.join(mapPath, file)
+  return fs.openAsync(completePath, 'a')
+    .then((fd) => fs.closeAsync(fd))
+    .then(() => fs.readFileAsync(completePath, 'utf-8'))
+    .then((data) => new Downloader(mapPath, file, send, data.trim()))
+}
+
 class DownloadQueue {
   constructor (path, file, send, data = null) {
     this.path = path
@@ -123,6 +202,8 @@ function startQueue (queuePath, file, send) {
 }
 
 module.exports = {
+  Downloader,
   DownloadQueue,
-  startQueue
+  startQueue,
+  startDownloader
 }
