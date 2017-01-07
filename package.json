@@ -25,6 +25,7 @@
     "cheerio": "^0.22.0",
     "fs-extra": "^1.0.0",
     "immutable": "^3.8.1",
+    "limiter": "^1.1.0",
     "lodash": "^4.17.3",
     "material-ui": "^0.16.5",
     "node-fetch": "^1.6.3",

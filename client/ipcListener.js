@@ -17,20 +17,22 @@ export const listenForIpc = (store) => {
 
   ipcRenderer.on('recv-downloaded', (event, args) => {
     console.log('Received: ', args)
-    if (args.curr >= args.total - 1) {
-      store.dispatch({
-        type: SET_DOWNLOAD_STATE,
-        state: DOWNLOADED,
-        mangaName: args.mangaName,
-        chapterNum: args.chapterNum
-      })
-    } else {
-      store.dispatch({
-        type: DOWNLOADED_PAGE,
-        curr: args.curr,
-        mangaName: args.mangaName,
-        chapterNum: args.chapterNum
-      })
+    for (const msg of args) {
+      if (msg.curr >= msg.total - 1) {
+        store.dispatch({
+          type: SET_DOWNLOAD_STATE,
+          state: DOWNLOADED,
+          mangaName: msg.mangaName,
+          chapterNum: msg.chapterNum
+        })
+      } else {
+        store.dispatch({
+          type: DOWNLOADED_PAGE,
+          curr: msg.curr,
+          mangaName: msg.mangaName,
+          chapterNum: msg.chapterNum
+        })
+      }
     }
   })
 

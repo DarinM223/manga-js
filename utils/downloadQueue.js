@@ -24,6 +24,7 @@ class Downloader {
     this.path = path
     this.file = file
     this.send = send
+    this.messages = []
 
     if (data === null || Object.keys(data).length === 0) {
       this.map = {}
@@ -31,6 +32,18 @@ class Downloader {
       this.map = JSON.parse(data)
       this.restore()
     }
+
+    this.sendMessages()
+  }
+
+  // Batches together messages and sends them in bulk.
+  sendMessages () {
+    setInterval(() => {
+      if (this.messages.length !== 0) {
+        this.send(this.messages)
+        this.messages.splice(0, this.messages.length)
+      }
+    }, 1000)
   }
 
   restore () {
@@ -43,7 +56,7 @@ class Downloader {
     })
   }
 
-  addChapterTask (mangaName, chapterNum, chapterPages) {
+  addChapterTask (mangaName, chapterNum, chapterPages, limiter = null) {
     if (!(mangaName in this.map)) {
       this.map[mangaName] = {}
     }
@@ -73,7 +86,7 @@ class Downloader {
     this.map[mangaName][chapterNum].downloaded++
     delete this.map[mangaName][chapterNum].pages[url]
 
-    this.send({
+    this.messages.push({
       mangaName,
       chapterNum,
       url: url,
@@ -90,20 +103,8 @@ class Downloader {
   }
 }
 
-function isDownloaded (basePath, mangaName, chapterNum, url) {
-  const imagePath = loc.imagePath(basePath, mangaName, chapterNum, url)
-
-  return new Promise((resolve, reject) => {
-    return fs.openAsync(imagePath, 'r')
-      .then((fd) => fs.closeAsync(fd))
-      .then(() => resolve(true))
-      .catch(() => resolve(false))
-  })
-}
-
 function downloadImage (basePath, mangaName, chapterNum, url) {
-  console.log('Downloading image')
-  return fetch(url).then((res) => {
+  return fetch(url, { timeout: 5000 }).then((res) => {
     return new Promise((resolve, reject) => {
       const imagePath = loc.imagePath(basePath, mangaName, chapterNum, url)
       const dest = fs.createWriteStream(imagePath)
@@ -113,20 +114,15 @@ function downloadImage (basePath, mangaName, chapterNum, url) {
       stream.on('end', resolve)
       stream.on('error', reject)
     })
+  }).catch((err) => {
+    console.log('Error downloading image: ', err)
+    return downloadImage(basePath, mangaName, chapterNum, url)
   })
 }
 
 function downloadPagePromise (basePath, mangaName, chapterNum, url, downloader) {
-  console.log('Downloading page promise')
   return fse.mkdirsAsync(loc.chapterPath(basePath, mangaName, chapterNum))
-    .then(() => isDownloaded(basePath, mangaName, chapterNum, url))
-    .then((downloaded) => {
-      if (!downloaded) {
-        return downloadImage(basePath, mangaName, chapterNum, url)
-      }
-
-      return Promise.resolve()
-    })
+    .then(() => downloadImage(basePath, mangaName, chapterNum, url))
     .then(() => downloader.update(mangaName, chapterNum, url))
 }
 
