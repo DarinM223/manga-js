@@ -99,7 +99,7 @@ export default class MangaViewComponent extends React.Component {
 
         {titleComponent(description, imageURL, this.handleOpen)}
 
-        <Table>
+        <Table selectable={false}>
           <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
             <TableRow>
               <TableHeaderColumn>Chapter</TableHeaderColumn>

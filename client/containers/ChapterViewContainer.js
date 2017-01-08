@@ -6,7 +6,7 @@ import { updatePage } from '../actions/manga.js'
 const mapStateToProps = (state, ownProps) => ({
   manga: state.manga,
   mangaName: ownProps.params.mangaName,
-  chapterNum: ownProps.params.chapterNum
+  chapterNum: parseInt(ownProps.params.chapterNum, 10)
 })
 
 const mapDispatchToProps = (dispatch) => ({
