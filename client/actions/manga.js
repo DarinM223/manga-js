@@ -2,6 +2,7 @@ import { actions } from 'react-redux-toastr'
 import { push } from 'react-router-redux'
 
 import { NOT_LOADED, LOADED, LOADING } from '../../utils/constants.js'
+import { adapterFromURL } from '../../utils/url.js'
 
 export const ADD_MANGA = 'ADD_MANGA'
 export const REMOVE_MANGA = 'REMOVE_MANGA'
@@ -27,7 +28,7 @@ function errorNotify (title, message) {
 
 export function addManga (url, mangaList) {
   const scraper = require('../../utils/scraper.js')
-  const adapter = require('../../utils/sites/mangareader.js')
+  const adapter = adapterFromURL(url)
 
   return (dispatch) => {
     scraper.scrape(url, adapter).then((manga) => {
@@ -82,7 +83,6 @@ export function downloadChapter (mangaName, chapterNum) {
 
 export function loadChapter (manga, chapterNum, background = false) {
   const scraper = require('../../utils/scraper.js')
-  const adapter = require('../../utils/sites/mangareader.js')
 
   const chapterRoute = `/chapter/${manga.get('name')}/${chapterNum}`
   return (dispatch) => {
@@ -90,6 +90,7 @@ export function loadChapter (manga, chapterNum, background = false) {
     const chapter = manga.get('chapters').get(chapterNum)
     const chapterURL = chapter.get('url')
     const loadState = chapter.get('loadState')
+    const adapter = adapterFromURL(chapterURL)
 
     switch (loadState) {
       case LOADED:

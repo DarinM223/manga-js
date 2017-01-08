@@ -5,6 +5,7 @@ import IconButton from 'material-ui/IconButton'
 import Dialog from 'material-ui/Dialog'
 import FlatButton from 'material-ui/FlatButton'
 import TextField from 'material-ui/TextField'
+import { validHostname } from '../../utils/url.js'
 
 const EMPTY_TEXT = 'EMPTY_TEXT'
 const INVALID_URL = 'INVALID_URL'
@@ -20,11 +21,11 @@ export default class HeaderComponent extends React.Component {
     }
 
     this.handleClose = () => {
-      this.setState({ open: false, text: '' })
+      this.setState({ open: false, text: '', error: NO_ERROR })
     }
 
     this.handleOpen = () => {
-      this.setState({ open: true })
+      this.setState({ open: true, error: NO_ERROR })
     }
 
     this.handleChange = (e) => {
@@ -37,8 +38,10 @@ export default class HeaderComponent extends React.Component {
         this.setState({ error: EMPTY_TEXT })
         return
       }
-
-      // TODO(DarinM223): check for invalid url
+      if (!validHostname(this.state.text)) {
+        this.setState({ error: INVALID_URL })
+        return
+      }
 
       this.props.onAddManga(this.state.text, this.props.manga)
       this.handleClose()

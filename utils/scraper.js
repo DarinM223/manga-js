@@ -1,4 +1,4 @@
-import fetch from 'node-fetch'
+const fetch = require('node-fetch')
 
 /**
  * Scrapes a specific chapter for the manga given the url to the chapter.
@@ -6,7 +6,7 @@ import fetch from 'node-fetch'
  * @param {Adapter} adapter
  * @return {Promise<[string]>} an array of image urls for each page in the chapter.
  */
-export function scrapeChapter (url, adapter) {
+function scrapeChapter (url, adapter) {
   return fetch(url)
     .then((res) => res.text())
     .then((body) => Promise.resolve(adapter.parsePageLinks(body)))
@@ -25,10 +25,12 @@ export function scrapeChapter (url, adapter) {
  * @param {Adapter} adapter
  * @return {Manga} the manga data that was parsed.
  */
-export function scrape (url, adapter) {
+function scrape (url, adapter) {
   const mangaName = url.substring(url.lastIndexOf('/') + 1, url.length)
 
   return fetch(url)
     .then((res) => res.text())
     .then((body) => adapter.parseMangaData(mangaName, body))
 }
+
+module.exports = { scrapeChapter, scrape }
