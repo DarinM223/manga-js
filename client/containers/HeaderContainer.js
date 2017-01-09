@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import HeaderComponent from '../components/HeaderComponent.js'
-import { addManga } from '../actions/manga.js'
+import { addManga, reloadManga } from '../actions/manga.js'
 
 const mapStateToProps = (state) => ({
   manga: state.manga
@@ -9,6 +9,13 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   onAddManga (url, mangaList) {
     dispatch(addManga(url, mangaList))
+  },
+
+  onReload (mangaList) {
+    for (const name of mangaList.keys()) {
+      const manga = mangaList.get(name)
+      dispatch(reloadManga(manga))
+    }
   }
 })
 

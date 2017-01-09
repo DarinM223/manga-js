@@ -4,7 +4,6 @@ import { SET_DOWNLOAD_STATE, DOWNLOADED_PAGE } from './actions/manga.js'
 
 export const listenForIpc = (store) => {
   ipcRenderer.on('recv-download-chapter', (event, args) => {
-    console.log('Received: ', args)
     if (args.err === null) {
       store.dispatch({
         type: SET_DOWNLOAD_STATE,
@@ -16,7 +15,6 @@ export const listenForIpc = (store) => {
   })
 
   ipcRenderer.on('recv-downloaded', (event, args) => {
-    console.log('Received: ', args)
     for (const msg of args) {
       if (msg.curr >= msg.total - 1) {
         store.dispatch({
@@ -37,7 +35,6 @@ export const listenForIpc = (store) => {
   })
 
   ipcRenderer.on('recv-delete-chapter', (event, args) => {
-    console.log('Received: ', args)
     if (args.err === null) {
       store.dispatch({
         type: SET_DOWNLOAD_STATE,

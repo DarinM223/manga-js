@@ -6,13 +6,15 @@ import { LOADING, LOADED, DOWNLOADED } from '../../utils/constants.js'
 import {
   ADD_MANGA,
   REMOVE_MANGA,
+  VISIT_MANGA,
   UPDATE_PAGE,
   LOAD_CHAPTER,
   DOWNLOAD_CHAPTER,
   DOWNLOADED_PAGE,
   UPDATE_CHAPTER,
   SET_LOADING,
-  SET_DOWNLOAD_STATE
+  SET_DOWNLOAD_STATE,
+  DIFF_CHANGES
 } from '../actions/manga.js'
 
 const initState = Immutable.fromJS({})
@@ -24,6 +26,8 @@ export function manga (state = initState, action) {
       return state.set(action.manga.name, manga)
     case REMOVE_MANGA:
       return state.delete(action.name)
+    case VISIT_MANGA:
+      return state.setIn([action.mangaName, 'new'], false)
     case UPDATE_PAGE:
       const totalPages = state.getIn([action.mangaName, 'chapters', action.chapterNum, 'pages']).count()
       return state.updateIn([action.mangaName, 'chapters', action.chapterNum, 'currentPage'], page => {
@@ -58,7 +62,29 @@ export function manga (state = initState, action) {
       return state
         .setIn([action.mangaName, 'chapters', action.chapterNum, 'pages'], Immutable.fromJS(action.pages))
         .setIn([action.mangaName, 'chapters', action.chapterNum, 'loadState'], LOADED)
+    case DIFF_CHANGES:
+      const newManga = Immutable.fromJS(action.manga)
+      const oldManga = state.get(action.manga.name)
+      return state.set(action.manga.name, applyNewChanges(oldManga, newManga))
     default:
       return state
   }
+}
+
+function applyNewChanges (oldManga, newManga) {
+  const oldMangaCount = oldManga.get('chapters').count()
+  const newMangaCount = newManga.get('chapters').count()
+  const isNew = oldMangaCount < newMangaCount
+
+  if (isNew) {
+    // Add the new chapters to the old manga object.
+    oldManga = oldManga.set('new', true)
+    for (let i = oldMangaCount; i < newMangaCount; i++) {
+      oldManga = oldManga.update('chapters', (chapters) => {
+        return chapters.push(newManga.getIn(['chapters', i]))
+      })
+    }
+  }
+
+  return oldManga
 }

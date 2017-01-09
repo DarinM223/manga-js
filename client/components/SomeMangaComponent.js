@@ -25,8 +25,6 @@ export default function SomeMangaComponent ({ manga }) {
   let oldMangaComponents = []
   let mangaList = null
 
-  // TODO(DarinM223): make this cleaner ;-;
-
   for (const name of manga.keys()) {
     const m = manga.get(name)
     const component = mangaComponent(m)

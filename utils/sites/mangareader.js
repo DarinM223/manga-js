@@ -61,7 +61,7 @@ export function parseMangaData (mangaName, body) {
   })
 
   return {
-    type: 'mangareader',
+    type: 'www.mangareader.net',
     title,
     name: mangaName,
     description,

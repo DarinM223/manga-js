@@ -2,10 +2,12 @@ import { actions } from 'react-redux-toastr'
 import { push } from 'react-router-redux'
 
 import { NOT_LOADED, LOADED, LOADING } from '../../utils/constants.js'
-import { adapterFromURL } from '../../utils/url.js'
+import { adapterFromURL, adapterFromHostname } from '../../utils/url.js'
+import scraper from '../../utils/scraper.js'
 
 export const ADD_MANGA = 'ADD_MANGA'
 export const REMOVE_MANGA = 'REMOVE_MANGA'
+export const VISIT_MANGA = 'VISIT_MANGA'
 export const UPDATE_PAGE = 'UPDATE_PAGE'
 export const UPDATE_CHAPTER = 'UPDATE_CHAPTER'
 export const LOAD_CHAPTER = 'LOAD_CHAPTER'
@@ -13,6 +15,7 @@ export const SET_DOWNLOAD_STATE = 'SET_DOWNLOAD_STATE'
 export const DOWNLOAD_CHAPTER = 'DOWNLOAD_CHAPTER'
 export const DOWNLOADED_PAGE = 'DOWNLOADED_PAGE'
 export const SET_LOADING = 'SET_LOADING'
+export const DIFF_CHANGES = 'DIFF_CHANGES'
 
 function errorNotify (title, message) {
   return actions.add({
@@ -27,7 +30,6 @@ function errorNotify (title, message) {
 }
 
 export function addManga (url, mangaList) {
-  const scraper = require('../../utils/scraper.js')
   const adapter = adapterFromURL(url)
 
   return (dispatch) => {
@@ -38,6 +40,24 @@ export function addManga (url, mangaList) {
         dispatch({ type: ADD_MANGA, manga })
       }
     })
+  }
+}
+
+export function visitManga (store) {
+  return (nextState) => {
+    store.dispatch({
+      type: VISIT_MANGA,
+      mangaName: nextState.params.name
+    })
+  }
+}
+
+export function reloadManga (manga) {
+  const adapter = adapterFromHostname(manga.get('type'))
+  const url = adapter.mangaURL(manga.get('name'))
+
+  return (dispatch) => {
+    scraper.scrape(url, adapter).then((manga) => dispatch({ type: DIFF_CHANGES, manga }))
   }
 }
 
@@ -82,8 +102,6 @@ export function downloadChapter (mangaName, chapterNum) {
 }
 
 export function loadChapter (manga, chapterNum, background = false) {
-  const scraper = require('../../utils/scraper.js')
-
   const chapterRoute = `/chapter/${manga.get('name')}/${chapterNum}`
   return (dispatch) => {
     const mangaName = manga.get('name')

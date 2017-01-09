@@ -10,6 +10,10 @@ const hostnameAdapterMap = {
 
 export function adapterFromURL (url) {
   const hostname = hostnameFromURL(url)
+  return adapterFromHostname(hostname)
+}
+
+export function adapterFromHostname (hostname) {
   return hostnameAdapterMap[hostname]
 }
 

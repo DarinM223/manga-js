@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react'
 import AppBar from 'material-ui/AppBar'
 import ActionNoteAdd from 'material-ui/svg-icons/action/note-add'
+import AvLoop from 'material-ui/svg-icons/av/loop'
 import IconButton from 'material-ui/IconButton'
 import Dialog from 'material-ui/Dialog'
 import FlatButton from 'material-ui/FlatButton'
@@ -23,16 +24,13 @@ export default class HeaderComponent extends React.Component {
     this.handleClose = () => {
       this.setState({ open: false, text: '', error: NO_ERROR })
     }
-
     this.handleOpen = () => {
       this.setState({ open: true, error: NO_ERROR })
     }
-
     this.handleChange = (e) => {
       e.preventDefault()
       this.setState({ text: e.target.value })
     }
-
     this.submit = () => {
       if (this.state.text.trim().length === 0) {
         this.setState({ error: EMPTY_TEXT })
@@ -45,6 +43,9 @@ export default class HeaderComponent extends React.Component {
 
       this.props.onAddManga(this.state.text, this.props.manga)
       this.handleClose()
+    }
+    this.handleReload = () => {
+      this.props.onReload(this.props.manga)
     }
   }
 
@@ -75,7 +76,9 @@ export default class HeaderComponent extends React.Component {
         <AppBar
           title='Manga list'
           iconElementRight={<IconButton><ActionNoteAdd /></IconButton>}
+          iconElementLeft={<IconButton><AvLoop /></IconButton>}
           onRightIconButtonTouchTap={this.handleOpen}
+          onLeftIconButtonTouchTap={this.handleReload}
         />
         <Dialog
           title='Enter the url of the manga to add'
@@ -98,5 +101,6 @@ export default class HeaderComponent extends React.Component {
 
 HeaderComponent.propTypes = {
   manga: PropTypes.object.isRequired,
-  onAddManga: PropTypes.func.isRequired
+  onAddManga: PropTypes.func.isRequired,
+  onReload: PropTypes.func.isRequired
 }
