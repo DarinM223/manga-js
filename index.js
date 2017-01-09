@@ -37,7 +37,8 @@ const createWindow = () => {
     slashes: true
   }))
 
-  mainWindow.webContents.openDevTools()
+  // Uncomment this line to debug the application.
+  // mainWindow.webContents.openDevTools()
 
   mainWindow.on('closed', function () {
     mainWindow = null
