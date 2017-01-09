@@ -52,6 +52,22 @@ export function visitManga (store) {
   }
 }
 
+export function reloadMangaList (store) {
+  // Only automatically reload manga list when you first open the application.
+  // Reloading after the fact will have to be done manually using the refresh button.
+  let reloaded = false
+  return (nextState) => {
+    if (!reloaded) {
+      for (const mangaName of store.getState().manga.keys()) {
+        const manga = store.getState().manga.get(mangaName)
+        store.dispatch(reloadManga(manga))
+      }
+
+      reloaded = true
+    }
+  }
+}
+
 export function reloadManga (manga) {
   const adapter = adapterFromHostname(manga.get('type'))
   const url = adapter.mangaURL(manga.get('name'))

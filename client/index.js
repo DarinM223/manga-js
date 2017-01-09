@@ -12,7 +12,7 @@ import { ipcRenderer } from 'electron'
 import MainContainer from './containers/MainContainer.js'
 import MangaViewContainer from './containers/MangaViewContainer.js'
 import ChapterViewContainer from './containers/ChapterViewContainer.js'
-import { visitManga } from './actions/manga.js'
+import { reloadMangaList, visitManga } from './actions/manga.js'
 
 // Start the image downloader queue on the main process.
 ipcRenderer.sendSync('start')
@@ -35,7 +35,7 @@ ReactDOM.render(
       />
       <MuiThemeProvider>
         <Router history={history}>
-          <Route path='/' component={MainContainer} />
+          <Route path='/' component={MainContainer} onEnter={reloadMangaList(store)} />
           <Route path='/manga/:name' component={MangaViewContainer} onEnter={visitManga(store)} />
           <Route path='/chapter/:mangaName/:chapterNum' component={ChapterViewContainer} />
         </Router>
