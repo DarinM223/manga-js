@@ -12,24 +12,26 @@ import { listenForIpc } from './ipcListener.js'
 
 const middleware = routerMiddleware(hashHistory)
 
-export default function configureStore () {
-  const persistedState = loadState()
-  const store = createStore(
-    combineReducers({
-      manga,
-      log,
-      routing: routerReducer,
-      toastr: toastrReducer
-    }),
-    persistedState,
-    applyMiddleware(thunk, middleware)
-  )
+export default function configureStore (loadFromDisk = true) {
+  const reducer = combineReducers({
+    manga,
+    log,
+    routing: routerReducer,
+    toastr: toastrReducer
+  })
 
-  listenForIpc(store)
+  let store
+  if (loadFromDisk) {
+    const persistedState = loadState()
+    store = createStore(reducer, persistedState, applyMiddleware(thunk, middleware))
 
-  store.subscribe(throttle(() => {
-    saveState(store.getState())
-  }), 1000)
+    listenForIpc(store)
+    store.subscribe(throttle(() => {
+      saveState(store.getState())
+    }), 1000)
+  } else {
+    store = createStore(reducer, applyMiddleware(thunk, middleware))
+  }
 
   return store
 }

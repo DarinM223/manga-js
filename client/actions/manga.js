@@ -33,7 +33,7 @@ export function addManga (url, mangaList) {
   const adapter = adapterFromURL(url)
 
   return (dispatch) => {
-    scraper.scrape(url, adapter).then((manga) => {
+    return scraper.scrape(url, adapter).then((manga) => {
       if (mangaList.has(manga.name)) {
         dispatch(errorNotify('Manga already exists', 'The manga with the given name already exists in the list'))
       } else {
@@ -73,7 +73,7 @@ export function reloadManga (manga) {
   const url = adapter.mangaURL(manga.get('name'))
 
   return (dispatch) => {
-    scraper.scrape(url, adapter).then((manga) => dispatch({ type: DIFF_CHANGES, manga }))
+    return scraper.scrape(url, adapter).then((manga) => dispatch({ type: DIFF_CHANGES, manga }))
   }
 }
 
