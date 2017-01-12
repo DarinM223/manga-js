@@ -6,9 +6,10 @@ const { startQueue } = require('./downloadQueue.js')
  * to the main process.
  */
 class BulkSender {
-  constructor (send) {
+  constructor (send, interval = 1000) {
     this.downloadData = {}
     this.send = send
+    this.interval = interval
 
     this.start()
   }
@@ -39,7 +40,7 @@ class BulkSender {
             const data = this.downloadData[mangaName][chapterNum]
             messages.push({
               mangaName,
-              chapterNum,
+              chapterNum: parseInt(chapterNum, 10),
               total: data.total,
               curr: data.curr
             })
@@ -48,7 +49,7 @@ class BulkSender {
         this.downloadData = {}
         this.send(messages)
       }
-    }, 1000)
+    }, this.interval)
   }
 }
 
