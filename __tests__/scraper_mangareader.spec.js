@@ -1,10 +1,9 @@
 /* global test, expect */
 
-// TODO(DarinM223): mock fetch call to not use network.
+import scraper from '../utils/scraper.js'
 
 test('properly scrapes one punch man manga data', () => {
   const adapter = require('../utils/sites/mangareader.js')
-  const scraper = require('../utils/scraper.js')
 
   return scraper.scrape('http://www.mangareader.net/onepunch-man', adapter)
     .then((manga) => {
@@ -12,7 +11,7 @@ test('properly scrapes one punch man manga data', () => {
       delete manga.chapters
 
       expect(manga).toEqual({
-        type: 'mangareader',
+        type: 'www.mangareader.net',
         name: 'onepunch-man',
         title: 'Onepunch-Man Manga',
         description: 'Follows the life of an average hero who manages to win all battles with only one punch. This ability seems to frustrate him as he no longer feels the thrill and adrenaline of fighting a tough battle, which leads to him questioning his past desire of being strong.',
@@ -25,8 +24,6 @@ test('properly scrapes one punch man manga data', () => {
 
 test('properly scrapes one punch man chapter 1', () => {
   const adapter = require('../utils/sites/mangareader.js')
-  const scraper = require('../utils/scraper.js')
-
   const imageFileName = (url) => url.substring(url.lastIndexOf('/') + 1, url.length)
 
   return scraper.scrapeChapter('http://www.mangareader.net/onepunch-man/1', adapter)
