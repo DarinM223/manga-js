@@ -3,6 +3,8 @@ manga-js
 
 A desktop manga reader in Javascript using React and Redux.
 
+[![Build Status](https://travis-ci.org/DarinM223/manga-js.svg?branch=master)](https://travis-ci.org/DarinM223/manga-js)
+
 ## Features
 
 * Many manga apps only allow you to read a small portion of manga from a given site. With this app you can add any manga available from a supported manga site by pasting in the URL.
