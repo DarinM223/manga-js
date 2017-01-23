@@ -1,4 +1,5 @@
 import cheerio from 'cheerio'
+import fetch from 'node-fetch'
 import { NOT_LOADED, NOT_DOWNLOADED } from '../constants.js'
 
 /**
@@ -17,6 +18,15 @@ export function mangaURL (mangaName, chapterNum = null, pageNum = null) {
   } else {
     return `http://www.mangareader.net/${mangaName}`
   }
+}
+
+/**
+ * Sends a request to the specified url and
+ * returns a Promise that contains the body of the response.
+ * @return {Promise<string>} the body of the response
+ */
+export function sendRequest (url) {
+  return fetch(url).then((res) => res.text())
 }
 
 /**
