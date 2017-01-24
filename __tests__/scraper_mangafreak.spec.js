@@ -2,7 +2,26 @@
 
 import scraper from '../utils/scraper.js'
 
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 15000
+
+test('properly scrapes demi-chan manga data', () => {
+  const adapter = require('../utils/sites/mangafreak.js')
+
+  return scraper.scrape('http://www3.mangafreak.net/Manga/Ajin_Chan_Wa_Kataritai', adapter)
+    .then((manga) => {
+      expect(manga.chapters.length).not.toEqual(0)
+      delete manga.chapters
+      expect(manga).toEqual({
+        type: 'www.mangafreak.net',
+        name: 'Ajin_Chan_Wa_Kataritai',
+        title: 'Ajin-chan wa Kataritai',
+        description: 'Succubus, Dullahan and Vampire. They are known as Ajin, or "demi"s and are slightly different than the average human. They have lived alongside humans for ages under persecution. However, in recent years, they have become accepted as members of society. This manga follows a high school biology teacher who has a great interest in demis and his interaction with the various demis in his school, each with their own cute problems.',
+        image: 'http://images.mangafreak.net/manga_images/ajin_chan_wa_kataritai.jpg',
+        new: true,
+        currentChapter: 0
+      })
+    })
+})
 
 test('properly scrapes demi-chan chapter 1', () => {
   const adapter = require('../utils/sites/mangafreak.js')

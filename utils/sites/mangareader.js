@@ -55,6 +55,8 @@ export function parseMangaData (mangaName, body) {
         }
       })
 
+      // Chapters are in increasing order (chapter 1 would
+      // have a smaller index than chapter 50).
       chapters.push({
         name,
         url,

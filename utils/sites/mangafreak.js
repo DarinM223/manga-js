@@ -1,7 +1,6 @@
 import cheerio from 'cheerio'
 import cloudscraper from 'cloudscraper'
-
-export let adapterNotLoaded = true
+import { NOT_LOADED, NOT_DOWNLOADED } from '../constants.js'
 
 export function sendRequest (url) {
   return new Promise((resolve, reject) => {
@@ -26,7 +25,50 @@ export function mangaURL (mangaName, chapterNum = null, pageNum = null) {
 }
 
 export function parseMangaData (mangaName, body) {
-  // TODO(DarinM223): implement this
+  const $ = cheerio.load(body)
+
+  const title = $('.manga_series_data h5').text().trim()
+  const description = $('.manga_series_description p').text().trim()
+  const image = $('.manga_series_image img').attr('src')
+
+  let chapters = []
+  $('.manga_series_list tr').each(function (idx, element) {
+    if (idx !== 0) {
+      let [name, url, date] = [null, null, null]
+      $(element).find('td').each(function (idx, element) {
+        if (idx === 0) {
+          name = $(element).find('a').text()
+          url = `http://www.mangafreak.net${$(element).find('a').attr('href')}`
+        } else if (idx === 1) {
+          date = $(element).text().trim()
+        }
+      })
+
+      chapters.push({
+        name,
+        url,
+        date,
+        loadState: NOT_LOADED,
+        download: {
+          state: NOT_DOWNLOADED,
+          progress: 0
+        },
+        currentPage: 0,
+        pages: []
+      })
+    }
+  })
+
+  return {
+    type: 'www.mangafreak.net',
+    title,
+    name: mangaName,
+    description,
+    new: true,
+    image,
+    chapters,
+    currentChapter: 0
+  }
 }
 
 export function parsePageLinks (body) {

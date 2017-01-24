@@ -5,7 +5,9 @@ function hostnameFromURL (url) {
 }
 
 const hostnameAdapterMap = {
-  'www.mangareader.net': require('./sites/mangareader.js')
+  'www.mangareader.net': require('./sites/mangareader.js'),
+  'www.mangafreak.net': require('./sites/mangafreak.js'),
+  'www3.mangafreak.net': require('./sites/mangafreak.js')
 }
 
 export function adapterFromURL (url) {
