@@ -1,6 +1,10 @@
+/* global Blob */
+
 import cheerio from 'cheerio'
 import fetch from 'node-fetch'
 import { NOT_LOADED, NOT_DOWNLOADED } from '../constants.js'
+import { fileExtFromURL } from '../url.js'
+import mimetype from 'mimetype'
 
 /**
  * Returns the URL for the given manga. If chapterNum or pageNum is also
@@ -23,9 +27,17 @@ export function mangaURL (mangaName, chapterNum = null, pageNum = null) {
 /**
  * Sends a request to the specified url and
  * returns a Promise that contains the body of the response.
+ * @param {boolean} blob optional parameter that if true specifies that the response must return a blob.
  * @return {Promise<string>} the body of the response
  */
-export function sendRequest (url) {
+export function sendRequest (url, blob = false) {
+  if (blob) {
+    const fileExt = fileExtFromURL(url)
+    const fileType = mimetype.lookup(`sample.${fileExt}`)
+    return fetch(url)
+      .then((res) => res.buffer())
+      .then((buf) => new Blob([buf], { type: fileType }))
+  }
   return fetch(url).then((res) => res.text())
 }
 

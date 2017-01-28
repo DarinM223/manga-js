@@ -23,3 +23,28 @@ export function validHostname (url) {
   const hostname = hostnameFromURL(url)
   return hostname in hostnameAdapterMap
 }
+
+export function fileExtFromURL (url) {
+  let lastDotIdx = -1
+  for (let i = url.length - 1; i >= 0; i--) {
+    if (url[i] === '.') {
+      lastDotIdx = i
+      break
+    }
+  }
+
+  if (lastDotIdx === -1) {
+    return null
+  }
+
+  let fileExt = ''
+  for (let i = lastDotIdx + 1; i < url.length; i++) {
+    const ch = url[i].toLowerCase()
+    if (ch < 'a' || ch > 'z') {
+      break
+    }
+    fileExt += url[i]
+  }
+
+  return fileExt
+}

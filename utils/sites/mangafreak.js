@@ -1,16 +1,32 @@
+/* global Blob */
 import cheerio from 'cheerio'
 import cloudscraper from 'cloudscraper'
 import { NOT_LOADED, NOT_DOWNLOADED } from '../constants.js'
+import { fileExtFromURL } from '../url.js'
+import mimetype from 'mimetype'
 
-export function sendRequest (url) {
+export function sendRequest (url, blob = false) {
   return new Promise((resolve, reject) => {
-    cloudscraper.get(url, function (err, resp, body) {
-      if (err) {
-        return reject(err)
-      }
+    if (blob) {
+      const fileExt = fileExtFromURL(url)
+      const fileType = mimetype.lookup(`sample.${fileExt}`)
 
-      resolve(body)
-    })
+      cloudscraper.request({ method: 'GET', url: url, encoding: null }, function (err, resp, body) {
+        if (err) {
+          return reject(err)
+        }
+
+        resolve(new Blob([body], { type: fileType }))
+      })
+    } else {
+      cloudscraper.get(url, function (err, resp, body) {
+        if (err) {
+          return reject(err)
+        }
+
+        resolve(body)
+      })
+    }
   })
 }
 

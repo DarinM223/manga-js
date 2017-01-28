@@ -4,12 +4,14 @@ import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back'
 import ContentUndo from 'material-ui/svg-icons/content/undo'
 import IconButton from 'material-ui/IconButton'
 import path from 'path'
+import ImageComponent from './ImageComponent.js'
 
 import { NOT_DOWNLOADED, DOWNLOADING, DOWNLOADED } from '../../utils/constants.js'
 
 export default function ChapterViewComponent ({ manga, mangaName, chapterNum, back, onImageClicked, onPrevClicked }) {
   const specificManga = manga.get(mangaName)
   const chapter = specificManga.get('chapters').get(chapterNum)
+  const type = `http://${specificManga.get('type')}`
   const title = `${specificManga.get('title')} - ${chapter.get('name')}`
   const currPage = chapter.get('currentPage')
 
@@ -17,12 +19,14 @@ export default function ChapterViewComponent ({ manga, mangaName, chapterNum, ba
   const downloadState = chapter.get('download').get('state')
 
   let imagePath = null
+  let local = false
   switch (downloadState) {
     case DOWNLOADING:
     case NOT_DOWNLOADED:
       imagePath = onlineURL
       break
     case DOWNLOADED:
+      local = true
       imagePath = 'manga://' + path.join(specificManga.get('name'), chapterNum + '', encodeURIComponent(onlineURL))
       break
   }
@@ -34,6 +38,13 @@ export default function ChapterViewComponent ({ manga, mangaName, chapterNum, ba
     onPrevClicked(specificManga, chapterNum)
   }
 
+  let imageComponent = null
+  if (local) {
+    imageComponent = <img src={imagePath} style={{ width: '100%' }} onClick={imageClicked} />
+  } else {
+    imageComponent = <ImageComponent src={imagePath} type={type} style={{ width: '100%' }} onClick={imageClicked} />
+  }
+
   return (
     <div>
       <AppBar
@@ -43,7 +54,7 @@ export default function ChapterViewComponent ({ manga, mangaName, chapterNum, ba
         style={{ position: 'fixed' }}
       />
       <br /><br /><br /><br />
-      <img src={imagePath} style={{ width: '100%' }} onClick={imageClicked} />
+      {imageComponent}
     </div>
   )
 }
