@@ -21,7 +21,7 @@ and then `npm start` to start the electron application.
 
 ## Supported sites
 
-Right now the only supported site is mangareader.net. However, I plan on adding support for more manga sites in the future and it is also fairly easy to contribute bindings to a specific site.
+Right now the only supported sites are mangareader.net and mangafreak.net. However, I plan on adding support for more manga sites in the future and it is also fairly easy to contribute bindings to a specific site.
 
 ## Contributing
 
