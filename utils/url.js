@@ -10,21 +10,21 @@ const hostnameAdapterMap = {
   'www3.mangafreak.net': require('./sites/mangafreak.js')
 }
 
-export function adapterFromURL (url) {
+function adapterFromURL (url) {
   const hostname = hostnameFromURL(url)
   return adapterFromHostname(hostname)
 }
 
-export function adapterFromHostname (hostname) {
+function adapterFromHostname (hostname) {
   return hostnameAdapterMap[hostname]
 }
 
-export function validHostname (url) {
+function validHostname (url) {
   const hostname = hostnameFromURL(url)
   return hostname in hostnameAdapterMap
 }
 
-export function fileExtFromURL (url) {
+function fileExtFromURL (url) {
   let lastDotIdx = -1
   for (let i = url.length - 1; i >= 0; i--) {
     if (url[i] === '.') {
@@ -47,4 +47,11 @@ export function fileExtFromURL (url) {
   }
 
   return fileExt
+}
+
+module.exports = {
+  adapterFromURL,
+  adapterFromHostname,
+  validHostname,
+  fileExtFromURL
 }

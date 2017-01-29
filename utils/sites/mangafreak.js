@@ -1,22 +1,26 @@
-/* global Blob */
-import cheerio from 'cheerio'
-import cloudscraper from 'cloudscraper'
-import { NOT_LOADED, NOT_DOWNLOADED } from '../constants.js'
-import { fileExtFromURL } from '../url.js'
-import mimetype from 'mimetype'
+const cheerio = require('cheerio')
+const cloudscraper = require('cloudscraper')
+const { NOT_LOADED, NOT_DOWNLOADED } = require('../constants.js')
 
-export function sendRequest (url, blob = false) {
+function mangaURL (mangaName, chapterNum = null, pageNum = null) {
+  if (chapterNum !== null && pageNum !== null) {
+    return `http://www.mangafreak.net/Read1_${mangaName}_${chapterNum}_${pageNum}#gohere`
+  } else if (chapterNum !== null) {
+    return `http://www.mangafreak.net/Read1_${mangaName}_${chapterNum}`
+  } else {
+    return `http://www.mangafreak.net/Manga/${mangaName}`
+  }
+}
+
+function sendRequest (url, buffer = false) {
   return new Promise((resolve, reject) => {
-    if (blob) {
-      const fileExt = fileExtFromURL(url)
-      const fileType = mimetype.lookup(`sample.${fileExt}`)
-
+    if (buffer) {
       cloudscraper.request({ method: 'GET', url: url, encoding: null }, function (err, resp, body) {
         if (err) {
           return reject(err)
         }
 
-        resolve(new Blob([body], { type: fileType }))
+        resolve(body)
       })
     } else {
       cloudscraper.get(url, function (err, resp, body) {
@@ -30,17 +34,7 @@ export function sendRequest (url, blob = false) {
   })
 }
 
-export function mangaURL (mangaName, chapterNum = null, pageNum = null) {
-  if (chapterNum !== null && pageNum !== null) {
-    return `http://www.mangafreak.net/Read1_${mangaName}_${chapterNum}_${pageNum}#gohere`
-  } else if (chapterNum !== null) {
-    return `http://www.mangafreak.net/Read1_${mangaName}_${chapterNum}`
-  } else {
-    return `http://www.mangafreak.net/Manga/${mangaName}`
-  }
-}
-
-export function parseMangaData (mangaName, body) {
+function parseMangaData (mangaName, body) {
   const $ = cheerio.load(body)
 
   const title = $('.manga_series_data h5').text().trim()
@@ -87,7 +81,7 @@ export function parseMangaData (mangaName, body) {
   }
 }
 
-export function parsePageLinks (body) {
+function parsePageLinks (body) {
   const $ = cheerio.load(body)
 
   let links = []
@@ -99,7 +93,15 @@ export function parsePageLinks (body) {
   return links
 }
 
-export function parsePageImage (body) {
+function parsePageImage (body) {
   const $ = cheerio.load(body)
   return $('#gohere').attr('src')
+}
+
+module.exports = {
+  mangaURL,
+  sendRequest,
+  parseMangaData,
+  parsePageLinks,
+  parsePageImage
 }

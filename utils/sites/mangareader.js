@@ -1,10 +1,6 @@
-/* global Blob */
-
-import cheerio from 'cheerio'
-import fetch from 'node-fetch'
-import { NOT_LOADED, NOT_DOWNLOADED } from '../constants.js'
-import { fileExtFromURL } from '../url.js'
-import mimetype from 'mimetype'
+const cheerio = require('cheerio')
+const fetch = require('node-fetch')
+const { NOT_LOADED, NOT_DOWNLOADED } = require('../constants.js')
 
 /**
  * Returns the URL for the given manga. If chapterNum or pageNum is also
@@ -14,7 +10,7 @@ import mimetype from 'mimetype'
  * @param {number|null} pageNum
  * @return {string} the requested URL.
  */
-export function mangaURL (mangaName, chapterNum = null, pageNum = null) {
+function mangaURL (mangaName, chapterNum = null, pageNum = null) {
   if (chapterNum !== null && pageNum !== null) {
     return `http://www.mangareader.net/${mangaName}/${chapterNum}/${pageNum}`
   } else if (chapterNum !== null) {
@@ -27,16 +23,12 @@ export function mangaURL (mangaName, chapterNum = null, pageNum = null) {
 /**
  * Sends a request to the specified url and
  * returns a Promise that contains the body of the response.
- * @param {boolean} blob optional parameter that if true specifies that the response must return a blob.
+ * @param {boolean} buffer optional parameter that if true specifies that the response must return an arraybuffer.
  * @return {Promise<string>} the body of the response
  */
-export function sendRequest (url, blob = false) {
-  if (blob) {
-    const fileExt = fileExtFromURL(url)
-    const fileType = mimetype.lookup(`sample.${fileExt}`)
-    return fetch(url)
-      .then((res) => res.buffer())
-      .then((buf) => new Blob([buf], { type: fileType }))
+function sendRequest (url, buffer = false) {
+  if (buffer) {
+    return fetch(url).then((res) => res.buffer())
   }
   return fetch(url).then((res) => res.text())
 }
@@ -47,7 +39,7 @@ export function sendRequest (url, blob = false) {
  * @param {string} body
  * @return {object} the manga as a nested object.
  */
-export function parseMangaData (mangaName, body) {
+function parseMangaData (mangaName, body) {
   const $ = cheerio.load(body)
 
   const title = $('#mangaproperties h1').text().trim()
@@ -101,7 +93,7 @@ export function parseMangaData (mangaName, body) {
  * @param {string} body
  * @return {[string]} the page links in the chapter.
  */
-export function parsePageLinks (body) {
+function parsePageLinks (body) {
   const $ = cheerio.load(body)
 
   let links = []
@@ -118,7 +110,15 @@ export function parsePageLinks (body) {
  * @param {string} body
  * @return {string} the image URL of the page.
  */
-export function parsePageImage (body) {
+function parsePageImage (body) {
   const $ = cheerio.load(body)
   return $('#img').attr('src')
+}
+
+module.exports = {
+  mangaURL,
+  sendRequest,
+  parseMangaData,
+  parsePageLinks,
+  parsePageImage
 }

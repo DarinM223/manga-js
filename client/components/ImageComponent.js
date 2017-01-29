@@ -1,7 +1,8 @@
-/* global URL */
+/* global Blob, URL */
 
 import React, { PropTypes } from 'react'
-import { adapterFromURL } from '../../utils/url.js'
+import { adapterFromURL, fileExtFromURL } from '../../utils/url.js'
+import mimetype from 'mimetype'
 
 export default class ImageComponent extends React.Component {
   constructor (props) {
@@ -16,7 +17,10 @@ export default class ImageComponent extends React.Component {
   }
 
   retrieveImage (src) {
-    this.adapter.sendRequest(src, true).then((blob) => {
+    this.adapter.sendRequest(src, true).then((buffer) => {
+      const fileExt = fileExtFromURL(src)
+      const fileType = mimetype.lookup(`sample.${fileExt}`)
+      const blob = new Blob([buffer], { type: fileType })
       const url = URL.createObjectURL(blob)
       this.setState({ src: url })
     })
