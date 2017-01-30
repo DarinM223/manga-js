@@ -21,11 +21,11 @@ and then `npm start` to start the electron application.
 
 ## Supported sites
 
-Right now the only supported site is mangareader.net. However, I plan on adding support for more manga sites in the future and it is also fairly easy to contribute bindings to a specific site.
+Right now the only supported sites are mangareader.net and mangafreak.net. However, I plan on adding support for more manga sites in the future and it is also fairly easy to contribute bindings to a specific site.
 
 ## Contributing
 
-Contributions for all parts of the application are welcome! The easiest contribution to make is adding support for a specific manga site. In order to do that, you should create a new file inside utils/sites and have it implement the functions mangaURL, parseMangaData, parsePageLinks, and parsePageImage (look at utils/sites/mangareader.js for an example). Then all you have to do is add a key-value pair to the hostnameAdapterMap object inside utils/url.js where the key is the hostname of the new manga site and the value is require('path to file you created').
+Contributions for all parts of the application are welcome! The easiest contribution to make is adding support for a specific manga site. In order to do that, you should create a new file inside utils/sites and have it implement the functions mangaURL, sendRequest, parseMangaData, parsePageLinks, and parsePageImage (look at utils/sites/mangareader.js for an example). Then all you have to do is add a key-value pair to the hostnameAdapterMap object inside utils/url.js where the key is the hostname of the new manga site and the value is require('path to file you created').
 
 The style checker for this project is [standard](https://github.com/feross/standard) so you should make sure that running standard in the project root doesn't result in any errors or warnings.
 

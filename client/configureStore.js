@@ -7,6 +7,7 @@ import { log } from './reducers/log.js'
 import { saveState, loadState } from './storage.js'
 import { hashHistory } from 'react-router'
 import throttle from 'lodash/throttle'
+import createLogger from 'redux-logger'
 
 import { listenForIpc } from './ipcListener.js'
 
@@ -19,11 +20,12 @@ export default function configureStore (loadFromDisk = true) {
     routing: routerReducer,
     toastr: toastrReducer
   })
+  const logger = createLogger()
 
   let store
   if (loadFromDisk) {
     const persistedState = loadState()
-    store = createStore(reducer, persistedState, applyMiddleware(thunk, middleware))
+    store = createStore(reducer, persistedState, applyMiddleware(thunk, middleware, logger))
 
     listenForIpc(store)
     store.subscribe(throttle(() => {

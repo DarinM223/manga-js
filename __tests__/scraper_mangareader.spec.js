@@ -1,6 +1,8 @@
-/* global test, expect */
+/* global test, expect, jasmine */
 
 import scraper from '../utils/scraper.js'
+
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000
 
 test('properly scrapes one punch man manga data', () => {
   const adapter = require('../utils/sites/mangareader.js')

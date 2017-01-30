@@ -4,34 +4,37 @@ import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back'
 import ContentUndo from 'material-ui/svg-icons/content/undo'
 import IconButton from 'material-ui/IconButton'
 import path from 'path'
+import ImageComponent from './ImageComponent.js'
 
 import { NOT_DOWNLOADED, DOWNLOADING, DOWNLOADED } from '../../utils/constants.js'
 
 export default function ChapterViewComponent ({ manga, mangaName, chapterNum, back, onImageClicked, onPrevClicked }) {
   const specificManga = manga.get(mangaName)
   const chapter = specificManga.get('chapters').get(chapterNum)
+  const type = `http://${specificManga.get('type')}`
   const title = `${specificManga.get('title')} - ${chapter.get('name')}`
   const currPage = chapter.get('currentPage')
 
   const onlineURL = chapter.get('pages').get(currPage)
   const downloadState = chapter.get('download').get('state')
 
-  let imagePath = null
+  const imageClicked = () => onImageClicked(specificManga, chapterNum)
+  const prevClicked = () => onPrevClicked(specificManga, chapterNum)
+  const imageProps = {
+    style: { width: '100%' },
+    onClick: imageClicked
+  }
+
+  let imageComponent = null
   switch (downloadState) {
     case DOWNLOADING:
     case NOT_DOWNLOADED:
-      imagePath = onlineURL
+      imageComponent = <ImageComponent src={onlineURL} type={type} {...imageProps} />
       break
     case DOWNLOADED:
-      imagePath = 'manga://' + path.join(specificManga.get('name'), chapterNum + '', encodeURIComponent(onlineURL))
+      const imagePath = 'manga://' + path.join(specificManga.get('name'), chapterNum + '', encodeURIComponent(onlineURL))
+      imageComponent = <img src={imagePath} {...imageProps} />
       break
-  }
-
-  const imageClicked = () => {
-    onImageClicked(specificManga, chapterNum)
-  }
-  const prevClicked = () => {
-    onPrevClicked(specificManga, chapterNum)
   }
 
   return (
@@ -43,7 +46,7 @@ export default function ChapterViewComponent ({ manga, mangaName, chapterNum, ba
         style={{ position: 'fixed' }}
       />
       <br /><br /><br /><br />
-      <img src={imagePath} style={{ width: '100%' }} onClick={imageClicked} />
+      {imageComponent}
     </div>
   )
 }

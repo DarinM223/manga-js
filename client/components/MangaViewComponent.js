@@ -7,6 +7,7 @@ import FlatButton from 'material-ui/FlatButton'
 import RaisedButton from 'material-ui/RaisedButton'
 import Dialog from 'material-ui/Dialog'
 
+import ImageComponent from './ImageComponent.js'
 import ChapterCellContainer from '../containers/ChapterCellContainer.js'
 
 const styles = {
@@ -28,7 +29,7 @@ const styles = {
   }
 }
 
-function titleComponent (description, imageURL, openDialog) {
+function titleComponent (type, description, imageURL, openDialog) {
   // Dummy variable that is always true to trick eslint >:)
   const isSecondary = true
   const deleteText = 'Delete manga'
@@ -40,7 +41,7 @@ function titleComponent (description, imageURL, openDialog) {
 
   return (
     <div style={styles.container}>
-      <img src={imageURL} style={styles.image} />
+      <ImageComponent src={imageURL} type={type} style={styles.image} />
       <div style={styles.div}>
         <h3>Description:</h3>
         <p>{textDescription}</p>
@@ -67,6 +68,7 @@ export default class MangaViewComponent extends React.Component {
     const specificManga = this.props.manga.get(this.props.name)
     const imageURL = specificManga.get('image')
     const description = specificManga.get('description')
+    const type = `http://${specificManga.get('type')}`
     const actions = [
       <FlatButton
         label='Yes, delete manga'
@@ -97,7 +99,7 @@ export default class MangaViewComponent extends React.Component {
           onRequestClose={this.handleClose}
         />
 
-        {titleComponent(description, imageURL, this.handleOpen)}
+        {titleComponent(type, description, imageURL, this.handleOpen)}
 
         <Table selectable={false}>
           <TableHeader displaySelectAll={false} adjustForCheckbox={false}>

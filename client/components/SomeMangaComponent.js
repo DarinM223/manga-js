@@ -1,20 +1,22 @@
 import React, { PropTypes } from 'react'
 import { List, ListItem } from 'material-ui/List'
-import Avatar from 'material-ui/Avatar'
 import Subheader from 'material-ui/Subheader'
 import Divider from 'material-ui/Divider'
 import HeaderContainer from '../containers/HeaderContainer.js'
 import { Link } from 'react-router'
+import ImageComponent from './ImageComponent.js'
 
 function mangaComponent (manga) {
   const title = manga.get('title')
+  const type = `http://${manga.get('type')}`
+  const avatar = true
 
   return (
     <Link to={'/manga/' + manga.get('name')} style={{ textDecoration: 'none' }}>
       <ListItem
         primaryText={title}
         secondaryText={manga.get('description')}
-        leftAvatar={<Avatar src={manga.get('image')} />}
+        leftAvatar={<ImageComponent src={manga.get('image')} type={type} avatar={avatar} />}
       />
     </Link>
   )

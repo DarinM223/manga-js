@@ -1,9 +1,9 @@
 const bluebird = require('bluebird')
 const fs = bluebird.promisifyAll(require('fs'))
 const fse = bluebird.promisifyAll(require('fs-extra'))
-const fetch = require('node-fetch')
 const loc = require('./location.js')
 const path = require('path')
+const { adapterFromHostname } = require('./url.js')
 
 /*
  * Queue format:
@@ -61,18 +61,11 @@ class DownloadQueue {
     return result
   }
 
-  downloadImage (mangaName, chapterNum, url) {
-    return fetch(url).then((res) => {
-      return new Promise((resolve, reject) => {
-        const imagePath = loc.imagePath(this.path, mangaName, chapterNum, url)
-        const dest = fs.createWriteStream(imagePath)
-        const stream = res.body
-
-        stream.pipe(dest)
-        stream.on('end', resolve)
-        stream.on('error', reject)
-      })
-    })
+  downloadImage (mangaName, chapterNum, url, type) {
+    const adapter = adapterFromHostname(type)
+    const imagePath = loc.imagePath(this.path, mangaName, chapterNum, url)
+    return adapter.sendRequest(url, true)
+      .then((chunk) => fs.writeFileAsync(imagePath, new Buffer(chunk)))
   }
 
   isDownloadedImage (mangaName, chapterNum, url) {
@@ -101,7 +94,7 @@ class DownloadQueue {
       .then(() => this.isDownloadedImage(top.mangaName, top.chapterNum, top.url))
       .then((downloaded) => {
         if (!downloaded) {
-          return this.downloadImage(top.mangaName, top.chapterNum, top.url)
+          return this.downloadImage(top.mangaName, top.chapterNum, top.url, top.type)
         }
 
         return Promise.resolve()

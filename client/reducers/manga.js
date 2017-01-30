@@ -52,9 +52,10 @@ export function manga (state = initState, action) {
       return state.setIn([action.mangaName, 'chapters', action.chapterNum, 'download', 'progress'], action.curr)
     case DOWNLOAD_CHAPTER:
       // Sends ipc call with the chapter's pages.
-      const [mangaName, chapterNum] = [action.mangaName, action.chapterNum]
+      const { mangaName, chapterNum } = action
+      const type = state.getIn([mangaName, 'type'])
       const pages = state.getIn([mangaName, 'chapters', chapterNum, 'pages']).toJS()
-      ipcRenderer.send('download-chapter', { mangaName, chapterNum, pages })
+      ipcRenderer.send('download-chapter', { mangaName, chapterNum, pages, type })
       return state
     case UPDATE_CHAPTER:
       return state.setIn([action.mangaName, 'currentChapter'], action.chapterNum)
