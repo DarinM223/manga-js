@@ -1,6 +1,7 @@
 /* global Blob, URL */
 
 import React, { PropTypes } from 'react'
+import Avatar from 'material-ui/Avatar'
 import { adapterFromURL, fileExtFromURL } from '../../utils/url.js'
 import mimetype from 'mimetype'
 
@@ -8,11 +9,12 @@ export default class ImageComponent extends React.Component {
   constructor (props) {
     super(props)
 
-    const { src, type, ...imgProps } = props // eslint-disable-line
+    const { src, type, avatar, ...imgProps } = props // eslint-disable-line
     const adapter = adapterFromURL(type)
 
     this.adapter = adapter
     this.imgProps = imgProps
+    this.avatar = avatar
     this.state = { src: null }
   }
 
@@ -38,8 +40,14 @@ export default class ImageComponent extends React.Component {
 
   render () {
     if (this.state.src !== null) {
+      if (this.avatar) {
+        return <Avatar {...this.imgProps} src={this.state.src} />
+      }
       return <img {...this.imgProps} src={this.state.src} />
     } else {
+      if (this.avatar) {
+        return <Avatar {...this.imgProps} />
+      }
       return <div />
     }
   }
@@ -47,5 +55,8 @@ export default class ImageComponent extends React.Component {
 
 ImageComponent.propTypes = {
   src: PropTypes.string.isRequired,
-  type: PropTypes.string.isRequired
+  type: PropTypes.string.isRequired,
+  avatar: PropTypes.bool
 }
+
+ImageComponent.defaultProps = { avatar: false }

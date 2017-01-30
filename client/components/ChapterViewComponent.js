@@ -18,31 +18,23 @@ export default function ChapterViewComponent ({ manga, mangaName, chapterNum, ba
   const onlineURL = chapter.get('pages').get(currPage)
   const downloadState = chapter.get('download').get('state')
 
-  let imagePath = null
-  let local = false
-  switch (downloadState) {
-    case DOWNLOADING:
-    case NOT_DOWNLOADED:
-      imagePath = onlineURL
-      break
-    case DOWNLOADED:
-      local = true
-      imagePath = 'manga://' + path.join(specificManga.get('name'), chapterNum + '', encodeURIComponent(onlineURL))
-      break
-  }
-
-  const imageClicked = () => {
-    onImageClicked(specificManga, chapterNum)
-  }
-  const prevClicked = () => {
-    onPrevClicked(specificManga, chapterNum)
+  const imageClicked = () => onImageClicked(specificManga, chapterNum)
+  const prevClicked = () => onPrevClicked(specificManga, chapterNum)
+  const imageProps = {
+    style: { width: '100%' },
+    onClick: imageClicked
   }
 
   let imageComponent = null
-  if (local) {
-    imageComponent = <img src={imagePath} style={{ width: '100%' }} onClick={imageClicked} />
-  } else {
-    imageComponent = <ImageComponent src={imagePath} type={type} style={{ width: '100%' }} onClick={imageClicked} />
+  switch (downloadState) {
+    case DOWNLOADING:
+    case NOT_DOWNLOADED:
+      imageComponent = <ImageComponent src={onlineURL} type={type} {...imageProps} />
+      break
+    case DOWNLOADED:
+      const imagePath = 'manga://' + path.join(specificManga.get('name'), chapterNum + '', encodeURIComponent(onlineURL))
+      imageComponent = <img src={imagePath} {...imageProps} />
+      break
   }
 
   return (
