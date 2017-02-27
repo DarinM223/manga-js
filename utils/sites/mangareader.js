@@ -3,21 +3,12 @@ const fetch = require('node-fetch')
 const { NOT_LOADED, NOT_DOWNLOADED } = require('../constants.js')
 
 /**
- * Returns the URL for the given manga. If chapterNum or pageNum is also
- * specified it returns the URL for the specific chapter or page of the manga.
+ * Returns the URL for the given manga.
  * @param {string} mangaName
- * @param {number|null} chapterNum
- * @param {number|null} pageNum
  * @return {string} the requested URL.
  */
 function mangaURL (mangaName, chapterNum = null, pageNum = null) {
-  if (chapterNum !== null && pageNum !== null) {
-    return `http://www.mangareader.net/${mangaName}/${chapterNum}/${pageNum}`
-  } else if (chapterNum !== null) {
-    return `http://www.mangareader.net/${mangaName}/${chapterNum}`
-  } else {
-    return `http://www.mangareader.net/${mangaName}`
-  }
+  return `http://www.mangareader.net/${mangaName}`
 }
 
 /**
@@ -90,10 +81,11 @@ function parseMangaData (mangaName, body) {
 
 /**
  * Parses the html body and returns an array of URLs to the pages of the chapter.
+ * @param {string} url the chapter URL
  * @param {string} body
  * @return {[string]} the page links in the chapter.
  */
-function parsePageLinks (body) {
+function parsePageLinks (url, body) {
   const $ = cheerio.load(body)
 
   let links = []
