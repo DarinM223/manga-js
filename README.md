@@ -11,6 +11,7 @@ A desktop manga reader in Javascript using React and Redux.
 * You can download as many chapters as you want for offline reading.
 * Because the download state is persisted to disk you can close the app while it is downloading a chapter and it will resume the next time you start it up again.
 * The app automatically checks for and adds new chapters on startup.
+* You can navigate to the next/previous page by clicking the right/left side of the manga image. You can also jump directly to a certain page or use a slider to scroll quickly through pages.
 
 ![Screenshot](/screenshot.png)
 
