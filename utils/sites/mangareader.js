@@ -7,7 +7,7 @@ const { NOT_LOADED, NOT_DOWNLOADED } = require('../constants.js')
  * @param {string} mangaName
  * @return {string} the requested URL.
  */
-function mangaURL (mangaName, chapterNum = null, pageNum = null) {
+function mangaURL (mangaName) {
   return `http://www.mangareader.net/${mangaName}`
 }
 
