@@ -4,18 +4,24 @@ import React, { PropTypes } from 'react'
 import Avatar from 'material-ui/Avatar'
 import { adapterFromURL, fileExtFromURL } from '../../utils/url.js'
 import mimetype from 'mimetype'
+import Measure from 'react-measure'
 
 export default class ImageComponent extends React.Component {
   constructor (props) {
     super(props)
 
-    const { src, type, avatar, ...imgProps } = props // eslint-disable-line
+    const { src, type, avatar, downloaded, onImageClick, ...imgProps } = props // eslint-disable-line
     const adapter = adapterFromURL(type)
 
     this.adapter = adapter
     this.imgProps = imgProps
-    this.avatar = avatar
-    this.state = { src: null }
+    this.state = {
+      src: null,
+      dimensions: {
+        width: -1,
+        height: -1
+      }
+    }
   }
 
   retrieveImage (src) {
@@ -29,23 +35,43 @@ export default class ImageComponent extends React.Component {
   }
 
   componentDidMount () {
-    this.retrieveImage(this.props.src)
+    if (!this.props.downloaded) {
+      this.retrieveImage(this.props.src)
+    }
   }
 
   componentWillUpdate (nextProps, nextState) {
-    if (nextProps.src !== this.props.src) {
+    if (nextProps.src !== this.props.src && !nextProps.downloaded) {
       this.retrieveImage(nextProps.src)
     }
   }
 
   render () {
-    if (this.state.src !== null) {
-      if (this.avatar) {
+    const imageClicked = (event) => {
+      const offsetX = event.nativeEvent.offsetX
+      const offsetY = event.nativeEvent.offsetY
+
+      this.props.onImageClick(offsetX, offsetY, this.state.dimensions)
+    }
+    const dimensionsChanged = (dim) => this.setState({ dimensions: dim })
+
+    if (this.props.downloaded) {
+      return (
+        <Measure onMeasure={dimensionsChanged}>
+          <img {...this.imgProps} src={this.props.src} onClick={imageClicked} />
+        </Measure>
+      )
+    } else if (this.state.src !== null) {
+      if (this.props.avatar) {
         return <Avatar {...this.imgProps} src={this.state.src} />
       }
-      return <img {...this.imgProps} src={this.state.src} />
+      return (
+        <Measure onMeasure={dimensionsChanged}>
+          <img {...this.imgProps} src={this.state.src} onClick={imageClicked} />
+        </Measure>
+      )
     } else {
-      if (this.avatar) {
+      if (this.props.avatar) {
         return <Avatar {...this.imgProps} />
       }
       return <div />
@@ -56,7 +82,12 @@ export default class ImageComponent extends React.Component {
 ImageComponent.propTypes = {
   src: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
-  avatar: PropTypes.bool
+  avatar: PropTypes.bool,
+  downloaded: PropTypes.bool,
+  onImageClick: PropTypes.func.isRequired
 }
 
-ImageComponent.defaultProps = { avatar: false }
+ImageComponent.defaultProps = {
+  avatar: false,
+  downloaded: false
+}

@@ -2,14 +2,8 @@ const cheerio = require('cheerio')
 const cloudscraper = require('cloudscraper')
 const { NOT_LOADED, NOT_DOWNLOADED } = require('../constants.js')
 
-function mangaURL (mangaName, chapterNum = null, pageNum = null) {
-  if (chapterNum !== null && pageNum !== null) {
-    return `http://www.mangafreak.net/Read1_${mangaName}_${chapterNum}_${pageNum}#gohere`
-  } else if (chapterNum !== null) {
-    return `http://www.mangafreak.net/Read1_${mangaName}_${chapterNum}`
-  } else {
-    return `http://www.mangafreak.net/Manga/${mangaName}`
-  }
+function mangaURL (mangaName) {
+  return `http://www.mangafreak.net/Manga/${mangaName}`
 }
 
 function sendRequest (url, buffer = false) {
@@ -81,7 +75,7 @@ function parseMangaData (mangaName, body) {
   }
 }
 
-function parsePageLinks (body) {
+function parsePageLinks (url, body) {
   const $ = cheerio.load(body)
 
   let links = []

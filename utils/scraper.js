@@ -6,7 +6,7 @@
  */
 function scrapeChapter (url, adapter) {
   return adapter.sendRequest(url)
-    .then((body) => Promise.resolve(adapter.parsePageLinks(body)))
+    .then((body) => Promise.resolve(adapter.parsePageLinks(url, body)))
     .then((links) => {
       return Promise.all(links.map((link) => {
         return adapter.sendRequest(link)
