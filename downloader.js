@@ -1,28 +1,30 @@
-const bluebird = require('bluebird')
-const fse = bluebird.promisifyAll(require('fs-extra'))
-const loc = require('./utils/location.js')
+const { startQueue } = require('./utils/downloadQueue.js')
+const BulkSender = require('./utils/BulkSender.js')
 
-function downloadChapter (event, args, worker) {
-  event.sender.send('recv-download-chapter', Object.assign({}, args, { err: null }))
-
-  // Send the download chapter message to the downloader process.
-  worker.send(args)
+function downloadProcessHandler (path, file) {
+  const sender = new BulkSender((bulkMsg) => process.send(bulkMsg))
+  startQueue(path, file, (msg) => sender.add(msg)).then((queue) => {
+    process.send({ start: true })
+    process.on('message', (msg) => {
+      const { mangaName, chapterNum, type } = msg
+      // Enqueue download tasks for each image.
+      msg.pages.forEach((url, i) => {
+        queue.enqueue({
+          mangaName,
+          chapterNum,
+          type,
+          url,
+          total: msg.pages.length,
+          curr: i
+        })
+      })
+    })
+  })
 }
 
-function deleteChapter (basePath, args) {
-  const path = loc.chapterPath(basePath, args.mangaName, args.chapterNum)
-
-  return fse.removeAsync(path)
-}
-
-function deleteManga (basePath, args) {
-  const path = loc.mangaPath(basePath, args.mangaName)
-
-  return fse.removeAsync(path)
-}
-
-module.exports = {
-  downloadChapter,
-  deleteChapter,
-  deleteManga
-}
+// Download process code.
+process.on('message', (msg) => {
+  if (msg.path) {
+    downloadProcessHandler(msg.path, 'queue.json')
+  }
+})
