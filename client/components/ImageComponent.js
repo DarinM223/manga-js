@@ -3,7 +3,7 @@
 import React, { PropTypes } from 'react'
 import Avatar from 'material-ui/Avatar'
 import { adapterFromURL, fileExtFromURL } from '../../utils/url.js'
-import mimetype from 'mimetype'
+import mime from 'mime-types'
 import Measure from 'react-measure'
 
 export default class ImageComponent extends React.Component {
@@ -27,7 +27,7 @@ export default class ImageComponent extends React.Component {
   retrieveImage (src) {
     this.adapter.sendRequest(src, true).then((buffer) => {
       const fileExt = fileExtFromURL(src)
-      const fileType = mimetype.lookup(`sample.${fileExt}`)
+      const fileType = mime.lookup(`.${fileExt}`)
       const blob = new Blob([buffer], { type: fileType })
       const url = URL.createObjectURL(blob)
       this.setState({ src: url })

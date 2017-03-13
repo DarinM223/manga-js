@@ -8,7 +8,18 @@
     <!-- Starting point for React app -->
     <div id="app"></div>
 
-    <script>require('babel-register')</script>
-    <script>require('./client/index.js')</script>
+    <script>
+      var fs = require('fs')
+      var path = require('path')
+      var bundlePath = path.join(__dirname, './build/bundle.js')
+
+      if (fs.existsSync(bundlePath)) {
+        require('./build/bundle.js')
+      } else {
+        console.log('Development mode')
+        require('babel-register')
+        require('./client/index.js')
+      }
+    </script>
   </body>
 </html>
