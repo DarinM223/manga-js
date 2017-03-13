@@ -6,7 +6,7 @@
   "scripts": {
     "start": "electron .",
     "test": "jest",
-    "build": "webpack",
+    "build": "webpack -p",
     "package-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --prune=true --out=release-builds",
     "package-windows": "electron-packager . --overwrite --asar=true --platform=win32 --arch=ia32 --prune=true --out=release-builds --version-string.CompanyName=DM --version-string.FileDescription=DM --version-string.ProductName=\"Manga-JS\"",
     "package-linux": "electron-packager . --overwrite --platform=linux --arch=x64 --prune=true --out=release-builds"
@@ -53,7 +53,8 @@
   "jest": {
     "testPathIgnorePatterns": [
       "/node_modules/",
-      "/release-builds/"
+      "/release-builds/",
+      "/build/"
     ]
   }
 }

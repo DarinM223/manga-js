@@ -17,8 +17,15 @@ A desktop manga reader in Javascript using React and Redux.
 
 ## Running
 
-In order to build and run manga-js, you have to first have npm installed. Then run `npm install` in the project directory
-and then `npm start` to start the electron application.
+In order to build and run manga-js, you have to first have npm installed. Then run `npm install` in the project directory to install the dependencies.
+
+If you want to run manga-js in development mode you can just run `npm start`.
+
+If you want to build the packaged electron app you should run `npm run build` to compile the front end Javascript and
+then run either `npm run package-mac` `npm run package-windows` or `npm run package-linux` to package the app.
+The packaged app will be in the release-builds folder.
+Because the app will always try to use the compiled Javascript bundle over the normal code, if you want to go back into development mode you have to
+remove the build/bundle.js file created from `npm run build`.
 
 ## Supported sites
 
