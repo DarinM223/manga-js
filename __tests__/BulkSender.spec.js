@@ -1,6 +1,6 @@
 /* global test, expect, jest */
 
-import { BulkSender } from '../utils/process.js'
+import BulkSender from '../utils/BulkSender.js'
 
 jest.useFakeTimers()
 

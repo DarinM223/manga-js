@@ -5,13 +5,9 @@ const path = require('path')
 const url = require('url')
 const bluebird = require('bluebird')
 const fs = bluebird.promisifyAll(require('fs'))
-const cluster = require('cluster')
 
 // Global reference to the main window.
 let mainWindow = null
-
-// Global reference to the download process.
-let downloadProcess = null
 
 const createWindow = () => {
   // Manga protocol is accessed through manga:// and allows the client to view locally downloaded files.
@@ -40,9 +36,7 @@ const createWindow = () => {
   // Uncomment this line to debug the application.
   // mainWindow.webContents.openDevTools()
 
-  mainWindow.on('closed', function () {
-    mainWindow = null
-  })
+  mainWindow.on('closed', () => { mainWindow = null })
 
   const basePath = app.getPath('userData')
   const initPath = path.join(basePath, 'init.json')
@@ -60,7 +54,9 @@ const createWindow = () => {
       .catch((err) => { console.log(err); event.returnValue = null })
   })
 
-  const { downloadChapter, deleteChapter, deleteManga } = require('./downloader.js')
+  const { downloadChapter, deleteChapter, deleteManga } = require('./downloaderUtils.js')
+  const BulkSender = require('./utils/BulkSender.js')
+  const { startQueue } = require('./utils/downloadQueue.js')
   const {
     DOWNLOAD_CHAPTER_MSG,
     DOWNLOADED_RECV,
@@ -70,48 +66,21 @@ const createWindow = () => {
   } = require('./utils/constants.js')
 
   ipcMain.on('start', (event, args) => {
-    downloadProcess.send({ path: basePath })
-    downloadProcess.on('message', (msg) => {
-      if (msg.start) {
-        // Return synchronously once the process has finished starting.
-        event.returnValue = null
-      } else {
-        event.sender.send(DOWNLOADED_RECV, msg)
-      }
+    const sender = new BulkSender((bulkMsg) => event.sender.send(DOWNLOADED_RECV, bulkMsg))
+    startQueue(app.getPath('userData'), 'queue.json', (msg) => sender.add(msg)).then((queue) => {
+      // Setup ipc handlers after queue started.
+      ipcMain.on(DOWNLOAD_CHAPTER_MSG, (event, args) => downloadChapter(event, args, queue))
+      ipcMain.on(DELETE_CHAPTER_MSG, (event, args) => returnAsync(args, deleteChapter(basePath, args), event, DELETE_CHAPTER_RECV))
+      ipcMain.on(DELETE_MANGA_MSG, (event, args) => deleteManga(basePath, args))
+
+      // Signal to the renderer that the queue has finished starting.
+      event.returnValue = null
     })
   })
-  ipcMain.on(DOWNLOAD_CHAPTER_MSG, (event, args) => downloadChapter(event, args, downloadProcess))
-  ipcMain.on(DELETE_CHAPTER_MSG, (event, args) => returnAsync(args, deleteChapter(basePath, args), event, DELETE_CHAPTER_RECV))
-  ipcMain.on(DELETE_MANGA_MSG, (event, args) => deleteManga(basePath, args))
 }
 
-if (cluster.isMaster) {
-  downloadProcess = cluster.fork()
-
-  app.on('ready', createWindow)
-
-  app.on('window-all-closed', function () {
-    // So Mac applications don't close when windows closed.
-    if (process.platform !== 'darwin') {
-      app.quit()
-    }
-  })
-
-  app.on('activate', function () {
-    // So Mac applications can be recreated when the dock icon is clicked.
-    if (mainWindow === null) {
-      createWindow()
-    }
-  })
-} else {
-  // Download process code.
-  process.on('message', (msg) => {
-    if (msg.path) {
-      const { downloadProcessHandler } = require('./utils/process.js')
-      downloadProcessHandler(msg.path, 'queue.json')
-    }
-  })
-}
+app.on('ready', createWindow)
+app.on('window-all-closed', () => app.quit())
 
 /**
  * Sends the return value when the promise completes.

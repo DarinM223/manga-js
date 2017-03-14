@@ -1,5 +1,3 @@
-const { startQueue } = require('./downloadQueue.js')
-
 /**
  * Sends a bunch of messages in a specified interval
  * in order to reduce the amount of messages needed to be sent
@@ -53,28 +51,4 @@ class BulkSender {
   }
 }
 
-function downloadProcessHandler (path, file) {
-  const sender = new BulkSender((bulkMsg) => process.send(bulkMsg))
-  startQueue(path, file, (msg) => sender.add(msg)).then((queue) => {
-    process.send({ start: true })
-    process.on('message', (msg) => {
-      const { mangaName, chapterNum, type } = msg
-      // Enqueue download tasks for each image.
-      msg.pages.forEach((url, i) => {
-        queue.enqueue({
-          mangaName,
-          chapterNum,
-          type,
-          url,
-          total: msg.pages.length,
-          curr: i
-        })
-      })
-    })
-  })
-}
-
-module.exports = {
-  BulkSender,
-  downloadProcessHandler
-}
+module.exports = BulkSender
