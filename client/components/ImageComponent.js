@@ -24,12 +24,20 @@ export default class ImageComponent extends React.Component {
     }
   }
 
+  scrollTop () {
+    if (this.props.scrollTop && !this.props.avatar) {
+      window.scrollTo(0, 0)
+    }
+  }
+
   retrieveImage (src) {
     this.adapter.sendRequest(src, true).then((buffer) => {
       const fileExt = fileExtFromURL(src)
       const fileType = mime.lookup(`.${fileExt}`)
       const blob = new Blob([buffer], { type: fileType })
       const url = URL.createObjectURL(blob)
+
+      this.scrollTop()
       this.setState({ src: url })
     })
   }
@@ -41,8 +49,12 @@ export default class ImageComponent extends React.Component {
   }
 
   componentWillUpdate (nextProps, nextState) {
-    if (nextProps.src !== this.props.src && !nextProps.downloaded) {
-      this.retrieveImage(nextProps.src)
+    if (nextProps.src !== this.props.src) {
+      if (!nextProps.downloaded) {
+        this.retrieveImage(nextProps.src)
+      } else {
+        this.scrollTop()
+      }
     }
   }
 
@@ -74,7 +86,7 @@ export default class ImageComponent extends React.Component {
       if (this.props.avatar) {
         return <Avatar {...this.imgProps} />
       }
-      return <div />
+      return <div {...this.imgProps} />
     }
   }
 }
@@ -84,10 +96,12 @@ ImageComponent.propTypes = {
   type: PropTypes.string.isRequired,
   avatar: PropTypes.bool,
   downloaded: PropTypes.bool,
+  scrollTop: PropTypes.bool,
   onImageClick: PropTypes.func.isRequired
 }
 
 ImageComponent.defaultProps = {
   avatar: false,
-  downloaded: false
+  downloaded: false,
+  scrollTop: false
 }

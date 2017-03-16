@@ -77,6 +77,7 @@ export default class ChapterViewComponent extends React.Component {
       throw new Error('Invalid download state')
     }
 
+    const scrollTop = true
     const imageComponent = (
       <ImageComponent
         src={imagePath}
@@ -84,6 +85,7 @@ export default class ChapterViewComponent extends React.Component {
         style={{ width: '100%' }}
         downloaded={downloaded}
         onImageClick={imageClicked}
+        scrollTop={scrollTop}
       />
     )
 

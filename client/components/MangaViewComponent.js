@@ -6,6 +6,7 @@ import IconButton from 'material-ui/IconButton'
 import FlatButton from 'material-ui/FlatButton'
 import RaisedButton from 'material-ui/RaisedButton'
 import Dialog from 'material-ui/Dialog'
+import { ScrollContainer } from 'react-router-scroll'
 
 import ImageComponent from './ImageComponent.js'
 import ChapterCellContainer from '../containers/ChapterCellContainer.js'
@@ -13,12 +14,16 @@ import ChapterCellContainer from '../containers/ChapterCellContainer.js'
 const styles = {
   container: {
     display: 'flex',
-    flexDirection: 'row'
+    flexDirection: 'row',
+    maxHeight: '40%',
+    overflow: 'auto'
   },
   image: {
     flex: 1,
     margin: '10px',
     objectFit: 'contain',
+    maxHeight: '25%',
+    width: 'auto',
     flexGrow: 0,
     flexShrink: 0
   },
@@ -88,9 +93,7 @@ export default class MangaViewComponent extends React.Component {
         <AppBar
           title={specificManga.get('title')}
           iconElementLeft={<IconButton onClick={this.props.back}><NavigationArrowBack /></IconButton>}
-          style={{ position: 'fixed' }}
         />
-        <br /><br /><br /><br />
         <Dialog
           title={confirmText}
           actions={actions}
@@ -101,18 +104,22 @@ export default class MangaViewComponent extends React.Component {
 
         {titleComponent(type, description, imageURL, this.handleOpen)}
 
-        <Table selectable={false}>
-          <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
-            <TableRow>
-              <TableHeaderColumn>Chapter</TableHeaderColumn>
-              <TableHeaderColumn>Date</TableHeaderColumn>
-              <TableHeaderColumn>Download</TableHeaderColumn>
-            </TableRow>
-          </TableHeader>
-          <TableBody displayRowCheckbox={false}>
-            {chapterComponents}
-          </TableBody>
-        </Table>
+        <ScrollContainer scrollKey={this.props.name}>
+          <div style={{ maxHeight: '60%', overflow: 'scroll' }}>
+            <Table selectable={false}>
+              <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
+                <TableRow>
+                  <TableHeaderColumn>Chapter</TableHeaderColumn>
+                  <TableHeaderColumn>Date</TableHeaderColumn>
+                  <TableHeaderColumn>Download</TableHeaderColumn>
+                </TableRow>
+              </TableHeader>
+              <TableBody displayRowCheckbox={false}>
+                {chapterComponents}
+              </TableBody>
+            </Table>
+          </div>
+        </ScrollContainer>
       </div>
     )
   }
