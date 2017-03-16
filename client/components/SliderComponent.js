@@ -17,6 +17,9 @@ const styles = {
   pageNumberEditing: {
     display: 'flex',
     width: '10%',
+    height: '30px',
+    position: 'relative',
+    top: '12px',
     flexDirection: 'row',
     justifyContent: 'space-around'
   }
@@ -66,8 +69,12 @@ export default class SliderComponent extends React.Component {
             onBlur={savePageText}
             onKeyPress={pageTextKeyPress}
             autoFocus
+            inputStyle={{ color: 'white', textAlign: 'center' }}
+            style={{ marginRight: '3px' }}
           />
-          <p>/{this.props.totalPages}</p>
+          <p style={{ color: 'white', fontFamily: 'Sans-Serif' }}>
+            /{this.props.totalPages}
+          </p>
         </div>
       )
     } else {

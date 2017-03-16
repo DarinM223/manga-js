@@ -9,6 +9,17 @@ import SliderComponent from './SliderComponent.js'
 
 import { NOT_DOWNLOADED, DOWNLOADING, DOWNLOADED } from '../../utils/constants.js'
 
+const styles = {
+  appBar: {
+    position: 'fixed',
+    width: '100%',
+    margin: 0
+  },
+  transparent: {
+    backgroundColor: 'rgba(50, 50, 50, 0.7)'
+  }
+}
+
 export default class ChapterViewComponent extends React.Component {
   constructor (props) {
     super(props)
@@ -92,24 +103,27 @@ export default class ChapterViewComponent extends React.Component {
     let sliderComponent = <div />
     if (this.state.navigationVisible) {
       sliderComponent = (
-        <SliderComponent
-          currValue={this.state.slider}
-          totalPages={totalPages}
-          onSliderChanged={sliderChanged}
-        />
+        <div style={styles.transparent}>
+          <SliderComponent
+            currValue={this.state.slider}
+            totalPages={totalPages}
+            onSliderChanged={sliderChanged}
+          />
+        </div>
       )
     }
 
     return (
       <div>
-        <AppBar
-          title={title}
-          iconElementLeft={<IconButton onClick={this.props.back}><NavigationArrowBack /></IconButton>}
-          iconElementRight={<IconButton onClick={dropDownClicked}><NavigationArrowDropDown /></IconButton>}
-          style={{ position: 'fixed' }}
-        />
+        <div style={styles.appBar}>
+          <AppBar
+            title={title}
+            iconElementLeft={<IconButton onClick={this.props.back}><NavigationArrowBack /></IconButton>}
+            iconElementRight={<IconButton onClick={dropDownClicked}><NavigationArrowDropDown /></IconButton>}
+          />
+          {sliderComponent}
+        </div>
         <br /><br /><br /><br />
-        {sliderComponent}
         {imageComponent}
       </div>
     )
