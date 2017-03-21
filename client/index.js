@@ -1,13 +1,14 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
-import { Router, Route, hashHistory } from 'react-router'
+import { applyRouterMiddleware, Router, Route, hashHistory } from 'react-router'
 import configureStore from './configureStore.js'
 import { syncHistoryWithStore } from 'react-router-redux'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import ReduxToastr from 'react-redux-toastr'
 import injectTapEventPlugin from 'react-tap-event-plugin'
 import { ipcRenderer } from 'electron'
+import { useScroll } from 'react-router-scroll'
 
 import MainContainer from './containers/MainContainer.js'
 import MangaViewContainer from './containers/MangaViewContainer.js'
@@ -34,7 +35,10 @@ ReactDOM.render(
         progressBar
       />
       <MuiThemeProvider>
-        <Router history={history}>
+        <Router
+          history={history}
+          render={applyRouterMiddleware(useScroll())}
+        >
           <Route path='/' component={MainContainer} onEnter={reloadMangaList(store)} />
           <Route path='/manga/:name' component={MangaViewContainer} onEnter={visitManga(store)} />
           <Route path='/chapter/:mangaName/:chapterNum' component={ChapterViewContainer} />
