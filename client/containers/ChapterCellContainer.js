@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import ChapterCellComponent from '../components/ChapterCellComponent.js'
+import ChapterCellComponent from '../components/ChapterCellComponent.jsx'
 
 import { downloadChapter, loadChapter } from '../actions/manga.js'
 

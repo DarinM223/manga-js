@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
-import Slider from 'material-ui/Slider'
-import Chip from 'material-ui/Chip'
-import TextField from 'material-ui/TextField'
+import Slider from '@mui/material/Slider'
+import Chip from '@mui/material/Chip'
+import TextField from '@mui/material/TextField'
 
 const styles = {
   slider: {

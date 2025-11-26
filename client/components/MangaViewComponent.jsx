@@ -1,14 +1,14 @@
 import React, { PropTypes } from 'react'
-import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow } from 'material-ui/Table'
-import AppBar from 'material-ui/AppBar'
-import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back'
-import IconButton from 'material-ui/IconButton'
-import FlatButton from 'material-ui/FlatButton'
-import RaisedButton from 'material-ui/RaisedButton'
-import Dialog from 'material-ui/Dialog'
+import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow } from '@mui/material/Table'
+import AppBar from '@mui/material/AppBar'
+import NavigationArrowBack from '@mui/material/svg-icons/navigation/arrow-back'
+import IconButton from '@mui/material/IconButton'
+import FlatButton from '@mui/material/FlatButton'
+import RaisedButton from '@mui/material/RaisedButton'
+import Dialog from '@mui/material/Dialog'
 import { ScrollContainer } from 'react-router-scroll'
 
-import ImageComponent from './ImageComponent.js'
+import ImageComponent from './ImageComponent.jsx'
 import ChapterCellContainer from '../containers/ChapterCellContainer.js'
 
 const styles = {

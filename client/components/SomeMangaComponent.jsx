@@ -1,10 +1,10 @@
 import React, { PropTypes } from 'react'
-import { List, ListItem } from 'material-ui/List'
-import Subheader from 'material-ui/Subheader'
-import Divider from 'material-ui/Divider'
+import { List, ListItem } from '@mui/material/List'
+import ListSubheader from '@mui/material/ListSubheader'
+import Divider from '@mui/material/Divider'
 import HeaderContainer from '../containers/HeaderContainer.js'
-import { Link } from 'react-router'
-import ImageComponent from './ImageComponent.js'
+import { Link } from 'react-router-dom'
+import ImageComponent from './ImageComponent.jsx'
 
 function mangaComponent (manga) {
   const title = manga.get('title')
@@ -40,7 +40,7 @@ export default function SomeMangaComponent ({ manga }) {
   if (newMangaComponents.length === 0) {
     mangaList = (
       <List>
-        <Subheader>Manga</Subheader>
+        <ListSubheader>Manga</ListSubheader>
         {oldMangaComponents}
       </List>
     )
@@ -48,12 +48,12 @@ export default function SomeMangaComponent ({ manga }) {
     mangaList = (
       <div>
         <List>
-          <Subheader>Recently updated manga</Subheader>
+          <ListSubheader>Recently updated manga</ListSubheader>
           {newMangaComponents}
         </List>
         <Divider />
         <List>
-          <Subheader>Manga</Subheader>
+          <ListSubheader>Manga</ListSubheader>
           {oldMangaComponents}
         </List>
       </div>

@@ -1,7 +1,7 @@
 /* global Blob, URL */
 
 import React, { PropTypes } from 'react'
-import Avatar from 'material-ui/Avatar'
+import Avatar from '@mui/material/Avatar'
 import { adapterFromURL, fileExtFromURL } from '../../utils/url.js'
 import mime from 'mime-types'
 import Measure from 'react-measure'

@@ -1,11 +1,11 @@
 import React, { PropTypes } from 'react'
-import AppBar from 'material-ui/AppBar'
+import AppBar from '@mui/material/AppBar'
 import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back'
 import NavigationArrowDropDown from 'material-ui/svg-icons/navigation/arrow-drop-down'
-import IconButton from 'material-ui/IconButton'
+import IconButton from '@mui/material/IconButton'
 import path from 'path'
-import ImageComponent from './ImageComponent.js'
-import SliderComponent from './SliderComponent.js'
+import ImageComponent from './ImageComponent.jsx'
+import SliderComponent from './SliderComponent.jsx'
 
 import { NOT_DOWNLOADED, DOWNLOADING, DOWNLOADED } from '../../utils/constants.js'
 

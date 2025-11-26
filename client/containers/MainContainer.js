@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import MainComponent from '../components/MainComponent.js'
+import MainComponent from '../components/MainComponent.jsx'
 
 const mapStateToProps = (state) => ({
   manga: state.manga

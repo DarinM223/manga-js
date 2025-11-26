@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
-import NoMangaComponent from './NoMangaComponent.js'
-import SomeMangaComponent from './SomeMangaComponent.js'
+import NoMangaComponent from './NoMangaComponent.jsx'
+import SomeMangaComponent from './SomeMangaComponent.jsx'
 
 /**
  * The main page of the manga reader.

@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
-import MangaViewComponent from '../components/MangaViewComponent.js'
-import { goBack } from 'react-router-redux'
+import MangaViewComponent from '../components/MangaViewComponent.jsx'
+// import { goBack } from 'react-router-redux'
 import { ipcRenderer } from 'electron'
 
 import { removeManga } from '../actions/manga.js'
@@ -11,11 +11,12 @@ const mapStateToProps = (state, ownProps) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  back () {
-    dispatch(goBack())
+  back() {
+    console.log('TODO: go back')
+    // dispatch(goBack())
   },
 
-  onDelete (mangaName) {
+  onDelete(mangaName) {
     ipcRenderer.send('delete-manga', { mangaName })
     dispatch(removeManga(mangaName))
   }

@@ -1,5 +1,5 @@
 import { actions } from 'react-redux-toastr'
-import { push } from 'react-router-redux'
+// import { push } from 'react-router-redux'
 
 import { NOT_LOADED, LOADED, LOADING } from '../../utils/constants.js'
 import { adapterFromURL, adapterFromHostname } from '../../utils/url.js'
@@ -80,7 +80,7 @@ export function reloadManga (manga) {
 export function removeManga (mangaName) {
   return (dispatch) => {
     dispatch({ type: REMOVE_MANGA, name: mangaName })
-    dispatch(push('/'))
+    // dispatch(push('/'))
   }
 }
 
@@ -129,7 +129,7 @@ export function loadChapter (manga, chapterNum, background = false) {
     switch (loadState) {
       case LOADED:
         if (!background) {
-          dispatch(push(chapterRoute))
+          // dispatch(push(chapterRoute))
           dispatch(updateChapter(mangaName, chapterNum))
         }
         break
@@ -151,7 +151,7 @@ export function loadChapter (manga, chapterNum, background = false) {
               pages: links
             })
             if (!background) {
-              dispatch(push(chapterRoute))
+              // dispatch(push(chapterRoute))
               dispatch(updateChapter(mangaName, chapterNum))
             }
           }

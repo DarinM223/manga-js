@@ -1,14 +1,12 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
-import { applyRouterMiddleware, Router, Route, hashHistory } from 'react-router'
+import { applyRouterMiddleware, Router, Route, hashHistory } from 'react-router-dom'
 import configureStore from './configureStore.js'
-import { syncHistoryWithStore } from 'react-router-redux'
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+import { ThemeProvider, createMuiTheme } from '@mui/material/styles'
 import ReduxToastr from 'react-redux-toastr'
-import injectTapEventPlugin from 'react-tap-event-plugin'
 import { ipcRenderer } from 'electron'
-import { useScroll } from 'react-router-scroll'
+// import { useScroll } from 'react-router-scroll'
 
 import MainContainer from './containers/MainContainer.js'
 import MangaViewContainer from './containers/MangaViewContainer.js'
@@ -18,10 +16,9 @@ import { reloadMangaList, visitManga } from './actions/manga.js'
 // Start the image downloader queue on the main process.
 ipcRenderer.sendSync('start')
 
-injectTapEventPlugin()
-
 const store = configureStore()
-const history = syncHistoryWithStore(hashHistory, store)
+const theme = createMuiTheme()
+// const history = syncHistoryWithStore(hashHistory, store)
 
 ReactDOM.render(
   <Provider store={store}>
@@ -34,16 +31,16 @@ ReactDOM.render(
         transitionOut='fadeOut'
         progressBar
       />
-      <MuiThemeProvider>
+      <ThemeProvider theme={theme}>
         <Router
           history={history}
-          render={applyRouterMiddleware(useScroll())}
+          // render={applyRouterMiddleware(useScroll())}
         >
           <Route path='/' component={MainContainer} onEnter={reloadMangaList(store)} />
           <Route path='/manga/:name' component={MangaViewContainer} onEnter={visitManga(store)} />
           <Route path='/chapter/:mangaName/:chapterNum' component={ChapterViewContainer} />
         </Router>
-      </MuiThemeProvider>
+      </ThemeProvider>
     </div>
   </Provider>,
   document.getElementById('app')
