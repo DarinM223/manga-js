@@ -4,13 +4,11 @@ import { reducer as toastrReducer } from 'react-redux-toastr'
 import { manga } from './reducers/manga.js'
 import { log } from './reducers/log.js'
 import { saveState, loadState } from './storage.js'
-import { hashHistory } from 'react-router-dom'
+// import { hashHistory } from 'react-router-dom'
 import throttle from 'lodash/throttle'
 // import createLogger from 'redux-logger'
 
 import { listenForIpc } from './ipcListener.js'
-
-const middleware = routerMiddleware(hashHistory)
 
 export default function configureStore (loadFromDisk = true) {
   const reducer = combineReducers({

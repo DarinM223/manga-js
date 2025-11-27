@@ -1,9 +1,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
-import { applyRouterMiddleware, Router, Route, hashHistory } from 'react-router-dom'
+import { HashRouter, Route } from 'react-router-dom'
 import configureStore from './configureStore.js'
-import { ThemeProvider, createMuiTheme } from '@mui/material/styles'
+import { ThemeProvider, createTheme } from '@mui/material/styles'
 import ReduxToastr from 'react-redux-toastr'
 import { ipcRenderer } from 'electron'
 // import { useScroll } from 'react-router-scroll'
@@ -17,31 +17,32 @@ import { reloadMangaList, visitManga } from './actions/manga.js'
 ipcRenderer.sendSync('start')
 
 const store = configureStore()
-const theme = createMuiTheme()
+const theme = createTheme()
 // const history = syncHistoryWithStore(hashHistory, store)
+const root = ReactDOM.createRoot(document.getElementById('app'))
 
-ReactDOM.render(
-  <Provider store={store}>
-    <div>
-      <ReduxToastr
-        timeOut={4000}
-        newestOnTop={false}
-        position='top-right'
-        transitionIn='fadeIn'
-        transitionOut='fadeOut'
-        progressBar
-      />
-      <ThemeProvider theme={theme}>
-        <Router
-          history={history}
+root.render(
+  <React.StrictMode>
+    <Provider store={store}>
+      <div>
+        <ReduxToastr
+          timeOut={4000}
+          newestOnTop={false}
+          position='top-right'
+          transitionIn='fadeIn'
+          transitionOut='fadeOut'
+          progressBar
+        />
+        <ThemeProvider theme={theme}>
+          <HashRouter
           // render={applyRouterMiddleware(useScroll())}
-        >
-          <Route path='/' component={MainContainer} onEnter={reloadMangaList(store)} />
-          <Route path='/manga/:name' component={MangaViewContainer} onEnter={visitManga(store)} />
-          <Route path='/chapter/:mangaName/:chapterNum' component={ChapterViewContainer} />
-        </Router>
-      </ThemeProvider>
-    </div>
-  </Provider>,
-  document.getElementById('app')
+          >
+            <Route path='/' component={MainContainer} onEnter={reloadMangaList(store)} />
+            <Route path='/manga/:name' component={MangaViewContainer} onEnter={visitManga(store)} />
+            <Route path='/chapter/:mangaName/:chapterNum' component={ChapterViewContainer} />
+          </HashRouter>
+        </ThemeProvider>
+      </div>
+    </Provider>
+  </React.StrictMode>
 )

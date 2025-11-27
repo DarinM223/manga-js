@@ -1,4 +1,4 @@
-import Immutable from 'immutable'
+import { fromJS } from 'immutable'
 import { ipcRenderer } from 'electron'
 
 import { LOADING, LOADED, DOWNLOADED } from '../../utils/constants.js'
@@ -17,12 +17,12 @@ import {
   DIFF_CHANGES
 } from '../actions/manga.js'
 
-const initState = Immutable.fromJS({})
+const initState = fromJS({})
 
-export function manga (state = initState, action) {
+export function manga(state = initState, action) {
   switch (action.type) {
     case ADD_MANGA:
-      const manga = Immutable.fromJS(action.manga)
+      const manga = fromJS(action.manga)
       return state.set(action.manga.name, manga)
     case REMOVE_MANGA:
       return state.delete(action.name)
@@ -61,10 +61,10 @@ export function manga (state = initState, action) {
       return state.setIn([action.mangaName, 'currentChapter'], action.chapterNum)
     case LOAD_CHAPTER:
       return state
-        .setIn([action.mangaName, 'chapters', action.chapterNum, 'pages'], Immutable.fromJS(action.pages))
+        .setIn([action.mangaName, 'chapters', action.chapterNum, 'pages'], fromJS(action.pages))
         .setIn([action.mangaName, 'chapters', action.chapterNum, 'loadState'], LOADED)
     case DIFF_CHANGES:
-      const newManga = Immutable.fromJS(action.manga)
+      const newManga = fromJS(action.manga)
       const oldManga = state.get(action.manga.name)
       return state.set(action.manga.name, applyNewChanges(oldManga, newManga))
     default:
@@ -72,7 +72,7 @@ export function manga (state = initState, action) {
   }
 }
 
-function applyNewChanges (oldManga, newManga) {
+function applyNewChanges(oldManga, newManga) {
   const oldMangaCount = oldManga.get('chapters').count()
   const newMangaCount = newManga.get('chapters').count()
   const isNew = oldMangaCount < newMangaCount

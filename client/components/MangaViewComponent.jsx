@@ -1,5 +1,9 @@
 import React, { PropTypes } from 'react'
-import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow } from '@mui/material/Table'
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
 import AppBar from '@mui/material/AppBar'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import IconButton from '@mui/material/IconButton'
@@ -104,20 +108,20 @@ export default class MangaViewComponent extends React.Component {
         {titleComponent(type, description, imageURL, this.handleOpen)}
 
         {/* <ScrollContainer scrollKey={this.props.name}> */}
-          <div style={{ maxHeight: '60%', overflow: 'scroll' }}>
-            <Table selectable={false}>
-              <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
-                <TableRow>
-                  <TableHeaderColumn>Chapter</TableHeaderColumn>
-                  <TableHeaderColumn>Date</TableHeaderColumn>
-                  <TableHeaderColumn>Download</TableHeaderColumn>
-                </TableRow>
-              </TableHeader>
-              <TableBody displayRowCheckbox={false}>
-                {chapterComponents}
-              </TableBody>
-            </Table>
-          </div>
+        <div style={{ maxHeight: '60%', overflow: 'scroll' }}>
+          <Table selectable={false}>
+            <TableHead displaySelectAll={false} adjustForCheckbox={false}>
+              <TableRow>
+                <TableCell>Chapter</TableCell>
+                <TableCell>Date</TableCell>
+                <TableCell>Download</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody displayRowCheckbox={false}>
+              {chapterComponents}
+            </TableBody>
+          </Table>
+        </div>
         {/* </ScrollContainer> */}
       </div>
     )

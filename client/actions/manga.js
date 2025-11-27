@@ -3,7 +3,7 @@ import { actions } from 'react-redux-toastr'
 
 import { NOT_LOADED, LOADED, LOADING } from '../../utils/constants.js'
 import { adapterFromURL, adapterFromHostname } from '../../utils/url.js'
-import scraper from '../../utils/scraper.js'
+import * as scraper from '../../utils/scraper.js'
 
 export const ADD_MANGA = 'ADD_MANGA'
 export const REMOVE_MANGA = 'REMOVE_MANGA'
@@ -17,7 +17,7 @@ export const DOWNLOADED_PAGE = 'DOWNLOADED_PAGE'
 export const SET_LOADING = 'SET_LOADING'
 export const DIFF_CHANGES = 'DIFF_CHANGES'
 
-function errorNotify (title, message) {
+function errorNotify(title, message) {
   return actions.add({
     type: 'error',
     title,
@@ -29,7 +29,7 @@ function errorNotify (title, message) {
   })
 }
 
-export function addManga (url, mangaList) {
+export function addManga(url, mangaList) {
   const adapter = adapterFromURL(url)
 
   return (dispatch) => {
@@ -43,7 +43,7 @@ export function addManga (url, mangaList) {
   }
 }
 
-export function visitManga (store) {
+export function visitManga(store) {
   return (nextState) => {
     store.dispatch({
       type: VISIT_MANGA,
@@ -52,7 +52,7 @@ export function visitManga (store) {
   }
 }
 
-export function reloadMangaList (store) {
+export function reloadMangaList(store) {
   // Only automatically reload manga list when you first open the application.
   // Reloading after the fact will have to be done manually using the refresh button.
   let reloaded = false
@@ -68,7 +68,7 @@ export function reloadMangaList (store) {
   }
 }
 
-export function reloadManga (manga) {
+export function reloadManga(manga) {
   const adapter = adapterFromHostname(manga.get('type'))
   const url = adapter.mangaURL(manga.get('name'))
 
@@ -77,14 +77,14 @@ export function reloadManga (manga) {
   }
 }
 
-export function removeManga (mangaName) {
+export function removeManga(mangaName) {
   return (dispatch) => {
     dispatch({ type: REMOVE_MANGA, name: mangaName })
     // dispatch(push('/'))
   }
 }
 
-export function updatePage (manga, chapterNum, amount) {
+export function updatePage(manga, chapterNum, amount) {
   return {
     type: UPDATE_PAGE,
     mangaName: manga.get('name'),
@@ -93,7 +93,7 @@ export function updatePage (manga, chapterNum, amount) {
   }
 }
 
-export function updateChapter (mangaName, chapterNum) {
+export function updateChapter(mangaName, chapterNum) {
   return {
     type: UPDATE_CHAPTER,
     mangaName,
@@ -101,7 +101,7 @@ export function updateChapter (mangaName, chapterNum) {
   }
 }
 
-export function setLoading (mangaName, chapterNum) {
+export function setLoading(mangaName, chapterNum) {
   return {
     type: SET_LOADING,
     mangaName,
@@ -109,7 +109,7 @@ export function setLoading (mangaName, chapterNum) {
   }
 }
 
-export function downloadChapter (mangaName, chapterNum) {
+export function downloadChapter(mangaName, chapterNum) {
   return {
     type: DOWNLOAD_CHAPTER,
     mangaName,
@@ -117,7 +117,7 @@ export function downloadChapter (mangaName, chapterNum) {
   }
 }
 
-export function loadChapter (manga, chapterNum, background = false) {
+export function loadChapter(manga, chapterNum, background = false) {
   const chapterRoute = `/chapter/${manga.get('name')}/${chapterNum}`
   return (dispatch) => {
     const mangaName = manga.get('name')

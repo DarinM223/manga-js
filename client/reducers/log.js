@@ -1,10 +1,10 @@
-import Immutable from 'immutable'
+import { fromJS } from 'immutable'
 
 import { SET_LOADING, LOAD_CHAPTER } from '../actions/manga.js'
 
-export const initState = Immutable.fromJS({})
+export const initState = fromJS({})
 
-export function log (state = initState, action) {
+export function log(state = initState, action) {
   switch (action.type) {
     case SET_LOADING:
       return state.setIn([action.mangaName, action.chapterNum], true)

@@ -1,8 +1,8 @@
-import Immutable from 'immutable'
+import { fromJS } from 'immutable'
 import { ipcRenderer } from 'electron'
 import { restoreFromLog } from './restoreFromLog.js'
 
-export function loadState () {
+export function loadState() {
   try {
     const serializedState = ipcRenderer.sendSync('load-state')
     if (serializedState === null) {
@@ -11,8 +11,8 @@ export function loadState () {
 
     const state = JSON.parse(serializedState)
     const [manga, log] = restoreFromLog(
-      Immutable.fromJS(state.manga),
-      Immutable.fromJS(state.log)
+      fromJS(state.manga),
+      fromJS(state.log)
     )
     return { ...state, manga, log }
   } catch (e) {
@@ -21,7 +21,7 @@ export function loadState () {
   }
 }
 
-export function saveState (state) {
+export function saveState(state) {
   try {
     const manga = state.manga.toJS()
     const log = state.log.toJS()

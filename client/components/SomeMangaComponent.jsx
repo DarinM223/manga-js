@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react'
-import { List, ListItem } from '@mui/material/List'
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
 import ListSubheader from '@mui/material/ListSubheader'
 import Divider from '@mui/material/Divider'
 import HeaderContainer from '../containers/HeaderContainer.js'

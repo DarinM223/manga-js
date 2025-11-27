@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react'
-import { TableRow, TableRowColumn } from '@mui/material/Table'
+import TableRow from '@mui/material/TableRow';
+import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton'
 import GetAppIcon from '@mui/icons-material/GetApp';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -44,9 +45,9 @@ export default function ChapterCellComponent({ manga, chapterNum, onDoubleClick,
 
   return (
     <TableRow {...rowProps} onDoubleClick={cellClicked}>
-      <TableRowColumn>{chapterName}</TableRowColumn>
-      <TableRowColumn>{chapter.get('date')}</TableRowColumn>
-      <TableRowColumn>{downloadComponent}</TableRowColumn>
+      <TableCell>{chapterName}</TableCell>
+      <TableCell>{chapter.get('date')}</TableCell>
+      <TableCell>{downloadComponent}</TableCell>
     </TableRow>
   )
 }

@@ -4,7 +4,7 @@
  * @param {Adapter} adapter
  * @return {Promise<[string]>} an array of image urls for each page in the chapter.
  */
-function scrapeChapter (url, adapter) {
+export function scrapeChapter (url, adapter) {
   return adapter.sendRequest(url)
     .then((body) => Promise.resolve(adapter.parsePageLinks(url, body)))
     .then((links) => {
@@ -21,11 +21,9 @@ function scrapeChapter (url, adapter) {
  * @param {Adapter} adapter
  * @return {Manga} the manga data that was parsed.
  */
-function scrape (url, adapter) {
+export function scrape (url, adapter) {
   const mangaName = url.substring(url.lastIndexOf('/') + 1, url.length)
 
   return adapter.sendRequest(url)
     .then((body) => adapter.parseMangaData(mangaName, body))
 }
-
-module.exports = { scrapeChapter, scrape }

@@ -1,16 +1,14 @@
-module.exports = {
-  NOT_LOADED: 'NOT_LOADED',
-  LOADING: 'LOADING',
-  LOADED: 'LOADED',
+export const NOT_LOADED = 'NOT_LOADED'
+export const LOADING = 'LOADING'
+export const LOADED = 'LOADED'
 
-  NOT_DOWNLOADED: 'NOT_DOWNLOADED',
-  DOWNLOADING: 'DOWNLOADING',
-  DOWNLOADED: 'DOWNLOADED',
+export const NOT_DOWNLOADED = 'NOT_DOWNLOADED'
+export const DOWNLOADING = 'DOWNLOADING'
+export const DOWNLOADED = 'DOWNLOADED'
 
-  DOWNLOAD_CHAPTER_MSG: 'download-chapter',
-  DOWNLOAD_CHAPTER_RECV: 'recv-download-chapter',
-  DOWNLOADED_RECV: 'recv-downloaded',
-  DELETE_CHAPTER_MSG: 'delete-chapter',
-  DELETE_CHAPTER_RECV: 'recv-delete-chapter',
-  DELETE_MANGA_MSG: 'delete-manga'
-}
+export const DOWNLOAD_CHAPTER_MSG = 'download-chapter'
+export const DOWNLOAD_CHAPTER_RECV = 'recv-download-chapter'
+export const DOWNLOADED_RECV = 'recv-downloaded'
+export const DELETE_CHAPTER_MSG = 'delete-chapter'
+export const DELETE_CHAPTER_RECV = 'recv-delete-chapter'
+export const DELETE_MANGA_MSG = 'delete-manga'
