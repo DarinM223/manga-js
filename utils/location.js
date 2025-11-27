@@ -1,20 +1,14 @@
-const path = require('path')
+import path from 'path'
 
-function mangaPath (basePath, mangaName) {
+export function mangaPath (basePath, mangaName) {
   return path.join(basePath, mangaName)
 }
 
-function chapterPath (basePath, mangaName, chapterNum) {
+export function chapterPath (basePath, mangaName, chapterNum) {
   return path.join(mangaPath(basePath, mangaName), chapterNum + '')
 }
 
-function imagePath (basePath, mangaName, chapterNum, url) {
+export function imagePath (basePath, mangaName, chapterNum, url) {
   const encodedURL = encodeURIComponent(url)
   return path.join(chapterPath(basePath, mangaName, chapterNum), encodedURL)
-}
-
-module.exports = {
-  mangaPath,
-  chapterPath,
-  imagePath
 }

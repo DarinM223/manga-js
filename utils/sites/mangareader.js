@@ -1,6 +1,5 @@
-const cheerio = require('cheerio')
-const fetch = require('node-fetch')
-const { NOT_LOADED, NOT_DOWNLOADED } = require('../constants.js')
+import * as cheerio from 'cheerio'
+import { NOT_LOADED, NOT_DOWNLOADED } from '../constants.js'
 
 /**
  * Returns the URL for the given manga.
@@ -107,7 +106,7 @@ function parsePageImage (body) {
   return $('#img').attr('src')
 }
 
-module.exports = {
+export default {
   mangaURL,
   sendRequest,
   parseMangaData,

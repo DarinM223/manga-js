@@ -1,5 +1,5 @@
 import { ipcRenderer } from 'electron'
-import { NOT_DOWNLOADED, DOWNLOADED, DOWNLOADING } from '../utils/constants.js'
+import { NOT_DOWNLOADED, DOWNLOADED, DOWNLOADING } from '../../utils/constants.js'
 import { SET_DOWNLOAD_STATE, DOWNLOADED_PAGE } from './actions/manga.js'
 
 export const listenForIpc = (store) => {

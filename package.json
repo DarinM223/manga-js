@@ -2,7 +2,7 @@
   "name": "manga-js",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "./out/main/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -11,6 +11,7 @@
   "license": "ISC",
   "packageManager": "pnpm@10.23.0",
   "dependencies": {
+    "@electron-toolkit/preload": "^3.0.2",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@mui/icons-material": "^7.3.5",
@@ -28,7 +29,14 @@
     "react-router-dom": "^7.9.6"
   },
   "devDependencies": {
-    "electron": "^39.2.4",
+    "electron": "^38.1.2",
+    "electron-builder": "^26.0.12",
+    "electron-vite": "^4.0.1",
     "vite": "^7.2.4"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "electron"
+    ]
   }
 }

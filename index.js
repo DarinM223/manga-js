@@ -1,10 +1,20 @@
 // Entry point for Electron application.
 
-const { app, protocol, ipcMain, BrowserWindow } = require('electron')
-const path = require('path')
-const url = require('url')
-const bluebird = require('bluebird')
-const fs = bluebird.promisifyAll(require('fs'))
+import { app, protocol, ipcMain, BrowserWindow } from 'electron'
+import path from 'path'
+import url from 'url'
+import fs from 'fs/promises'
+import { downloadChapter, deleteChapter, deleteManga } from './downloaderUtils.js'
+import BulkSender from './utils/BulkSender.js'
+import { startQueue } from './utils/downloadQueue.js'
+import {
+  DOWNLOAD_CHAPTER_MSG,
+  DOWNLOADED_RECV,
+  DELETE_CHAPTER_MSG,
+  DELETE_CHAPTER_RECV,
+  DELETE_MANGA_MSG
+} from './utils/constants.js'
+
 
 // Global reference to the main window.
 let mainWindow = null
@@ -42,28 +52,17 @@ const createWindow = () => {
   const initPath = path.join(basePath, 'init.json')
 
   ipcMain.on('save-state', (event, state) => {
-    fs.openAsync(initPath, 'a')
-      .then((fd) => fs.closeAsync(fd))
-      .then(() => fs.writeFileAsync(initPath, state, 'utf-8'))
+    fs.open(initPath, 'a')
+      .then((fd) => fd.close())
+      .then(() => fs.writeFile(initPath, state, 'utf-8'))
       .catch((err) => console.log(err))
   })
 
   ipcMain.on('load-state', (event, arg) => {
-    fs.readFileAsync(initPath, 'utf-8')
+    fs.readFile(initPath, 'utf-8')
       .then((state) => { event.returnValue = state })
       .catch((err) => { console.log(err); event.returnValue = null })
   })
-
-  const { downloadChapter, deleteChapter, deleteManga } = require('./downloaderUtils.js')
-  const BulkSender = require('./utils/BulkSender.js')
-  const { startQueue } = require('./utils/downloadQueue.js')
-  const {
-    DOWNLOAD_CHAPTER_MSG,
-    DOWNLOADED_RECV,
-    DELETE_CHAPTER_MSG,
-    DELETE_CHAPTER_RECV,
-    DELETE_MANGA_MSG
-  } = require('./utils/constants.js')
 
   ipcMain.on('start', (event, args) => {
     const sender = new BulkSender((bulkMsg) => event.sender.send(DOWNLOADED_RECV, bulkMsg))
@@ -85,7 +84,7 @@ app.on('window-all-closed', () => app.quit())
 /**
  * Sends the return value when the promise completes.
  */
-function returnAsync (args, promise, event, channel) {
+function returnAsync(args, promise, event, channel) {
   promise
     .then((result) => event.sender.send(channel, Object.assign({}, args, { err: null, result })))
     .catch((err) => event.sender.send(channel, Object.assign({}, args, { err, result: null })))

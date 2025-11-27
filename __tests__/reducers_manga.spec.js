@@ -1,6 +1,6 @@
 /* global test, expect, jasmine */
 
-import configureStore from '../client/configureStore.js'
+import configureStore from '../src/renderer/configureStore.js'
 import { LOADED, NOT_LOADED, NOT_DOWNLOADED } from '../utils/constants.js'
 import {
   addManga,
@@ -9,7 +9,7 @@ import {
   loadChapter,
   VISIT_MANGA,
   DIFF_CHANGES
-} from '../client/actions/manga.js'
+} from '../src/renderer/actions/manga.js'
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000
 

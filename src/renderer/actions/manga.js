@@ -1,9 +1,9 @@
 import { actions } from 'react-redux-toastr'
 // import { push } from 'react-router-redux'
 
-import { NOT_LOADED, LOADED, LOADING } from '../../utils/constants.js'
-import { adapterFromURL, adapterFromHostname } from '../../utils/url.js'
-import * as scraper from '../../utils/scraper.js'
+import { NOT_LOADED, LOADED, LOADING } from '../../../utils/constants.js'
+import { adapterFromURL, adapterFromHostname } from '../../../utils/url.js'
+import * as scraper from '../../../utils/scraper.js'
 
 export const ADD_MANGA = 'ADD_MANGA'
 export const REMOVE_MANGA = 'REMOVE_MANGA'

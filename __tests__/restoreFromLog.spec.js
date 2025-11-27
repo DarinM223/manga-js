@@ -1,6 +1,6 @@
 /* global test, expect */
 
-import { restoreFromLog } from '../client/restoreFromLog.js'
+import { restoreFromLog } from '../src/renderer/restoreFromLog.js'
 import { NOT_LOADED, LOADED } from '../utils/constants.js'
 import Immutable from 'immutable'
 

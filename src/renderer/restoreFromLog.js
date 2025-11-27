@@ -1,4 +1,4 @@
-import { NOT_LOADED } from '../utils/constants.js'
+import { NOT_LOADED } from '../../utils/constants.js'
 import { initState } from './reducers/log.js'
 
 export function restoreFromLog (manga, log) {

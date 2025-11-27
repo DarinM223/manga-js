@@ -6,7 +6,7 @@ import IconButton from '@mui/material/IconButton'
 import Dialog from '@mui/material/Dialog'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
-import { validHostname } from '../../utils/url.js'
+import { validHostname } from '../../../utils/url.js'
 
 const EMPTY_TEXT = 'EMPTY_TEXT'
 const INVALID_URL = 'INVALID_URL'

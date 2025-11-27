@@ -1,3 +1,6 @@
+import mangareader from './sites/mangareader.js'
+import mangafreak from './sites/mangafreak.js'
+
 function hostnameFromURL(url) {
   const elem = document.createElement('a')
   elem.href = url
@@ -5,9 +8,9 @@ function hostnameFromURL(url) {
 }
 
 const hostnameAdapterMap = {
-  'www.mangareader.net': require('./sites/mangareader.js'),
-  'www.mangafreak.net': require('./sites/mangafreak.js'),
-  'www3.mangafreak.net': require('./sites/mangafreak.js')
+  'www.mangareader.net': mangareader,
+  'www.mangafreak.net': mangafreak,
+  'www3.mangafreak.net': mangafreak,
 }
 
 export function adapterFromURL(url) {

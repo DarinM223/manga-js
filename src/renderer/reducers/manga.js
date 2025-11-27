@@ -1,7 +1,7 @@
 import { fromJS } from 'immutable'
 import { ipcRenderer } from 'electron'
 
-import { LOADING, LOADED, DOWNLOADED } from '../../utils/constants.js'
+import { LOADING, LOADED, DOWNLOADED } from '../../../utils/constants.js'
 
 import {
   ADD_MANGA,

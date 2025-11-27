@@ -3,7 +3,7 @@
  * in order to reduce the amount of messages needed to be sent
  * to the main process.
  */
-class BulkSender {
+export default class BulkSender {
   constructor (send, interval = 1000) {
     this.downloadData = {}
     this.send = send
@@ -50,5 +50,3 @@ class BulkSender {
     }, this.interval)
   }
 }
-
-module.exports = BulkSender

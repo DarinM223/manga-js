@@ -1,8 +1,7 @@
-const bluebird = require('bluebird')
-const fse = bluebird.promisifyAll(require('fs-extra'))
-const loc = require('./utils/location.js')
+import fs from 'fs/promises'
+import * as loc from './utils/location.js'
 
-function downloadChapter (event, args, queue) {
+export function downloadChapter (event, args, queue) {
   event.sender.send('recv-download-chapter', Object.assign({}, args, { err: null }))
   const { mangaName, chapterNum, type } = args
 
@@ -19,20 +18,14 @@ function downloadChapter (event, args, queue) {
   })
 }
 
-function deleteChapter (basePath, args) {
+export function deleteChapter (basePath, args) {
   const path = loc.chapterPath(basePath, args.mangaName, args.chapterNum)
 
-  return fse.removeAsync(path)
+  return fs.rm(path)
 }
 
-function deleteManga (basePath, args) {
+export function deleteManga (basePath, args) {
   const path = loc.mangaPath(basePath, args.mangaName)
 
-  return fse.removeAsync(path)
-}
-
-module.exports = {
-  downloadChapter,
-  deleteChapter,
-  deleteManga
+  return fs.rm(path)
 }

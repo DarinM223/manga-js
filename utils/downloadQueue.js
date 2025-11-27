@@ -1,9 +1,7 @@
-const bluebird = require('bluebird')
-const fs = bluebird.promisifyAll(require('fs'))
-const fse = bluebird.promisifyAll(require('fs-extra'))
-const loc = require('./location.js')
-const path = require('path')
-const { adapterFromHostname } = require('./url.js')
+import fs from 'fs/promises'
+import * as loc from './location.js'
+import path from 'path'
+import { adapterFromHostname } from './url.js'
 
 /*
  * Queue format:
@@ -19,8 +17,8 @@ const { adapterFromHostname } = require('./url.js')
  * ]
  */
 
-class DownloadQueue {
-  constructor (path, file, send, data = null) {
+export class DownloadQueue {
+  constructor(path, file, send, data = null) {
     this.path = path
     this.file = file
     this.send = send
@@ -37,12 +35,12 @@ class DownloadQueue {
 
   // Super slow stringifies and writes the entire JSON.
   // Doesn't matter for now since the size of the queue will be small, YOLO >_<
-  write () {
+  write() {
     const queuePath = path.join(this.path, this.file)
-    return fs.writeFileAsync(queuePath, JSON.stringify(this.queue), 'utf-8')
+    return fs.writeFile(queuePath, JSON.stringify(this.queue), 'utf-8')
   }
 
-  enqueue (data) {
+  enqueue(data) {
     this.queue.push(data)
 
     // Restart queue if it stopped.
@@ -52,7 +50,7 @@ class DownloadQueue {
     }
   }
 
-  dequeue () {
+  dequeue() {
     if (this.queue.length === 0) {
       return null
     }
@@ -61,36 +59,36 @@ class DownloadQueue {
     return result
   }
 
-  downloadImage (mangaName, chapterNum, url, type) {
+  downloadImage(mangaName, chapterNum, url, type) {
     const adapter = adapterFromHostname(type)
     const imagePath = loc.imagePath(this.path, mangaName, chapterNum, url)
     return adapter.sendRequest(url, true)
-      .then((chunk) => fs.writeFileAsync(imagePath, new Buffer(chunk)))
+      .then((chunk) => fs.writeFile(imagePath, new Buffer(chunk)))
   }
 
-  isDownloadedImage (mangaName, chapterNum, url) {
+  isDownloadedImage(mangaName, chapterNum, url) {
     const imagePath = loc.imagePath(this.path, mangaName, chapterNum, url)
 
     return new Promise((resolve, reject) => {
-      return fs.openAsync(imagePath, 'r')
-        .then((fd) => fs.closeAsync(fd))
+      return fs.open(imagePath, 'r')
+        .then((fd) => fd.close())
         .then(() => resolve(true))
         .catch(() => resolve(false))
     })
   }
 
-  reply (msg) {
+  reply(msg) {
     this.send(msg)
   }
 
-  start () {
+  start() {
     const top = this.dequeue()
     if (top === null) {
       this.running = false
       return Promise.resolve()
     }
 
-    return fse.mkdirsAsync(loc.chapterPath(this.path, top.mangaName, top.chapterNum))
+    return fs.mkdir(loc.chapterPath(this.path, top.mangaName, top.chapterNum), { recursive: true })
       .then(() => this.isDownloadedImage(top.mangaName, top.chapterNum, top.url))
       .then((downloaded) => {
         if (!downloaded) {
@@ -107,15 +105,10 @@ class DownloadQueue {
   }
 }
 
-function startQueue (queuePath, file, send) {
+export function startQueue(queuePath, file, send) {
   const completePath = path.join(queuePath, file)
-  return fs.openAsync(completePath, 'a')
-    .then((fd) => fs.closeAsync(fd))
-    .then(() => fs.readFileAsync(completePath, 'utf-8'))
+  return fs.open(completePath, 'a')
+    .then((fd) => fd.close())
+    .then(() => fs.readFile(completePath, 'utf-8'))
     .then((data) => new DownloadQueue(queuePath, file, send, data.trim()))
-}
-
-module.exports = {
-  DownloadQueue,
-  startQueue
 }

@@ -7,7 +7,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import CircularProgress from '@mui/material/CircularProgress'
 import { ipcRenderer } from 'electron'
 
-import { NOT_DOWNLOADED, DOWNLOADING, DOWNLOADED } from '../../utils/constants.js'
+import { NOT_DOWNLOADED, DOWNLOADING, DOWNLOADED } from '../../../utils/constants.js'
 
 export default function ChapterCellComponent({ manga, chapterNum, onDoubleClick, onDownload, onCancelDownload, onDeleteDownload, ...rowProps }) {
   const mangaName = manga.get('name')

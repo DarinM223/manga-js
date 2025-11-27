@@ -7,7 +7,7 @@ import path from 'path'
 import ImageComponent from './ImageComponent.jsx'
 import SliderComponent from './SliderComponent.jsx'
 
-import { NOT_DOWNLOADED, DOWNLOADING, DOWNLOADED } from '../../utils/constants.js'
+import { NOT_DOWNLOADED, DOWNLOADING, DOWNLOADED } from '../../../utils/constants.js'
 
 const styles = {
   appBar: {
