@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import AppBar from '@mui/material/AppBar'
-import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back'
-import NavigationArrowDropDown from 'material-ui/svg-icons/navigation/arrow-drop-down'
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import IconButton from '@mui/material/IconButton'
 import path from 'path'
 import ImageComponent from './ImageComponent.jsx'
@@ -118,8 +118,8 @@ export default class ChapterViewComponent extends React.Component {
         <div style={styles.appBar}>
           <AppBar
             title={title}
-            iconElementLeft={<IconButton onClick={this.props.back}><NavigationArrowBack /></IconButton>}
-            iconElementRight={<IconButton onClick={dropDownClicked}><NavigationArrowDropDown /></IconButton>}
+            iconElementLeft={<IconButton onClick={this.props.back}><ArrowBackIcon /></IconButton>}
+            iconElementRight={<IconButton onClick={dropDownClicked}><ArrowDropDownIcon /></IconButton>}
           />
           {sliderComponent}
         </div>

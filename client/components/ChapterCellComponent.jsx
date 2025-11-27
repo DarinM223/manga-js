@@ -1,14 +1,14 @@
 import React, { PropTypes } from 'react'
 import { TableRow, TableRowColumn } from '@mui/material/Table'
 import IconButton from '@mui/material/IconButton'
-import ActionGetApp from '@mui/material/svg-icons/action/get-app'
-import ActionDelete from '@mui/material/svg-icons/action/delete'
+import GetAppIcon from '@mui/icons-material/GetApp';
+import DeleteIcon from '@mui/icons-material/Delete';
 import CircularProgress from '@mui/material/CircularProgress'
 import { ipcRenderer } from 'electron'
 
 import { NOT_DOWNLOADED, DOWNLOADING, DOWNLOADED } from '../../utils/constants.js'
 
-export default function ChapterCellComponent ({ manga, chapterNum, onDoubleClick, onDownload, onCancelDownload, onDeleteDownload, ...rowProps }) {
+export default function ChapterCellComponent({ manga, chapterNum, onDoubleClick, onDownload, onCancelDownload, onDeleteDownload, ...rowProps }) {
   const mangaName = manga.get('name')
   const chapter = manga.get('chapters').get(chapterNum)
   const currentChapter = manga.get('currentChapter')
@@ -30,7 +30,7 @@ export default function ChapterCellComponent ({ manga, chapterNum, onDoubleClick
   let downloadComponent = null
   switch (downloadState) {
     case NOT_DOWNLOADED:
-      downloadComponent = <IconButton onClick={downloadClicked}><ActionGetApp /></IconButton>
+      downloadComponent = <IconButton onClick={downloadClicked}><GetAppIcon /></IconButton>
       break
     case DOWNLOADING:
       const total = chapter.get('pages').count()
@@ -38,7 +38,7 @@ export default function ChapterCellComponent ({ manga, chapterNum, onDoubleClick
       downloadComponent = <CircularProgress mode='determinate' value={progress} max={total} size={20} style={{ marginLeft: '15px' }} />
       break
     case DOWNLOADED:
-      downloadComponent = <IconButton onClick={deleteDownloadClicked}><ActionDelete /></IconButton>
+      downloadComponent = <IconButton onClick={deleteDownloadClicked}><DeleteIcon /></IconButton>
       break
   }
 

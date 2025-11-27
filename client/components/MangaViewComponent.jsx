@@ -1,12 +1,11 @@
 import React, { PropTypes } from 'react'
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow } from '@mui/material/Table'
 import AppBar from '@mui/material/AppBar'
-import NavigationArrowBack from '@mui/material/svg-icons/navigation/arrow-back'
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import IconButton from '@mui/material/IconButton'
-import FlatButton from '@mui/material/FlatButton'
-import RaisedButton from '@mui/material/RaisedButton'
+import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
-import { ScrollContainer } from 'react-router-scroll'
+// import { ScrollContainer } from 'react-router-scroll'
 
 import ImageComponent from './ImageComponent.jsx'
 import ChapterCellContainer from '../containers/ChapterCellContainer.js'
@@ -34,7 +33,7 @@ const styles = {
   }
 }
 
-function titleComponent (type, description, imageURL, openDialog) {
+function titleComponent(type, description, imageURL, openDialog) {
   // Dummy variable that is always true to trick eslint >:)
   const isSecondary = true
   const deleteText = 'Delete manga'
@@ -50,14 +49,14 @@ function titleComponent (type, description, imageURL, openDialog) {
       <div style={styles.div}>
         <h3>Description:</h3>
         <p>{textDescription}</p>
-        <RaisedButton label={deleteText} secondary={isSecondary} onClick={openDialog} />
+        <Button variant="contained" label={deleteText} secondary={isSecondary} onClick={openDialog} />
       </div>
     </div>
   )
 }
 
 export default class MangaViewComponent extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
 
     this.state = { open: false }
@@ -69,13 +68,13 @@ export default class MangaViewComponent extends React.Component {
     }
   }
 
-  render () {
+  render() {
     const specificManga = this.props.manga.get(this.props.name)
     const imageURL = specificManga.get('image')
     const description = specificManga.get('description')
     const type = `http://${specificManga.get('type')}`
     const actions = [
-      <FlatButton
+      <Button
         label='Yes, delete manga'
         keyboardFocused={false}
         onTouchTap={this.handleDelete}
@@ -92,7 +91,7 @@ export default class MangaViewComponent extends React.Component {
       <div>
         <AppBar
           title={specificManga.get('title')}
-          iconElementLeft={<IconButton onClick={this.props.back}><NavigationArrowBack /></IconButton>}
+          iconElementLeft={<IconButton onClick={this.props.back}><ArrowBackIcon /></IconButton>}
         />
         <Dialog
           title={confirmText}
@@ -104,7 +103,7 @@ export default class MangaViewComponent extends React.Component {
 
         {titleComponent(type, description, imageURL, this.handleOpen)}
 
-        <ScrollContainer scrollKey={this.props.name}>
+        {/* <ScrollContainer scrollKey={this.props.name}> */}
           <div style={{ maxHeight: '60%', overflow: 'scroll' }}>
             <Table selectable={false}>
               <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
@@ -119,7 +118,7 @@ export default class MangaViewComponent extends React.Component {
               </TableBody>
             </Table>
           </div>
-        </ScrollContainer>
+        {/* </ScrollContainer> */}
       </div>
     )
   }

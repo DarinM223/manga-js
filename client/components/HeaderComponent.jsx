@@ -1,10 +1,10 @@
 import React, { PropTypes } from 'react'
 import AppBar from '@mui/material/AppBar'
-import ActionNoteAdd from '@mui/material/svg-icons/action/note-add'
-import AvLoop from '@mui/material/svg-icons/av/loop'
+import NoteAddIcon from '@mui/icons-material/NoteAdd';
+import LoopIcon from '@mui/icons-material/Loop';
 import IconButton from '@mui/material/IconButton'
 import Dialog from '@mui/material/Dialog'
-import FlatButton from '@mui/material/FlatButton'
+import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import { validHostname } from '../../utils/url.js'
 
@@ -13,7 +13,7 @@ const INVALID_URL = 'INVALID_URL'
 const NO_ERROR = 'NO_ERROR'
 
 export default class HeaderComponent extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
       open: false,
@@ -49,9 +49,9 @@ export default class HeaderComponent extends React.Component {
     }
   }
 
-  render () {
+  render() {
     const actions = [
-      <FlatButton
+      <Button
         label='Add manga'
         keyboardFocused={false}
         onTouchTap={this.submit}
@@ -75,8 +75,8 @@ export default class HeaderComponent extends React.Component {
       <div>
         <AppBar
           title='Manga list'
-          iconElementRight={<IconButton><ActionNoteAdd /></IconButton>}
-          iconElementLeft={<IconButton><AvLoop /></IconButton>}
+          iconElementRight={<IconButton><NoteAddIcon /></IconButton>}
+          iconElementLeft={<IconButton><LoopIcon /></IconButton>}
           onRightIconButtonTouchTap={this.handleOpen}
           onLeftIconButtonTouchTap={this.handleReload}
         />
