@@ -29,6 +29,7 @@
     "react-router-dom": "^7.9.6"
   },
   "devDependencies": {
+    "@types/react": "^19.2.7",
     "electron": "^38.1.2",
     "electron-builder": "^26.0.12",
     "electron-vite": "^4.0.1",

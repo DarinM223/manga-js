@@ -37,9 +37,9 @@ root.render(
           // render={applyRouterMiddleware(useScroll())}
           >
             <Routes>
-              <Route path='/' element={MainContainer} onEnter={reloadMangaList(store)} />
-              <Route path='/manga/:name' element={MangaViewContainer} onEnter={visitManga(store)} />
-              <Route path='/chapter/:mangaName/:chapterNum' element={ChapterViewContainer} />
+              <Route path='/' element={<MainContainer />} onEnter={reloadMangaList(store)} />
+              <Route path='/manga/:name' element={<MangaViewContainer />} onEnter={visitManga(store)} />
+              <Route path='/chapter/:mangaName/:chapterNum' element={<ChapterViewContainer />} />
             </Routes>
           </HashRouter>
         </ThemeProvider>

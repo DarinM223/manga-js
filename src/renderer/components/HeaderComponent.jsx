@@ -7,6 +7,7 @@ import Dialog from '@mui/material/Dialog'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import { validHostname } from '../../../utils/url.js'
+import { DialogActions, DialogContent, DialogTitle, Toolbar, Typography } from '@mui/material';
 
 const EMPTY_TEXT = 'EMPTY_TEXT'
 const INVALID_URL = 'INVALID_URL'
@@ -50,19 +51,8 @@ export default class HeaderComponent extends React.Component {
   }
 
   render() {
-    const actions = [
-      <Button
-        label='Add manga'
-        keyboardFocused={false}
-        onTouchTap={this.submit}
-      />
-    ]
-
     let errorText = null
     switch (this.state.error) {
-      case NO_ERROR:
-        errorText = ''
-        break
       case EMPTY_TEXT:
         errorText = 'Please enter the url of the manga into the text field'
         break
@@ -71,28 +61,29 @@ export default class HeaderComponent extends React.Component {
         break
     }
 
+    let textField = <TextField id='text-field-default' onChange={this.handleChange} />;
+    if (errorText !== null) {
+      textField = <TextField error id='text-field-default' helperText={errorText} onChange={this.handleChange} />;
+    }
+
     return (
       <div>
-        <AppBar
-          title='Manga list'
-          iconElementRight={<IconButton><NoteAddIcon /></IconButton>}
-          iconElementLeft={<IconButton><LoopIcon /></IconButton>}
-          onRightIconButtonTouchTap={this.handleOpen}
-          onLeftIconButtonTouchTap={this.handleReload}
-        />
-        <Dialog
-          title='Enter the url of the manga to add'
-          actions={actions}
-          modal={false}
-          open={this.state.open}
-          onRequestClose={this.handleClose}
-        >
-          <div>Paste the url of the manga to add in the text field below:</div>
-          <TextField
-            id='text-field-default'
-            errorText={errorText}
-            onChange={this.handleChange}
-          />
+        <AppBar position='static'>
+          <Toolbar style={{ justifyContent: 'space-between' }}>
+            <IconButton onClick={this.handleOpen}><NoteAddIcon /></IconButton>
+            <Typography variant="h6">Manga list</Typography>
+            <IconButton onClick={this.handleClose}><LoopIcon /></IconButton>
+          </Toolbar>
+        </AppBar>
+        <Dialog open={this.state.open} onClose={this.handleClose}>
+          <DialogTitle>Enter the url of the manga to add</DialogTitle>
+          <DialogContent>
+            <div>Paste the url of the manga to add in the text field below:</div>
+            {textField}
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={this.submit}>Add manga</Button>
+          </DialogActions>
         </Dialog>
       </div>
     )
