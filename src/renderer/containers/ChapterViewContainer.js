@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import ChapterViewComponent from '../components/ChapterViewComponent.jsx'
-// import { goBack } from 'react-router-redux'
+import { useNavigate } from "react-router-dom";
 import { updatePage } from '../actions/manga.js'
 
 const mapStateToProps = (state, ownProps) => ({
@@ -10,12 +10,12 @@ const mapStateToProps = (state, ownProps) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  back () {
-    console.log('TODO: go back')
-    // dispatch(goBack())
+  back() {
+    const navigate = useNavigate()
+    navigate(-1)
   },
 
-  update (manga, chapterNum, amount) {
+  update(manga, chapterNum, amount) {
     dispatch(updatePage(manga, chapterNum, amount))
   }
 })

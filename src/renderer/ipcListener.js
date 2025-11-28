@@ -1,4 +1,4 @@
-import { NOT_DOWNLOADED, DOWNLOADED, DOWNLOADING } from '../../utils/constants.js'
+import { DownloadStateType } from '../../utils/constants.js'
 import { SET_DOWNLOAD_STATE, DOWNLOADED_PAGE } from './actions/manga.js'
 
 export const listenForIpc = (store) => {
@@ -6,7 +6,7 @@ export const listenForIpc = (store) => {
     if (args.err === null) {
       store.dispatch({
         type: SET_DOWNLOAD_STATE,
-        state: DOWNLOADING,
+        state: DownloadStateType.DOWNLOADING,
         mangaName: args.mangaName,
         chapterNum: args.chapterNum
       })
@@ -18,7 +18,7 @@ export const listenForIpc = (store) => {
       if (msg.curr >= msg.total - 1) {
         store.dispatch({
           type: SET_DOWNLOAD_STATE,
-          state: DOWNLOADED,
+          state: DownloadStateType.DOWNLOADED,
           mangaName: msg.mangaName,
           chapterNum: msg.chapterNum
         })
@@ -37,7 +37,7 @@ export const listenForIpc = (store) => {
     if (args.err === null) {
       store.dispatch({
         type: SET_DOWNLOAD_STATE,
-        state: NOT_DOWNLOADED,
+        state: DownloadStateType.NOT_DOWNLOADED,
         mangaName: args.mangaName,
         chapterNum: args.chapterNum
       })

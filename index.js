@@ -7,13 +7,7 @@ import fs from 'fs/promises'
 import { downloadChapter, deleteChapter, deleteManga } from './downloaderUtils.js'
 import BulkSender from './utils/BulkSender.js'
 import { startQueue } from './utils/downloadQueue.js'
-import {
-  DOWNLOAD_CHAPTER_MSG,
-  DOWNLOADED_RECV,
-  DELETE_CHAPTER_MSG,
-  DELETE_CHAPTER_RECV,
-  DELETE_MANGA_MSG
-} from './utils/constants.js'
+import { MessageType } from './utils/constants.js'
 
 
 // Global reference to the main window.
@@ -70,12 +64,12 @@ const createWindow = () => {
   })
 
   ipcMain.on('start', (event, args) => {
-    const sender = new BulkSender((bulkMsg) => event.sender.send(DOWNLOADED_RECV, bulkMsg))
+    const sender = new BulkSender((bulkMsg) => event.sender.send(MessageType.DOWNLOADED_RECV, bulkMsg))
     startQueue(app.getPath('userData'), 'queue.json', (msg) => sender.add(msg)).then((queue) => {
       // Setup ipc handlers after queue started.
-      ipcMain.on(DOWNLOAD_CHAPTER_MSG, (event, args) => downloadChapter(event, args, queue))
-      ipcMain.on(DELETE_CHAPTER_MSG, (event, args) => returnAsync(args, deleteChapter(basePath, args), event, DELETE_CHAPTER_RECV))
-      ipcMain.on(DELETE_MANGA_MSG, (event, args) => deleteManga(basePath, args))
+      ipcMain.on(MessageType.DOWNLOAD_CHAPTER_MSG, (event, args) => downloadChapter(event, args, queue))
+      ipcMain.on(MessageType.DELETE_CHAPTER_MSG, (event, args) => returnAsync(args, deleteChapter(basePath, args), event, MessageType.DELETE_CHAPTER_RECV))
+      ipcMain.on(MessageType.DELETE_MANGA_MSG, (event, args) => deleteManga(basePath, args))
 
       // Signal to the renderer that the queue has finished starting.
       event.returnValue = null

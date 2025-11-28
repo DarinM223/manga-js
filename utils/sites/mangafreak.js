@@ -1,6 +1,5 @@
 import * as cheerio from 'cheerio'
 // const cloudscraper = require('cloudscraper')
-import { NOT_LOADED, NOT_DOWNLOADED } from '../constants.js'
 
 function mangaURL(mangaName) {
   return `http://www.mangafreak.net/Manga/${mangaName}`
@@ -54,9 +53,9 @@ function parseMangaData(mangaName, body) {
         name,
         url,
         date,
-        loadState: NOT_LOADED,
+        loadState: 'NOT_LOADED',
         download: {
-          state: NOT_DOWNLOADED,
+          state: 'NOT_DOWNLOADED',
           progress: 0
         },
         currentPage: 0,

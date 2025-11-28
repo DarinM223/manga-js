@@ -1,7 +1,6 @@
 import { connect } from 'react-redux'
 import MangaViewComponent from '../components/MangaViewComponent.jsx'
-// import { goBack } from 'react-router-redux'
-
+import { useNavigate } from "react-router-dom";
 import { removeManga } from '../actions/manga.js'
 
 const mapStateToProps = (state, ownProps) => ({
@@ -11,8 +10,8 @@ const mapStateToProps = (state, ownProps) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   back() {
-    console.log('TODO: go back')
-    // dispatch(goBack())
+    const navigate = useNavigate()
+    navigate(-1)
   },
 
   onDelete(mangaName) {

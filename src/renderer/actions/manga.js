@@ -1,7 +1,6 @@
 import { actions } from 'react-redux-toastr'
-// import { push } from 'react-router-redux'
-
-import { NOT_LOADED, LOADED, LOADING } from '../../../utils/constants.js'
+import { useNavigate } from "react-router-dom";
+import { LoadStateType } from '../../../utils/constants.js'
 import { adapterFromURL, adapterFromHostname } from '../../../utils/url.js'
 import * as scraper from '../../../utils/scraper.js'
 
@@ -78,9 +77,10 @@ export function reloadManga(manga) {
 }
 
 export function removeManga(mangaName) {
+  const navigate = useNavigate()
   return (dispatch) => {
     dispatch({ type: REMOVE_MANGA, name: mangaName })
-    // dispatch(push('/'))
+    navigate('/')
   }
 }
 
@@ -127,16 +127,16 @@ export function loadChapter(manga, chapterNum, background = false) {
     const adapter = adapterFromURL(chapterURL)
 
     switch (loadState) {
-      case LOADED:
+      case LoadStateType.LOADED:
         if (!background) {
           // dispatch(push(chapterRoute))
           dispatch(updateChapter(mangaName, chapterNum))
         }
         break
-      case LOADING:
+      case LoadStateType.LOADING:
         // Ignore action if the chapter is already loading.
         break
-      case NOT_LOADED:
+      case LoadStateType.NOT_LOADED:
         dispatch(setLoading(mangaName, chapterNum))
 
         // Load chapter, then dispatch to update state, then dispatch to update router.

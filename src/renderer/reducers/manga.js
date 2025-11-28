@@ -1,6 +1,6 @@
 import { fromJS } from 'immutable'
 
-import { LOADING, LOADED, DOWNLOADED } from '../../../utils/constants.js'
+import { LoadStateType, DownloadStateType } from '../../../utils/constants.js'
 
 import {
   ADD_MANGA,
@@ -39,11 +39,11 @@ export function manga(state = initState, action) {
         }
       })
     case SET_LOADING:
-      return state.setIn([action.mangaName, 'chapters', action.chapterNum, 'loadState'], LOADING)
+      return state.setIn([action.mangaName, 'chapters', action.chapterNum, 'loadState'], LoadStateType.LOADING)
     case SET_DOWNLOAD_STATE:
       let newState = state
       // Clear progress once downloaded.
-      if (action.state === DOWNLOADED) {
+      if (action.state === DownloadStateType.DOWNLOADED) {
         newState = newState.setIn([action.mangaName, 'chapters', action.chapterNum, 'download', 'progress'], 0)
       }
       return newState.setIn([action.mangaName, 'chapters', action.chapterNum, 'download', 'state'], action.state)
@@ -61,7 +61,7 @@ export function manga(state = initState, action) {
     case LOAD_CHAPTER:
       return state
         .setIn([action.mangaName, 'chapters', action.chapterNum, 'pages'], fromJS(action.pages))
-        .setIn([action.mangaName, 'chapters', action.chapterNum, 'loadState'], LOADED)
+        .setIn([action.mangaName, 'chapters', action.chapterNum, 'loadState'], LoadStateType.LOADED)
     case DIFF_CHANGES:
       const newManga = fromJS(action.manga)
       const oldManga = state.get(action.manga.name)

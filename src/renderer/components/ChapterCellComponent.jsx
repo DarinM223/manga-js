@@ -5,8 +5,7 @@ import IconButton from '@mui/material/IconButton'
 import GetAppIcon from '@mui/icons-material/GetApp';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CircularProgress from '@mui/material/CircularProgress'
-
-import { NOT_DOWNLOADED, DOWNLOADING, DOWNLOADED } from '../../../utils/constants.js'
+import { DownloadStateType } from '../../../utils/constants.js'
 
 export default function ChapterCellComponent({ manga, chapterNum, onDoubleClick, onDownload, onCancelDownload, onDeleteDownload, ...rowProps }) {
   const mangaName = manga.get('name')
@@ -29,15 +28,15 @@ export default function ChapterCellComponent({ manga, chapterNum, onDoubleClick,
 
   let downloadComponent = null
   switch (downloadState) {
-    case NOT_DOWNLOADED:
+    case DownloadStateType.NOT_DOWNLOADED:
       downloadComponent = <IconButton onClick={downloadClicked}><GetAppIcon /></IconButton>
       break
-    case DOWNLOADING:
+    case DownloadStateType.DOWNLOADING:
       const total = chapter.get('pages').count()
       const progress = chapter.get('download').get('progress')
       downloadComponent = <CircularProgress mode='determinate' value={progress} max={total} size={20} style={{ marginLeft: '15px' }} />
       break
-    case DOWNLOADED:
+    case DownloadStateType.DOWNLOADED:
       downloadComponent = <IconButton onClick={deleteDownloadClicked}><DeleteIcon /></IconButton>
       break
   }

@@ -1,5 +1,4 @@
 import { createStore, combineReducers, applyMiddleware } from '@reduxjs/toolkit'
-// import { routerMiddleware, routerReducer } from 'react-router-redux'
 import { reducer as toastrReducer } from 'react-redux-toastr'
 import { manga } from './reducers/manga.js'
 import { log } from './reducers/log.js'
@@ -14,7 +13,6 @@ export default function configureStore (loadFromDisk = true) {
   const reducer = combineReducers({
     manga,
     log,
-    // routing: routerReducer,
     toastr: toastrReducer
   })
   // const logger = createLogger()

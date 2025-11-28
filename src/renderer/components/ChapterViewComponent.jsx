@@ -6,8 +6,7 @@ import IconButton from '@mui/material/IconButton'
 import path from 'path'
 import ImageComponent from './ImageComponent.jsx'
 import SliderComponent from './SliderComponent.jsx'
-
-import { NOT_DOWNLOADED, DOWNLOADING, DOWNLOADED } from '../../../utils/constants.js'
+import { DownloadStateType } from '../../../utils/constants.js'
 
 const styles = {
   appBar: {
@@ -21,7 +20,7 @@ const styles = {
 }
 
 export default class ChapterViewComponent extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
 
     const specificManga = props.manga.get(props.mangaName)
@@ -33,13 +32,13 @@ export default class ChapterViewComponent extends React.Component {
     }
   }
 
-  updateSlider (updatedValue, totalPages) {
+  updateSlider(updatedValue, totalPages) {
     if (updatedValue >= 1 && updatedValue <= totalPages) {
       this.setState({ slider: updatedValue })
     }
   }
 
-  render () {
+  render() {
     const specificManga = this.props.manga.get(this.props.mangaName)
     const chapter = specificManga.get('chapters').get(this.props.chapterNum)
     const type = `http://${specificManga.get('type')}`
@@ -75,9 +74,10 @@ export default class ChapterViewComponent extends React.Component {
 
     let imagePath = null
     let downloaded = false
-    if (downloadState === DOWNLOADING || downloadState === NOT_DOWNLOADED) {
+    if (downloadState === DownloadStateType.DOWNLOADING ||
+      downloadState === DownloadStateType.NOT_DOWNLOADED) {
       imagePath = onlineURL
-    } else if (downloadState === DOWNLOADED) {
+    } else if (downloadState === DownloadStateType.DOWNLOADED) {
       imagePath = 'manga://' + path.join(
         specificManga.get('name'),
         this.props.chapterNum + '',

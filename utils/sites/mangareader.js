@@ -1,5 +1,4 @@
 import * as cheerio from 'cheerio'
-import { NOT_LOADED, NOT_DOWNLOADED } from '../constants.js'
 
 /**
  * Returns the URL for the given manga.
@@ -18,7 +17,7 @@ function mangaURL (mangaName) {
  */
 function sendRequest (url, buffer = false) {
   if (buffer) {
-    return fetch(url).then((res) => res.buffer())
+    return fetch(url).then((res) => res.arrayBuffer())
   }
   return fetch(url).then((res) => res.text())
 }
@@ -55,9 +54,9 @@ function parseMangaData (mangaName, body) {
         name,
         url,
         date,
-        loadState: NOT_LOADED,
+        loadState: 'NOT_LOADED',
         download: {
-          state: NOT_DOWNLOADED,
+          state: 'NOT_DOWNLOADED',
           progress: 0
         },
         currentPage: 0,
