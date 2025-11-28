@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -126,11 +126,4 @@ export default class MangaViewComponent extends React.Component {
       </div>
     )
   }
-}
-
-MangaViewComponent.propTypes = {
-  manga: PropTypes.object.isRequired,
-  name: PropTypes.string.isRequired,
-  back: PropTypes.func.isRequired,
-  onDelete: PropTypes.func.isRequired
 }

@@ -1,6 +1,6 @@
 /* global Blob, URL */
 
-import React, { PropTypes } from 'react'
+import React from 'react'
 import Avatar from '@mui/material/Avatar'
 import { adapterFromURL, fileExtFromURL } from '../../../utils/url.js'
 import mime from 'mime-types'
@@ -89,15 +89,6 @@ export default class ImageComponent extends React.Component {
       return <div {...this.imgProps} />
     }
   }
-}
-
-ImageComponent.propTypes = {
-  src: PropTypes.string.isRequired,
-  type: PropTypes.string.isRequired,
-  avatar: PropTypes.bool,
-  downloaded: PropTypes.bool,
-  scrollTop: PropTypes.bool,
-  onImageClick: PropTypes.func.isRequired
 }
 
 ImageComponent.defaultProps = {

@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
 import Slider from '@mui/material/Slider'
 import Chip from '@mui/material/Chip'
 import TextField from '@mui/material/TextField'
@@ -102,10 +102,4 @@ export default class SliderComponent extends React.Component {
       </div>
     )
   }
-}
-
-SliderComponent.propTypes = {
-  currValue: PropTypes.number.isRequired,
-  totalPages: PropTypes.number.isRequired,
-  onSliderChanged: PropTypes.func.isRequired
 }

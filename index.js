@@ -33,15 +33,20 @@ const createWindow = () => {
     width: 800,
     height: 600,
     webPreferences: {
-      webSecurity: false
+      preload: path.join(__dirname, '../preload/index.js'),
+      sandbox: false
     }
   })
 
-  mainWindow.loadURL(url.format({
-    pathname: path.join(__dirname, 'index.html'),
-    protocol: 'file:',
-    slashes: true
-  }))
+  if (!app.isPackaged && process.env['ELECTRON_RENDERER_URL']) {
+    mainWindow.loadURL(`${process.env['ELECTRON_RENDERER_URL']}/index.html`)
+  } else {
+    mainWindow.loadURL(url.format({
+      pathname: path.join(__dirname, '../renderer/index.html'),
+      protocol: 'file:',
+      slashes: true
+    }))
+  }
 
   // Uncomment this line to debug the application.
   // mainWindow.webContents.openDevTools()

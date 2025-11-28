@@ -1,11 +1,10 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton'
 import GetAppIcon from '@mui/icons-material/GetApp';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CircularProgress from '@mui/material/CircularProgress'
-import { ipcRenderer } from 'electron'
 
 import { NOT_DOWNLOADED, DOWNLOADING, DOWNLOADED } from '../../../utils/constants.js'
 
@@ -18,7 +17,7 @@ export default function ChapterCellComponent({ manga, chapterNum, onDoubleClick,
   const cellClicked = () => onDoubleClick(manga, chapterNum)
   const downloadClicked = () => onDownload(manga, chapterNum)
   const deleteDownloadClicked = () => {
-    ipcRenderer.send('delete-chapter', { mangaName, chapterNum })
+    window.api.deleteChapter(mangaName, chapterNum)
   }
 
   let chapterName = chapter.get('name')
@@ -50,11 +49,4 @@ export default function ChapterCellComponent({ manga, chapterNum, onDoubleClick,
       <TableCell>{downloadComponent}</TableCell>
     </TableRow>
   )
-}
-
-ChapterCellComponent.propTypes = {
-  manga: PropTypes.object.isRequired,
-  chapterNum: PropTypes.number.isRequired,
-  onDoubleClick: PropTypes.func.isRequired,
-  onDownload: PropTypes.func.isRequired
 }

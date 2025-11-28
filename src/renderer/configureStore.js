@@ -14,7 +14,7 @@ export default function configureStore (loadFromDisk = true) {
   const reducer = combineReducers({
     manga,
     log,
-    routing: routerReducer,
+    // routing: routerReducer,
     toastr: toastrReducer
   })
   // const logger = createLogger()

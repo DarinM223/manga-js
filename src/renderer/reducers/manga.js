@@ -1,5 +1,4 @@
 import { fromJS } from 'immutable'
-import { ipcRenderer } from 'electron'
 
 import { LOADING, LOADED, DOWNLOADED } from '../../../utils/constants.js'
 
@@ -55,7 +54,7 @@ export function manga(state = initState, action) {
       const { mangaName, chapterNum } = action
       const type = state.getIn([mangaName, 'type'])
       const pages = state.getIn([mangaName, 'chapters', chapterNum, 'pages']).toJS()
-      ipcRenderer.send('download-chapter', { mangaName, chapterNum, pages, type })
+      window.api.downloadChapter(mangaName, chapterNum, pages, type)
       return state
     case UPDATE_CHAPTER:
       return state.setIn([action.mangaName, 'currentChapter'], action.chapterNum)

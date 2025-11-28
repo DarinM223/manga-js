@@ -1,10 +1,9 @@
 import { fromJS } from 'immutable'
-import { ipcRenderer } from 'electron'
 import { restoreFromLog } from './restoreFromLog.js'
 
 export function loadState() {
   try {
-    const serializedState = ipcRenderer.sendSync('load-state')
+    const serializedState = window.api.loadState()
     if (serializedState === null) {
       return undefined
     }
@@ -27,7 +26,7 @@ export function saveState(state) {
     const log = state.log.toJS()
     const savedState = { ...state, manga, log }
     const serializedState = JSON.stringify(savedState)
-    ipcRenderer.send('save-state', serializedState)
+    window.api.saveState(serializedState)
   } catch (e) {
     console.log(e)
   }

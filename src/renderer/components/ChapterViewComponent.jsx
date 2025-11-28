@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
 import AppBar from '@mui/material/AppBar'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
@@ -128,12 +128,4 @@ export default class ChapterViewComponent extends React.Component {
       </div>
     )
   }
-}
-
-ChapterViewComponent.propTypes = {
-  manga: PropTypes.object.isRequired,
-  mangaName: PropTypes.string.isRequired,
-  chapterNum: PropTypes.number.isRequired,
-  back: PropTypes.func.isRequired,
-  update: PropTypes.func.isRequired
 }

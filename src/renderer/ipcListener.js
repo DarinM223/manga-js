@@ -1,9 +1,8 @@
-import { ipcRenderer } from 'electron'
 import { NOT_DOWNLOADED, DOWNLOADED, DOWNLOADING } from '../../utils/constants.js'
 import { SET_DOWNLOAD_STATE, DOWNLOADED_PAGE } from './actions/manga.js'
 
 export const listenForIpc = (store) => {
-  ipcRenderer.on('recv-download-chapter', (event, args) => {
+  window.electron.ipcRenderer.on('recv-download-chapter', (event, args) => {
     if (args.err === null) {
       store.dispatch({
         type: SET_DOWNLOAD_STATE,
@@ -14,7 +13,7 @@ export const listenForIpc = (store) => {
     }
   })
 
-  ipcRenderer.on('recv-downloaded', (event, args) => {
+  window.electron.ipcRenderer.on('recv-downloaded', (event, args) => {
     for (const msg of args) {
       if (msg.curr >= msg.total - 1) {
         store.dispatch({
@@ -34,7 +33,7 @@ export const listenForIpc = (store) => {
     }
   })
 
-  ipcRenderer.on('recv-delete-chapter', (event, args) => {
+  window.electron.ipcRenderer.on('recv-delete-chapter', (event, args) => {
     if (args.err === null) {
       store.dispatch({
         type: SET_DOWNLOAD_STATE,

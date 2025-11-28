@@ -1,11 +1,10 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
+import ReactDOM from 'react-dom/client'
 import { Provider } from 'react-redux'
-import { HashRouter, Route } from 'react-router-dom'
+import { HashRouter, Routes, Route } from 'react-router-dom'
 import configureStore from './configureStore.js'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 import ReduxToastr from 'react-redux-toastr'
-import { ipcRenderer } from 'electron'
 // import { useScroll } from 'react-router-scroll'
 
 import MainContainer from './containers/MainContainer.js'
@@ -14,7 +13,7 @@ import ChapterViewContainer from './containers/ChapterViewContainer.js'
 import { reloadMangaList, visitManga } from './actions/manga.js'
 
 // Start the image downloader queue on the main process.
-ipcRenderer.sendSync('start')
+window.api.start()
 
 const store = configureStore()
 const theme = createTheme()
@@ -37,9 +36,11 @@ root.render(
           <HashRouter
           // render={applyRouterMiddleware(useScroll())}
           >
-            <Route path='/' component={MainContainer} onEnter={reloadMangaList(store)} />
-            <Route path='/manga/:name' component={MangaViewContainer} onEnter={visitManga(store)} />
-            <Route path='/chapter/:mangaName/:chapterNum' component={ChapterViewContainer} />
+            <Routes>
+              <Route path='/' element={MainContainer} onEnter={reloadMangaList(store)} />
+              <Route path='/manga/:name' element={MangaViewContainer} onEnter={visitManga(store)} />
+              <Route path='/chapter/:mangaName/:chapterNum' element={ChapterViewContainer} />
+            </Routes>
           </HashRouter>
         </ThemeProvider>
       </div>

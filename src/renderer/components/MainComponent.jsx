@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
 import NoMangaComponent from './NoMangaComponent.jsx'
 import SomeMangaComponent from './SomeMangaComponent.jsx'
 
@@ -14,8 +14,4 @@ export default function MainComponent ({ manga }) {
   } else {
     return <SomeMangaComponent manga={manga} />
   }
-}
-
-MainComponent.propTypes = {
-  manga: PropTypes.object.isRequired
 }

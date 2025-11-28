@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
 import AppBar from '@mui/material/AppBar'
 import NoteAddIcon from '@mui/icons-material/NoteAdd';
 import LoopIcon from '@mui/icons-material/Loop';
@@ -97,10 +97,4 @@ export default class HeaderComponent extends React.Component {
       </div>
     )
   }
-}
-
-HeaderComponent.propTypes = {
-  manga: PropTypes.object.isRequired,
-  onAddManga: PropTypes.func.isRequired,
-  onReload: PropTypes.func.isRequired
 }

@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListSubheader from '@mui/material/ListSubheader'
@@ -67,8 +67,4 @@ export default function SomeMangaComponent ({ manga }) {
       {mangaList}
     </div>
   )
-}
-
-SomeMangaComponent.propTypes = {
-  manga: PropTypes.object.isRequired
 }
