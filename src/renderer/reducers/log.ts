@@ -2,10 +2,10 @@ import { SET_LOADING, LOAD_CHAPTER, Action } from '../actions/manga.ts'
 import { produce } from 'immer'
 
 type State = { [mangaName: string]: { [chapterNum: number]: boolean } }
-export const initState = {} as const satisfies State as State
+export const initState = {} as const satisfies State
 
 
-export function log(state = initState, action: Action) {
+export function log(state: State = initState, action: Action): State {
   switch (action.type) {
     case SET_LOADING:
       return produce(state, (draft) => {
