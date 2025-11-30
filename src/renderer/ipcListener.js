@@ -1,5 +1,5 @@
 import { DownloadStateType } from '../../utils/constants.js'
-import { SET_DOWNLOAD_STATE, DOWNLOADED_PAGE } from './actions/manga.js'
+import { SET_DOWNLOAD_STATE, DOWNLOADED_PAGE } from './actions/manga.ts'
 
 export const listenForIpc = (store) => {
   window.electron.ipcRenderer.on('recv-download-chapter', (event, args) => {

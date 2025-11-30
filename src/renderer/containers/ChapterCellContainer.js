@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 import ChapterCellComponent from '../components/ChapterCellComponent.jsx'
 
-import { downloadChapter, loadChapter } from '../actions/manga.js'
+import { downloadChapter, loadChapter } from '../actions/manga.ts'
 
 const mapStateToProps = () => ({})
 const mapDispatchToProps = (dispatch) => ({

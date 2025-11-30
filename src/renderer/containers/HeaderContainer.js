@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import HeaderComponent from '../components/HeaderComponent.jsx'
-import { addManga, reloadManga } from '../actions/manga.js'
+import { addManga, reloadManga } from '../actions/manga.ts'
 
 const mapStateToProps = (state) => ({
   manga: state.manga

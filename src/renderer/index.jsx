@@ -10,7 +10,7 @@ import ReduxToastr from 'react-redux-toastr'
 import MainContainer from './containers/MainContainer.js'
 import MangaViewContainer from './containers/MangaViewContainer.js'
 import ChapterViewContainer from './containers/ChapterViewContainer.js'
-import { reloadMangaList, visitManga } from './actions/manga.js'
+import { reloadMangaList, visitManga } from './actions/manga.ts'
 
 // Start the image downloader queue on the main process.
 window.api.start()

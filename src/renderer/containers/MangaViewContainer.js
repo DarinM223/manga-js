@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 import MangaViewComponent from '../components/MangaViewComponent.jsx'
 import { useNavigate } from "react-router-dom";
-import { removeManga } from '../actions/manga.js'
+import { removeManga } from '../actions/manga.ts'
 
 const mapStateToProps = (state, ownProps) => ({
   manga: state.manga,

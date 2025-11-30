@@ -14,7 +14,7 @@ import {
   SET_LOADING,
   SET_DOWNLOAD_STATE,
   DIFF_CHANGES
-} from '../actions/manga.js'
+} from '../actions/manga.ts'
 
 const initState = fromJS({})
 

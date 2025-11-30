@@ -9,7 +9,7 @@ import {
   loadChapter,
   VISIT_MANGA,
   DIFF_CHANGES
-} from '../src/renderer/actions/manga.js'
+} from '../src/renderer/actions/manga.ts'
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000
 

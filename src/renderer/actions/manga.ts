@@ -1,8 +1,9 @@
 import { actions } from 'react-redux-toastr'
 import { useNavigate } from "react-router-dom";
-import { LoadStateType } from '../../../utils/constants.js'
+import { DownloadStateType, LoadStateType } from '../../../utils/constants.js'
 import { adapterFromURL, adapterFromHostname } from '../../../utils/url.js'
 import * as scraper from '../../../utils/scraper.js'
+import { Manga } from '../../../utils/manga.ts'
 
 export const ADD_MANGA = 'ADD_MANGA'
 export const REMOVE_MANGA = 'REMOVE_MANGA'
@@ -15,6 +16,19 @@ export const DOWNLOAD_CHAPTER = 'DOWNLOAD_CHAPTER'
 export const DOWNLOADED_PAGE = 'DOWNLOADED_PAGE'
 export const SET_LOADING = 'SET_LOADING'
 export const DIFF_CHANGES = 'DIFF_CHANGES'
+
+export type Action =
+  | { type: 'ADD_MANGA', manga: Manga }
+  | { type: 'REMOVE_MANGA', name: string }
+  | { type: 'VISIT_MANGA', mangaName: string }
+  | { type: 'UPDATE_PAGE', mangaName: string, chapterNum: number, amount: number }
+  | { type: 'UPDATE_CHAPTER', mangaName: string, chapterNum: number }
+  | { type: 'LOAD_CHAPTER', mangaName: string, chapterNum: number, pages: string[] }
+  | { type: 'SET_DOWNLOAD_STATE', state: DownloadStateType, mangaName: string, chapterNum: number }
+  | { type: 'DOWNLOAD_CHAPTER', mangaName: string, chapterNum: number }
+  | { type: 'DOWNLOADED_PAGE', curr: number, mangaName: string, chapterNum: number }
+  | { type: 'SET_LOADING', mangaName: string, chapterNum: number }
+  | { type: 'DIFF_CHANGES', manga: Manga }
 
 function errorNotify(title, message) {
   return actions.add({

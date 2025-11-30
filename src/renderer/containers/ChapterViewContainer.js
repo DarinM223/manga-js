@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 import ChapterViewComponent from '../components/ChapterViewComponent.jsx'
 import { useNavigate } from "react-router-dom";
-import { updatePage } from '../actions/manga.js'
+import { updatePage } from '../actions/manga.ts'
 
 const mapStateToProps = (state, ownProps) => ({
   manga: state.manga,
