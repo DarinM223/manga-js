@@ -1,7 +1,7 @@
 import { SET_LOADING, LOAD_CHAPTER, Action } from '../actions/manga.ts'
 import { produce } from 'immer'
 
-type State = { [mangaName: string]: { [chapterNum: number]: boolean } }
+export type State = { [mangaName: string]: { [chapterNum: number]: boolean } }
 export const initState = {} as const satisfies State
 
 

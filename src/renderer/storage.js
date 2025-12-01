@@ -1,5 +1,5 @@
 import { fromJS } from 'immutable'
-import { restoreFromLog } from './restoreFromLog.js'
+import { restoreFromLog } from './restoreFromLog.ts'
 
 export function loadState() {
   try {

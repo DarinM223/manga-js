@@ -1,7 +1,7 @@
 /* global test, expect */
 
-import { restoreFromLog } from '../src/renderer/restoreFromLog.js'
-import { NOT_LOADED, LOADED } from '../utils/constants.js'
+import { restoreFromLog } from '../src/renderer/restoreFromLog.ts'
+import { NOT_LOADED, LOADED } from '../utils/constants.ts'
 import Immutable from 'immutable'
 
 test('restoreFromLog', () => {

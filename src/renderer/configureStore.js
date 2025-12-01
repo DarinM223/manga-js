@@ -1,6 +1,6 @@
 import { createStore, combineReducers, applyMiddleware } from '@reduxjs/toolkit'
 import { reducer as toastrReducer } from 'react-redux-toastr'
-import { manga } from './reducers/manga.js'
+import { manga } from './reducers/manga.ts'
 import { log } from './reducers/log.js'
 import { saveState, loadState } from './storage.js'
 // import { hashHistory } from 'react-router-dom'

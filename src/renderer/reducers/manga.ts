@@ -16,7 +16,7 @@ import {
 } from '../actions/manga.ts'
 import { produce } from 'immer'
 
-type State = { readonly [mangaName: string]: Manga }
+export type State = { readonly [mangaName: string]: Manga }
 const initState = {} as const satisfies State
 
 export function manga(state: State = initState, action: Action): State {
