@@ -6,9 +6,8 @@ import { produce } from 'immer';
 export function restoreFromLog(manga: MangaState, log: LogState): [MangaState, LogState] {
   const currManga = produce(manga, (draft) => {
     for (const mangaName in log) {
-      const chapters = log[mangaName]
-      for (const chapterNum of Object.keys(chapters) as unknown as Array<keyof typeof chapters>) {
-        draft[mangaName].chapters[chapterNum].loadState = LoadStateType.NOT_LOADED
+      for (const chapterNum in log[mangaName]) {
+        draft[mangaName].chapters[+chapterNum].loadState = LoadStateType.NOT_LOADED
       }
     }
   })

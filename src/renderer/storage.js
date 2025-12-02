@@ -1,4 +1,3 @@
-import { fromJS } from 'immutable'
 import { restoreFromLog } from './restoreFromLog.ts'
 
 export function loadState() {
@@ -9,10 +8,7 @@ export function loadState() {
     }
 
     const state = JSON.parse(serializedState)
-    const [manga, log] = restoreFromLog(
-      fromJS(state.manga),
-      fromJS(state.log)
-    )
+    const [manga, log] = restoreFromLog(state.manga, state.log)
     return { ...state, manga, log }
   } catch (e) {
     console.log(e)
@@ -22,10 +18,7 @@ export function loadState() {
 
 export function saveState(state) {
   try {
-    const manga = state.manga.toJS()
-    const log = state.log.toJS()
-    const savedState = { ...state, manga, log }
-    const serializedState = JSON.stringify(savedState)
+    const serializedState = JSON.stringify(state)
     window.api.saveState(serializedState)
   } catch (e) {
     console.log(e)
