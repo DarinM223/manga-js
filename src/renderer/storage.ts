@@ -1,6 +1,12 @@
+import { ToastrState } from 'react-redux-toastr'
+import { State as LogState } from './reducers/log.ts'
+import { State as MangaState } from './reducers/manga.ts'
 import { restoreFromLog } from './restoreFromLog.ts'
+import { } from './window.ts'
 
-export function loadState() {
+export type State = { manga: MangaState, log: LogState, toastr: ToastrState }
+
+export function loadState(): State | undefined {
   try {
     const serializedState = window.api.loadState()
     if (serializedState === null) {
@@ -16,7 +22,7 @@ export function loadState() {
   }
 }
 
-export function saveState(state) {
+export function saveState(state: State) {
   try {
     const serializedState = JSON.stringify(state)
     window.api.saveState(serializedState)

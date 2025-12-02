@@ -1,6 +1,6 @@
 /* global test, expect, jasmine */
 
-import configureStore from '../src/renderer/configureStore.js'
+import configureStore from '../src/renderer/configureStore.ts'
 import { LOADED, NOT_LOADED, NOT_DOWNLOADED } from '../utils/constants.js'
 import {
   addManga,
@@ -10,8 +10,7 @@ import {
   VISIT_MANGA,
   DIFF_CHANGES
 } from '../src/renderer/actions/manga.ts'
-
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000
+import { test, expect } from 'vitest'
 
 test('manga reducer', () => {
   const store = configureStore(false)

@@ -57,9 +57,15 @@ importers:
         specifier: ^7.9.6
         version: 7.9.6(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
     devDependencies:
+      '@types/lodash':
+        specifier: ^4.17.21
+        version: 4.17.21
       '@types/react':
         specifier: ^19.2.7
         version: 19.2.7
+      '@types/react-redux-toastr':
+        specifier: ^8.0.0
+        version: 8.0.0
       electron:
         specifier: ^38.1.2
         version: 38.7.2
@@ -737,6 +743,9 @@ packages:
   '@types/keyv@3.1.4':
     resolution: {integrity: sha512-BQ5aZNSCpj7D6K2ksrRCTmKRLEpnPvWDiLPfoGyhZ++8YtiK9d/3DBKPJgry359X/P1PfruyYwvnvwFjuEiEIg==}
 
+  '@types/lodash@4.17.21':
+    resolution: {integrity: sha512-FOvQ0YPD5NOfPgMzJihoT+Za5pdkDJWcbpuj1DjaKZIr/gxodQjY/uWEFlTNqW2ugXHUiL8lRQgw63dzKHZdeQ==}
+
   '@types/ms@2.1.0':
     resolution: {integrity: sha512-GsCCIZDE/p3i96vtEqx+7dBUGXrc7zeSK3wwPHIaRThS+9OhWIXRqzs4d6k1SVU8g91DrNRWxWUGhp5KXQb2VA==}
 
@@ -751,6 +760,9 @@ packages:
 
   '@types/prop-types@15.7.15':
     resolution: {integrity: sha512-F6bEyamV9jKGAFBEmlQnesRPGOQqS2+Uwi0Em15xenOxHaf2hv6L8YCVn3rPdPJOiJfPiCnLIRyvwVaqMY3MIw==}
+
+  '@types/react-redux-toastr@8.0.0':
+    resolution: {integrity: sha512-QU2W1ik/h5vgonidIhoM+2scCTFrVfbtp8y7XUW0DCkat8TJE/DUQsIiFB3XlhIKV+C0aj2qEUiYfLqYA+d8jA==}
 
   '@types/react-transition-group@4.4.12':
     resolution: {integrity: sha512-8TV6R3h2j7a91c+1DXdJi3Syo69zzIZbz7Lg5tORM5LEJG7X/E6a1V3drRyBRZq7/utz7A+c4OgYLiLcYGHG6w==}
@@ -3098,6 +3110,8 @@ snapshots:
     dependencies:
       '@types/node': 22.19.1
 
+  '@types/lodash@4.17.21': {}
+
   '@types/ms@2.1.0': {}
 
   '@types/node@22.19.1':
@@ -3113,6 +3127,11 @@ snapshots:
     optional: true
 
   '@types/prop-types@15.7.15': {}
+
+  '@types/react-redux-toastr@8.0.0':
+    dependencies:
+      '@types/react': 19.2.7
+      redux: 5.0.1
 
   '@types/react-transition-group@4.4.12(@types/react@19.2.7)':
     dependencies:

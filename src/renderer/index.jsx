@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { Provider } from 'react-redux'
 import { HashRouter, Routes, Route } from 'react-router-dom'
-import configureStore from './configureStore.js'
+import loadStore from './configureStore.ts'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 import ReduxToastr from 'react-redux-toastr'
 // import { useScroll } from 'react-router-scroll'
@@ -15,7 +15,7 @@ import { reloadMangaList, visitManga } from './actions/manga.ts'
 // Start the image downloader queue on the main process.
 window.api.start()
 
-const store = configureStore()
+const store = loadStore()
 const theme = createTheme()
 // const history = syncHistoryWithStore(hashHistory, store)
 const root = ReactDOM.createRoot(document.getElementById('app'))

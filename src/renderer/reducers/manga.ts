@@ -15,6 +15,7 @@ import {
   Action
 } from '../actions/manga.ts'
 import { produce } from 'immer'
+import { } from '../window.ts'
 
 export type State = { readonly [mangaName: string]: Manga }
 const initState = {} as const satisfies State
