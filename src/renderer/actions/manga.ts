@@ -2,8 +2,11 @@ import { actions } from 'react-redux-toastr'
 import { useNavigate } from "react-router-dom";
 import { DownloadStateType, LoadStateType } from '../../../utils/constants.js'
 import { adapterFromURL, adapterFromHostname } from '../../../utils/url.js'
-import * as scraper from '../../../utils/scraper.js'
+import * as scraper from '../../../utils/scraper.ts'
 import { Manga } from '../../../utils/manga.ts'
+import { Dispatch, Action as ReduxAction } from '@reduxjs/toolkit';
+import { State as MangaState } from '../reducers/manga.ts'
+import { AppStore } from '../configureStore.ts';
 
 export const ADD_MANGA = 'ADD_MANGA'
 export const REMOVE_MANGA = 'REMOVE_MANGA'
@@ -30,7 +33,7 @@ export type Action =
   | { type: 'SET_LOADING', mangaName: string, chapterNum: number }
   | { type: 'DIFF_CHANGES', manga: Manga }
 
-function errorNotify(title, message) {
+function errorNotify(title: string, message: string): ReduxAction {
   return actions.add({
     type: 'error',
     title,
@@ -42,21 +45,19 @@ function errorNotify(title, message) {
   })
 }
 
-export function addManga(url, mangaList) {
+export function addManga(url: string, mangaList: MangaState): (dispatch: Dispatch<Action | ReduxAction>) => Promise<Action | ReduxAction> {
   const adapter = adapterFromURL(url)
 
   return (dispatch) => {
-    return scraper.scrape(url, adapter).then((manga) => {
-      if (mangaList.has(manga.name)) {
-        dispatch(errorNotify('Manga already exists', 'The manga with the given name already exists in the list'))
-      } else {
-        dispatch({ type: ADD_MANGA, manga })
-      }
-    })
+    return scraper.scrape(url, adapter).then((manga) =>
+      manga.name in mangaList
+        ? dispatch(errorNotify('Manga already exists', 'The manga with the given name already exists in the list'))
+        : dispatch({ type: ADD_MANGA, manga })
+    )
   }
 }
 
-export function visitManga(store) {
+export function visitManga(store: AppStore) {
   return (nextState) => {
     store.dispatch({
       type: VISIT_MANGA,
@@ -81,33 +82,34 @@ export function reloadMangaList(store) {
   }
 }
 
-export function reloadManga(manga) {
-  const adapter = adapterFromHostname(manga.get('type'))
-  const url = adapter.mangaURL(manga.get('name'))
+export function reloadManga(manga: Manga): (dispatch: Dispatch<Action>) => Promise<Action> {
+  const adapter = adapterFromHostname(manga.type)
+  const url = adapter.mangaURL(manga.name)
 
   return (dispatch) => {
     return scraper.scrape(url, adapter).then((manga) => dispatch({ type: DIFF_CHANGES, manga }))
   }
 }
 
-export function removeManga(mangaName) {
+export function removeManga(mangaName: string): (dispatch: Dispatch<Action>) => Promise<Action> {
   const navigate = useNavigate()
-  return (dispatch) => {
-    dispatch({ type: REMOVE_MANGA, name: mangaName })
-    navigate('/')
+  return async (dispatch) => {
+    const action = await dispatch({ type: REMOVE_MANGA, name: mangaName })
+    await navigate('/')
+    return action
   }
 }
 
-export function updatePage(manga, chapterNum, amount) {
+export function updatePage(manga: Manga, chapterNum: number, amount: number): Action {
   return {
     type: UPDATE_PAGE,
-    mangaName: manga.get('name'),
+    mangaName: manga.name,
     chapterNum,
     amount
   }
 }
 
-export function updateChapter(mangaName, chapterNum) {
+export function updateChapter(mangaName: string, chapterNum: number): Action {
   return {
     type: UPDATE_CHAPTER,
     mangaName,
@@ -115,7 +117,7 @@ export function updateChapter(mangaName, chapterNum) {
   }
 }
 
-export function setLoading(mangaName, chapterNum) {
+export function setLoading(mangaName: string, chapterNum: number): Action {
   return {
     type: SET_LOADING,
     mangaName,
@@ -123,7 +125,7 @@ export function setLoading(mangaName, chapterNum) {
   }
 }
 
-export function downloadChapter(mangaName, chapterNum) {
+export function downloadChapter(mangaName: string, chapterNum: number): Action {
   return {
     type: DOWNLOAD_CHAPTER,
     mangaName,
@@ -131,47 +133,45 @@ export function downloadChapter(mangaName, chapterNum) {
   }
 }
 
-export function loadChapter(manga, chapterNum, background = false) {
-  const chapterRoute = `/chapter/${manga.get('name')}/${chapterNum}`
-  return (dispatch) => {
-    const mangaName = manga.get('name')
-    const chapter = manga.get('chapters').get(chapterNum)
-    const chapterURL = chapter.get('url')
-    const loadState = chapter.get('loadState')
+export function loadChapter(manga: Manga, chapterNum: number, background = false): (dispatch: Dispatch<Action | ReduxAction>) => Promise<void> {
+  const navigate = useNavigate()
+  const chapterRoute = `/chapter/${manga.name}/${chapterNum}`
+  return async (dispatch) => {
+    const mangaName = manga.name
+    const chapter = manga.chapters[chapterNum]
+    const chapterURL = chapter.url
+    const loadState = chapter.loadState
     const adapter = adapterFromURL(chapterURL)
 
     switch (loadState) {
       case LoadStateType.LOADED:
         if (!background) {
-          // dispatch(push(chapterRoute))
-          dispatch(updateChapter(mangaName, chapterNum))
+          await navigate(chapterRoute)
+          await dispatch(updateChapter(mangaName, chapterNum))
         }
         break
       case LoadStateType.LOADING:
         // Ignore action if the chapter is already loading.
         break
       case LoadStateType.NOT_LOADED:
-        dispatch(setLoading(mangaName, chapterNum))
+        await dispatch(setLoading(mangaName, chapterNum))
 
         // Load chapter, then dispatch to update state, then dispatch to update router.
-        return scraper.scrapeChapter(chapterURL, adapter).then((links) => {
-          if (links.length === 0) {
-            dispatch(errorNotify('Chapter is empty', 'The chapter being loaded has no pages'))
-          } else {
-            dispatch({
-              type: LOAD_CHAPTER,
-              mangaName: mangaName,
-              chapterNum,
-              pages: links
-            })
-            if (!background) {
-              // dispatch(push(chapterRoute))
-              dispatch(updateChapter(mangaName, chapterNum))
-            }
+        const links = await scraper.scrapeChapter(chapterURL, adapter)
+        if (links.length === 0) {
+          await dispatch(errorNotify('Chapter is empty', 'The chapter being loaded has no pages'))
+        } else {
+          await dispatch({
+            type: LOAD_CHAPTER,
+            mangaName: mangaName,
+            chapterNum,
+            pages: links
+          })
+          if (!background) {
+            await navigate(chapterRoute)
+            await dispatch(updateChapter(mangaName, chapterNum))
           }
-        })
+        }
     }
-
-    return Promise.resolve()
   }
 }

@@ -1,6 +1,6 @@
 /* global test, expect, jasmine */
 
-import scraper from '../utils/scraper.js'
+import scraper from '../utils/scraper.ts'
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000
 

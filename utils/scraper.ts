@@ -1,15 +1,15 @@
+import { Adapter, Manga } from "./manga"
+
 /**
  * Scrapes a specific chapter for the manga given the url to the chapter.
- * @param {string} url
- * @param {Adapter} adapter
- * @return {Promise<[string]>} an array of image urls for each page in the chapter.
+ * @return an array of image urls for each page in the chapter.
  */
-export function scrapeChapter (url, adapter) {
-  return adapter.sendRequest(url)
+export function scrapeChapter(url: string, adapter: Adapter): Promise<string[]> {
+  return adapter.sendRequest(url, false)
     .then((body) => Promise.resolve(adapter.parsePageLinks(url, body)))
     .then((links) => {
       return Promise.all(links.map((link) => {
-        return adapter.sendRequest(link)
+        return adapter.sendRequest(link, false)
           .then((body) => adapter.parsePageImage(body))
       }))
     })
@@ -17,13 +17,10 @@ export function scrapeChapter (url, adapter) {
 
 /**
  * Returns the data for the manga given the url to the manga.
- * @param {string} mangaName
- * @param {Adapter} adapter
- * @return {Manga} the manga data that was parsed.
  */
-export function scrape (url, adapter) {
+export function scrape(url: string, adapter: Adapter): Promise<Manga> {
   const mangaName = url.substring(url.lastIndexOf('/') + 1, url.length)
 
-  return adapter.sendRequest(url)
+  return adapter.sendRequest(url, false)
     .then((body) => adapter.parseMangaData(mangaName, body))
 }
