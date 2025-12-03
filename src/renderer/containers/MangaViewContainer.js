@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 import MangaViewComponent from '../components/MangaViewComponent.jsx'
 import { useNavigate } from "react-router-dom";
-import { removeManga } from '../actions/manga.ts'
+import { removeManga, visitManga } from '../actions/manga.ts'
 
 const mapStateToProps = (state, ownProps) => ({
   manga: state.manga,
@@ -17,6 +17,10 @@ const mapDispatchToProps = (dispatch) => ({
   onDelete(mangaName) {
     window.api.deleteManga(mangaName)
     dispatch(removeManga(mangaName))
+  },
+
+  onVisitManga(mangaName) {
+    dispatch(visitManga(mangaName))
   }
 })
 

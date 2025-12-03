@@ -72,6 +72,10 @@ export default class MangaViewComponent extends React.Component {
     }
   }
 
+  componentDidMount() {
+    this.props.onVisitManga(this.props.name)
+  }
+
   render() {
     const specificManga = this.props.manga.get(this.props.name)
     const imageURL = specificManga.get('image')

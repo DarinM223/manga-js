@@ -57,31 +57,6 @@ export function addManga(url: string, mangaList: MangaState): (dispatch: Dispatc
   }
 }
 
-export function visitManga(store: AppStore) {
-  return (nextState) => {
-    store.dispatch({
-      type: VISIT_MANGA,
-      mangaName: nextState.params.name
-    })
-  }
-}
-
-export function reloadMangaList(store) {
-  // Only automatically reload manga list when you first open the application.
-  // Reloading after the fact will have to be done manually using the refresh button.
-  let reloaded = false
-  return (nextState) => {
-    if (!reloaded) {
-      for (const mangaName of store.getState().manga.keys()) {
-        const manga = store.getState().manga.get(mangaName)
-        store.dispatch(reloadManga(manga))
-      }
-
-      reloaded = true
-    }
-  }
-}
-
 export function reloadManga(manga: Manga): (dispatch: Dispatch<Action>) => Promise<Action> {
   const adapter = adapterFromHostname(manga.type)
   const url = adapter.mangaURL(manga.name)
@@ -97,6 +72,13 @@ export function removeManga(mangaName: string): (dispatch: Dispatch<Action>) => 
     const action = await dispatch({ type: REMOVE_MANGA, name: mangaName })
     await navigate('/')
     return action
+  }
+}
+
+export function visitManga(mangaName: string): Action {
+  return {
+    type: VISIT_MANGA,
+    mangaName
   }
 }
 

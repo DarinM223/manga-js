@@ -10,7 +10,6 @@ import ReduxToastr from 'react-redux-toastr'
 import MainContainer from './containers/MainContainer.js'
 import MangaViewContainer from './containers/MangaViewContainer.js'
 import ChapterViewContainer from './containers/ChapterViewContainer.js'
-import { reloadMangaList, visitManga } from './actions/manga.ts'
 
 // Start the image downloader queue on the main process.
 window.api.start()
@@ -37,8 +36,8 @@ root.render(
           // render={applyRouterMiddleware(useScroll())}
           >
             <Routes>
-              <Route path='/' element={<MainContainer />} onEnter={reloadMangaList(store)} />
-              <Route path='/manga/:name' element={<MangaViewContainer />} onEnter={visitManga(store)} />
+              <Route path='/' element={<MainContainer />} />
+              <Route path='/manga/:name' element={<MangaViewContainer />} />
               <Route path='/chapter/:mangaName/:chapterNum' element={<ChapterViewContainer />} />
             </Routes>
           </HashRouter>
