@@ -6,7 +6,6 @@ import * as scraper from '../../../utils/scraper.ts'
 import { Manga } from '../../../utils/manga.ts'
 import { Dispatch, Action as ReduxAction } from '@reduxjs/toolkit';
 import { State as MangaState } from '../reducers/manga.ts'
-import { AppStore } from '../configureStore.ts';
 
 export const ADD_MANGA = 'ADD_MANGA'
 export const REMOVE_MANGA = 'REMOVE_MANGA'
@@ -57,13 +56,15 @@ export function addManga(url: string, mangaList: MangaState): (dispatch: Dispatc
   }
 }
 
-export function reloadManga(manga: Manga): (dispatch: Dispatch<Action>) => Promise<Action> {
-  const adapter = adapterFromHostname(manga.type)
-  const url = adapter.mangaURL(manga.name)
-
-  return (dispatch) => {
-    return scraper.scrape(url, adapter).then((manga) => dispatch({ type: DIFF_CHANGES, manga }))
+export function reloadManga(manga: Manga): (dispatch: Dispatch<Action>) => Promise<void> {
+  if (manga.type !== "preloaded") {
+    const adapter = adapterFromHostname(manga.type)
+    const url = adapter.mangaURL(manga.name)
+    return (dispatch) => {
+      return scraper.scrape(url, adapter).then((manga) => { dispatch({ type: DIFF_CHANGES, manga }) })
+    }
   }
+  return (_dispatch) => Promise.resolve()
 }
 
 export function removeManga(mangaName: string): (dispatch: Dispatch<Action>) => Promise<Action> {

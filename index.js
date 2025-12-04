@@ -9,6 +9,20 @@ import BulkSender from './utils/BulkSender.js'
 import { startQueue } from './utils/downloadQueue.js'
 import { MessageType } from './utils/constants.js'
 
+async function copyDir(src, dest) {
+  const entries = await fs.readdir(src, { recursive: true, withFileTypes: true })
+
+  for (const entry of entries) {
+    let srcPath = path.join(entry.path, entry.name);
+    let destPath = srcPath.replace(src, dest);
+    let destDir = path.dirname(destPath);
+
+    if (entry.isFile()) {
+      await fs.mkdir(destDir, { recursive: true })
+      await fs.copyFile(srcPath, destPath);
+    }
+  }
+}
 
 // Global reference to the main window.
 let mainWindow = null
@@ -57,10 +71,23 @@ const createWindow = () => {
       .catch((err) => console.log(err))
   })
 
-  ipcMain.on('load-state', (event, arg) => {
-    fs.readFile(initPath, 'utf-8')
-      .then((state) => { event.returnValue = state })
-      .catch((err) => { console.log(err); event.returnValue = null })
+  ipcMain.on('load-state', async (event, _arg) => {
+    try {
+      const state = await fs.readFile(initPath, 'utf-8')
+      event.returnValue = state
+    } catch (err) {
+      console.log(err)
+      // Try to copy preloaded manga into .config directory.
+      try {
+        const resourcesPath = path.join(basePath, 'resources')
+        await fs.copyFile('./init.json', initPath)
+        await copyDir('resources', resourcesPath)
+        event.returnValue = await fs.readFile(initPath, 'utf-8')
+      } catch (err) {
+        console.log(err)
+        event.returnValue = null
+      }
+    }
   })
 
   ipcMain.on('start', (event, args) => {
