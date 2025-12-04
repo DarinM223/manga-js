@@ -1,37 +1,39 @@
 import React from 'react'
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import ListItemText from '@mui/material/ListItemText';
 import ListSubheader from '@mui/material/ListSubheader'
 import Divider from '@mui/material/Divider'
-import HeaderContainer from '../containers/HeaderContainer.js'
+import HeaderComponent from './HeaderComponent.jsx'
 import { Link } from 'react-router-dom'
 import ImageComponent from './ImageComponent.jsx'
 
-function mangaComponent (manga) {
-  const title = manga.get('title')
-  const type = `http://${manga.get('type')}`
+function mangaComponent(manga) {
+  const type = `http://${manga.type}`
   const avatar = true
 
   return (
-    <Link to={'/manga/' + manga.get('name')} style={{ textDecoration: 'none' }}>
-      <ListItem
-        primaryText={title}
-        secondaryText={manga.get('description')}
-        leftAvatar={<ImageComponent src={manga.get('image')} type={type} avatar={avatar} />}
-      />
+    <Link key={manga.type + manga.name} to={'/manga/' + manga.name} style={{ textDecoration: 'none' }}>
+      <ListItem>
+        <ListItemAvatar>
+          <ImageComponent src={manga.image} type={type} avatar={avatar} />
+        </ListItemAvatar>
+        <ListItemText primary={manga.title} secondary={manga.description} />
+      </ListItem>
     </Link>
   )
 }
 
-export default function SomeMangaComponent ({ manga }) {
+export default function SomeMangaComponent({ manga }) {
   let newMangaComponents = []
   let oldMangaComponents = []
   let mangaList = null
 
-  for (const name of manga.keys()) {
-    const m = manga.get(name)
+  for (const name in manga) {
+    const m = manga[name]
     const component = mangaComponent(m)
-    if (m.get('new')) {
+    if (m.new) {
       newMangaComponents.push(component)
     } else {
       oldMangaComponents.push(component)
@@ -63,7 +65,7 @@ export default function SomeMangaComponent ({ manga }) {
 
   return (
     <div>
-      <HeaderContainer />
+      <HeaderComponent />
       {mangaList}
     </div>
   )

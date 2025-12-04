@@ -7,8 +7,8 @@ import { ThemeProvider, createTheme } from '@mui/material/styles'
 import ReduxToastr from 'react-redux-toastr'
 // import { useScroll } from 'react-router-scroll'
 
-import MainContainer from './containers/MainContainer.js'
-import MangaViewContainer from './containers/MangaViewContainer.js'
+import MangaViewComponent from './components/MangaViewComponent.jsx'
+import MainComponent from './components/MainComponent.jsx'
 import ChapterViewContainer from './containers/ChapterViewContainer.js'
 
 // Start the image downloader queue on the main process.
@@ -36,8 +36,8 @@ root.render(
           // render={applyRouterMiddleware(useScroll())}
           >
             <Routes>
-              <Route path='/' element={<MainContainer />} />
-              <Route path='/manga/:name' element={<MangaViewContainer />} />
+              <Route path='/' element={<MainComponent />} />
+              <Route path='/manga/:name' element={<MangaViewComponent />} />
               <Route path='/chapter/:mangaName/:chapterNum' element={<ChapterViewContainer />} />
             </Routes>
           </HashRouter>

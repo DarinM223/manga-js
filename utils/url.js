@@ -1,5 +1,6 @@
 import mangareader from './sites/mangareader.js'
 import mangafreak from './sites/mangafreak.js'
+import preloaded from './sites/preloaded.ts'
 
 function hostnameFromURL(url) {
   const elem = document.createElement('a')
@@ -11,6 +12,7 @@ const hostnameAdapterMap = {
   'www.mangareader.net': mangareader,
   'www.mangafreak.net': mangafreak,
   'www3.mangafreak.net': mangafreak,
+  'preloaded':preloaded,
 }
 
 export function adapterFromURL(url) {

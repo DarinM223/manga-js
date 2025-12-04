@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -9,10 +9,12 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import IconButton from '@mui/material/IconButton'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
-// import { ScrollContainer } from 'react-router-scroll'
-
 import ImageComponent from './ImageComponent.jsx'
 import ChapterCellContainer from '../containers/ChapterCellContainer.js'
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
+import { removeManga, visitManga } from '../actions/manga.js';
+// import { ScrollContainer } from 'react-router-scroll'
 
 const styles = {
   container: {
@@ -59,75 +61,69 @@ function titleComponent(type, description, imageURL, openDialog) {
   )
 }
 
-export default class MangaViewComponent extends React.Component {
-  constructor(props) {
-    super(props)
+export default function MangaViewComponent(_props) {
+  const { name } = useParams()
+  const manga = useSelector((state) => state.manga)
+  const [open, setOpen] = useState(false)
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  useEffect(() => { dispatch(visitManga(name)) })
 
-    this.state = { open: false }
-    this.handleClose = () => this.setState({ open: false })
-    this.handleOpen = () => this.setState({ open: true })
-    this.handleDelete = () => {
-      this.props.onDelete(this.props.name)
-      this.handleClose()
-    }
+  const specificManga = manga[name]
+  const imageURL = specificManga.image
+  const description = specificManga.description
+  const type = `http://${specificManga.type}`
+  const handleDelete = (mangaName) => {
+    window.api.deleteManga(mangaName)
+    dispatch(removeManga(mangaName))
+    setOpen(false)
+  }
+  const actions = [
+    <Button
+      label='Yes, delete manga'
+      keyboardFocused={false}
+      onTouchTap={() => handleDelete(name)}
+    />
+  ]
+
+  let chapterComponents = []
+  for (let chapterNum = 0; chapterNum < specificManga.chapters.length; chapterNum++) {
+    chapterComponents.push(<ChapterCellContainer key={chapterNum} manga={specificManga} chapterNum={chapterNum} />)
   }
 
-  componentDidMount() {
-    this.props.onVisitManga(this.props.name)
-  }
-
-  render() {
-    const specificManga = this.props.manga.get(this.props.name)
-    const imageURL = specificManga.get('image')
-    const description = specificManga.get('description')
-    const type = `http://${specificManga.get('type')}`
-    const actions = [
-      <Button
-        label='Yes, delete manga'
-        keyboardFocused={false}
-        onTouchTap={this.handleDelete}
+  const confirmText = `Are you sure you want to delete ${specificManga.title}?`
+  return (
+    <div>
+      <AppBar
+        title={specificManga.title}
+        iconElementLeft={<IconButton onClick={() => navigate(-1)}><ArrowBackIcon /></IconButton>}
       />
-    ]
+      <Dialog
+        title={confirmText}
+        actions={actions}
+        modal={false}
+        open={open}
+        onRequestClose={() => setOpen(false)}
+      />
 
-    let chapterComponents = []
-    for (let chapterNum = 0; chapterNum < specificManga.get('chapters').count(); chapterNum++) {
-      chapterComponents.push(<ChapterCellContainer manga={specificManga} chapterNum={chapterNum} />)
-    }
+      {titleComponent(type, description, imageURL, () => setOpen(true))}
 
-    const confirmText = `Are you sure you want to delete ${specificManga.get('title')}?`
-    return (
-      <div>
-        <AppBar
-          title={specificManga.get('title')}
-          iconElementLeft={<IconButton onClick={this.props.back}><ArrowBackIcon /></IconButton>}
-        />
-        <Dialog
-          title={confirmText}
-          actions={actions}
-          modal={false}
-          open={this.state.open}
-          onRequestClose={this.handleClose}
-        />
-
-        {titleComponent(type, description, imageURL, this.handleOpen)}
-
-        {/* <ScrollContainer scrollKey={this.props.name}> */}
-        <div style={{ maxHeight: '60%', overflow: 'scroll' }}>
-          <Table selectable={false}>
-            <TableHead displaySelectAll={false} adjustForCheckbox={false}>
-              <TableRow>
-                <TableCell>Chapter</TableCell>
-                <TableCell>Date</TableCell>
-                <TableCell>Download</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody displayRowCheckbox={false}>
-              {chapterComponents}
-            </TableBody>
-          </Table>
-        </div>
-        {/* </ScrollContainer> */}
+      {/* <ScrollContainer scrollKey={this.props.name}> */}
+      <div style={{ maxHeight: '60%', overflow: 'scroll' }}>
+        <Table selectable={false}>
+          <TableHead displaySelectAll={false} adjustForCheckbox={false}>
+            <TableRow>
+              <TableCell>Chapter</TableCell>
+              <TableCell>Date</TableCell>
+              <TableCell>Download</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody displayRowCheckbox={false}>
+            {chapterComponents}
+          </TableBody>
+        </Table>
       </div>
-    )
-  }
+      {/* </ScrollContainer> */}
+    </div>
+  )
 }

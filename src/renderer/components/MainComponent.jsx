@@ -1,6 +1,8 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import NoMangaComponent from './NoMangaComponent.jsx'
 import SomeMangaComponent from './SomeMangaComponent.jsx'
+import { useSelector, useDispatch } from 'react-redux'
+import { reloadManga } from '../actions/manga.js'
 
 /**
  * The main page of the manga reader.
@@ -9,34 +11,24 @@ import SomeMangaComponent from './SomeMangaComponent.jsx'
  * if there is manga saved.
  */
 
-export default class MainComponent extends React.Component {
-  constructor(props) {
-    super(props)
-    this.reloaded = false
-  }
-
-  reloadMangaList() {
+export default function MainComponent(_props) {
+  const manga = useSelector((state) => state.manga)
+  const dispatch = useDispatch()
+  const [reloaded, setReloaded] = useState(false)
+  useEffect(() => {
     // Only automatically reload manga list when you first open the application.
     // Reloading after the fact will have to be done manually using the refresh button.
-    if (!this.reloaded) {
-      for (const mangaName in this.props.manga) {
-        const manga = this.props.manga[mangaName]
-        this.props.onReloadManga(manga)
+    if (!reloaded) {
+      for (const mangaName in manga) {
+        const specificManga = manga[mangaName]
+        dispatch(reloadManga(specificManga))
       }
-
-      this.reloaded = true
+      setReloaded(true)
     }
-  }
-
-  componentDidMount() {
-    this.reloadMangaList()
-  }
-
-  render() {
-    if (Object.keys(this.props.manga).length === 0) {
-      return <NoMangaComponent />
-    } else {
-      return <SomeMangaComponent manga={this.props.manga} />
-    }
+  })
+  if (Object.keys(manga).length === 0) {
+    return <NoMangaComponent />
+  } else {
+    return <SomeMangaComponent manga={manga} />
   }
 }

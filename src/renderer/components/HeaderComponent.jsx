@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import AppBar from '@mui/material/AppBar'
 import NoteAddIcon from '@mui/icons-material/NoteAdd';
 import LoopIcon from '@mui/icons-material/Loop';
@@ -8,84 +8,89 @@ import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import { validHostname } from '../../../utils/url.js'
 import { DialogActions, DialogContent, DialogTitle, Toolbar, Typography } from '@mui/material';
+import { useSelector, useDispatch } from 'react-redux';
+import { addManga, reloadManga } from '../actions/manga.js';
 
 const EMPTY_TEXT = 'EMPTY_TEXT'
 const INVALID_URL = 'INVALID_URL'
 const NO_ERROR = 'NO_ERROR'
 
-export default class HeaderComponent extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      open: false,
-      text: '',
-      error: NO_ERROR
-    }
+export default function HeaderComponent(_props) {
+  const dispatch = useDispatch()
+  const manga = useSelector((state) => state.manga)
+  const [state, setState] = useState({
+    open: false,
+    text: '',
+    error: NO_ERROR
+  })
 
-    this.handleClose = () => {
-      this.setState({ open: false, text: '', error: NO_ERROR })
-    }
-    this.handleOpen = () => {
-      this.setState({ open: true, error: NO_ERROR })
-    }
-    this.handleChange = (e) => {
-      e.preventDefault()
-      this.setState({ text: e.target.value })
-    }
-    this.submit = () => {
-      if (this.state.text.trim().length === 0) {
-        this.setState({ error: EMPTY_TEXT })
-        return
-      }
-      if (!validHostname(this.state.text)) {
-        this.setState({ error: INVALID_URL })
-        return
-      }
-
-      this.props.onAddManga(this.state.text, this.props.manga)
-      this.handleClose()
-    }
-    this.handleReload = () => {
-      this.props.onReload(this.props.manga)
+  const onAddManga = (url, mangaList) => {
+    dispatch(addManga(url, mangaList))
+  }
+  const onReload = (mangaList) => {
+    for (const name in mangaList) {
+      const manga = mangaList[name]
+      dispatch(reloadManga(manga))
     }
   }
-
-  render() {
-    let errorText = null
-    switch (this.state.error) {
-      case EMPTY_TEXT:
-        errorText = 'Please enter the url of the manga into the text field'
-        break
-      case INVALID_URL:
-        errorText = 'Please enter a valid manga url into the text field'
-        break
-    }
-
-    let textField = <TextField id='text-field-default' onChange={this.handleChange} />;
-    if (errorText !== null) {
-      textField = <TextField error id='text-field-default' helperText={errorText} onChange={this.handleChange} />;
-    }
-
-    return (
-      <div>
-        <AppBar position='static'>
-          <Toolbar style={{ justifyContent: 'space-between' }}>
-            <IconButton onClick={this.handleOpen}><NoteAddIcon /></IconButton>
-            <Typography variant="h6">Manga list</Typography>
-            <IconButton onClick={this.handleClose}><LoopIcon /></IconButton>
-          </Toolbar>
-        </AppBar>
-        <Dialog open={this.state.open} onClose={this.handleClose}>
-          <DialogTitle>Enter the url of the manga to add</DialogTitle>
-          <DialogContent>
-            <div>Paste the url of the manga to add in the text field below:</div>
-            {textField}
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={this.submit}>Add manga</Button>
-          </DialogActions>
-        </Dialog>
-      </div>
-    )
+  const handleClose = () => {
+    setState({ open: false, text: '', error: NO_ERROR })
   }
+  const handleOpen = () => {
+    setState({ open: true, error: NO_ERROR })
+  }
+  const handleChange = (e) => {
+    e.preventDefault()
+    setState({ text: e.target.value })
+  }
+  const submit = () => {
+    if (state.text.trim().length === 0) {
+      setState({ error: EMPTY_TEXT })
+      return
+    }
+    if (!validHostname(state.text)) {
+      setState({ error: INVALID_URL })
+      return
+    }
+
+    onAddManga(state.text, manga)
+    handleClose()
+  }
+  const handleReload = () => { onReload(manga) }
+  let errorText = null
+  switch (state.error) {
+    case EMPTY_TEXT:
+      errorText = 'Please enter the url of the manga into the text field'
+      break
+    case INVALID_URL:
+      errorText = 'Please enter a valid manga url into the text field'
+      break
+  }
+
+  let textField = <TextField id='text-field-default' onChange={handleChange} />;
+  if (errorText !== null) {
+    textField = <TextField error id='text-field-default' helperText={errorText} onChange={handleChange} />;
+  }
+
+  return (
+    <div>
+      <AppBar position='static'>
+        <Toolbar style={{ justifyContent: 'space-between' }}>
+          <IconButton onClick={handleOpen}><NoteAddIcon /></IconButton>
+          <Typography variant="h6">Manga list</Typography>
+          <IconButton onClick={handleClose}><LoopIcon /></IconButton>
+        </Toolbar>
+      </AppBar>
+      <Dialog open={state.open} onClose={handleClose}>
+        <DialogTitle>Enter the url of the manga to add</DialogTitle>
+        <DialogContent>
+          <div>Paste the url of the manga to add in the text field below:</div>
+          {textField}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={submit}>Add manga</Button>
+        </DialogActions>
+      </Dialog>
+    </div>
+  )
 }
