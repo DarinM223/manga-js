@@ -1,12 +1,15 @@
-import React from 'react'
+import React, { useState } from 'react'
 import AppBar from '@mui/material/AppBar'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import IconButton from '@mui/material/IconButton'
-import path from 'path'
 import ImageComponent from './ImageComponent.jsx'
 import SliderComponent from './SliderComponent.jsx'
 import { DownloadStateType } from '../../../utils/constants.js'
+import { useSelector } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { updatePage } from '../actions/manga.js';
 
 const styles = {
   appBar: {
@@ -19,113 +22,108 @@ const styles = {
   }
 }
 
-export default class ChapterViewComponent extends React.Component {
-  constructor(props) {
-    super(props)
+export default function ChapterViewComponent(_props) {
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const manga = useSelector((state) => state.manga)
+  const { mangaName, chapterNum } = useParams()
+  const specificManga = manga[mangaName]
+  const chapter = specificManga.chapters[chapterNum]
+  const type = `http://${specificManga.type}`
+  const title = `${specificManga.title} - ${chapter.name}`
+  const currPage = chapter.currentPage
+  const [slider, setSlider] = useState(currPage + 1)
+  const [navigationVisible, setNavigationVisible] = useState(false)
 
-    const specificManga = props.manga.get(props.mangaName)
-    const chapter = specificManga.get('chapters').get(props.chapterNum)
-    const currPage = chapter.get('currentPage')
-    this.state = {
-      slider: currPage + 1,
-      navigationVisible: false
-    }
-  }
-
-  updateSlider(updatedValue, totalPages) {
+  const updateSlider = (updatedValue, totalPages) => {
     if (updatedValue >= 1 && updatedValue <= totalPages) {
-      this.setState({ slider: updatedValue })
+      setSlider(updatedValue)
+    }
+  }
+  const update = (manga, chapterNum, amount) => {
+    dispatch(updatePage(manga, chapterNum, amount))
+  }
+
+  const onlineURL = chapter.pages[currPage]
+  const totalPages = chapter.pages.length
+  const downloadState = chapter.downloadState.type
+
+  const imageClicked = (xOffset, _yOffset, dimensions) => {
+    // If click was on the right half of the image then go to the next page,
+    // otherwise go to the previous page.
+    if (xOffset > dimensions.width / 2) {
+      updateSlider(slider + 1, totalPages)
+      update(specificManga, chapterNum, 1)
+    } else {
+      updateSlider(slider - 1, totalPages)
+      update(specificManga, chapterNum, -1)
     }
   }
 
-  render() {
-    const specificManga = this.props.manga.get(this.props.mangaName)
-    const chapter = specificManga.get('chapters').get(this.props.chapterNum)
-    const type = `http://${specificManga.get('type')}`
-    const title = `${specificManga.get('title')} - ${chapter.get('name')}`
-    const currPage = chapter.get('currentPage')
+  const dropDownClicked = () => setNavigationVisible(!navigationVisible)
 
-    const onlineURL = chapter.get('pages').get(currPage)
-    const totalPages = chapter.get('pages').count()
-    const downloadState = chapter.get('download').get('state')
+  const sliderChanged = (value) => {
+    updateSlider(value, totalPages)
+    const diff = value - currPage - 1
 
-    const imageClicked = (xOffset, yOffset, dimensions) => {
-      // If click was on the right half of the image then go to the next page,
-      // otherwise go to the previous page.
-      if (xOffset > dimensions.width / 2) {
-        this.updateSlider(this.state.slider + 1, totalPages)
-        this.props.update(specificManga, this.props.chapterNum, 1)
-      } else {
-        this.updateSlider(this.state.slider - 1, totalPages)
-        this.props.update(specificManga, this.props.chapterNum, -1)
-      }
+    if (diff !== 0) {
+      update(specificManga, chapterNum, diff)
     }
+  }
 
-    const dropDownClicked = () => this.setState({ navigationVisible: !this.state.navigationVisible })
+  let imagePath = null
+  let downloaded = false
+  if (downloadState === DownloadStateType.DOWNLOADING ||
+    downloadState === DownloadStateType.NOT_DOWNLOADED) {
+    imagePath = onlineURL
+  } else if (downloadState === DownloadStateType.DOWNLOADED) {
+    imagePath = 'manga://' + [
+      specificManga.name,
+      chapterNum + '',
+      encodeURIComponent(onlineURL)
+    ].join('/')
+    downloaded = true
+  } else {
+    throw new Error('Invalid download state')
+  }
 
-    const sliderChanged = (value) => {
-      this.updateSlider(value, totalPages)
-      const diff = value - currPage - 1
+  const scrollTop = true
+  const imageComponent = (
+    <ImageComponent
+      src={imagePath}
+      type={type}
+      style={{ width: '100%' }}
+      downloaded={downloaded}
+      onImageClick={imageClicked}
+      scrollTop={scrollTop}
+    />
+  )
 
-      if (diff !== 0) {
-        this.props.update(specificManga, this.props.chapterNum, diff)
-      }
-    }
-
-    let imagePath = null
-    let downloaded = false
-    if (downloadState === DownloadStateType.DOWNLOADING ||
-      downloadState === DownloadStateType.NOT_DOWNLOADED) {
-      imagePath = onlineURL
-    } else if (downloadState === DownloadStateType.DOWNLOADED) {
-      imagePath = 'manga://' + path.join(
-        specificManga.get('name'),
-        this.props.chapterNum + '',
-        encodeURIComponent(onlineURL)
-      )
-      downloaded = true
-    } else {
-      throw new Error('Invalid download state')
-    }
-
-    const scrollTop = true
-    const imageComponent = (
-      <ImageComponent
-        src={imagePath}
-        type={type}
-        style={{ width: '100%' }}
-        downloaded={downloaded}
-        onImageClick={imageClicked}
-        scrollTop={scrollTop}
-      />
-    )
-
-    let sliderComponent = <div />
-    if (this.state.navigationVisible) {
-      sliderComponent = (
-        <div style={styles.transparent}>
-          <SliderComponent
-            currValue={this.state.slider}
-            totalPages={totalPages}
-            onSliderChanged={sliderChanged}
-          />
-        </div>
-      )
-    }
-
-    return (
-      <div>
-        <div style={styles.appBar}>
-          <AppBar
-            title={title}
-            iconElementLeft={<IconButton onClick={this.props.back}><ArrowBackIcon /></IconButton>}
-            iconElementRight={<IconButton onClick={dropDownClicked}><ArrowDropDownIcon /></IconButton>}
-          />
-          {sliderComponent}
-        </div>
-        <br /><br /><br /><br />
-        {imageComponent}
+  let sliderComponent = <div />
+  if (navigationVisible) {
+    sliderComponent = (
+      <div style={styles.transparent}>
+        <SliderComponent
+          currValue={slider}
+          totalPages={totalPages}
+          onSliderChanged={sliderChanged}
+        />
       </div>
     )
   }
+
+  return (
+    <div>
+      <div style={styles.appBar}>
+        <AppBar
+          title={title}
+          iconElementLeft={<IconButton onClick={() => navigate(-1)}><ArrowBackIcon /></IconButton>}
+          iconElementRight={<IconButton onClick={dropDownClicked}><ArrowDropDownIcon /></IconButton>}
+        />
+        {sliderComponent}
+      </div>
+      <br /><br /><br /><br />
+      {imageComponent}
+    </div>
+  )
 }

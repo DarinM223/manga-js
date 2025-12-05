@@ -9,7 +9,7 @@ import ReduxToastr from 'react-redux-toastr'
 
 import MangaViewComponent from './components/MangaViewComponent.jsx'
 import MainComponent from './components/MainComponent.jsx'
-import ChapterViewContainer from './containers/ChapterViewContainer.js'
+import ChapterViewComponent from './components/ChapterViewComponent.jsx'
 
 // Start the image downloader queue on the main process.
 window.api.start()
@@ -38,7 +38,7 @@ root.render(
             <Routes>
               <Route path='/' element={<MainComponent />} />
               <Route path='/manga/:name' element={<MangaViewComponent />} />
-              <Route path='/chapter/:mangaName/:chapterNum' element={<ChapterViewContainer />} />
+              <Route path='/chapter/:mangaName/:chapterNum' element={<ChapterViewComponent />} />
             </Routes>
           </HashRouter>
         </ThemeProvider>

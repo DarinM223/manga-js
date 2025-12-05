@@ -24,13 +24,13 @@
     "mime-types": "^3.0.2",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "react-measure": "^2.5.2",
     "react-redux": "^9.2.0",
     "react-redux-toastr": "^8.0.0",
     "react-router-dom": "^7.9.6"
   },
   "devDependencies": {
     "@types/lodash": "^4.17.21",
+    "@types/node": "^24.10.1",
     "@types/react": "^19.2.7",
     "@types/react-redux-toastr": "^8.0.0",
     "electron": "^38.1.2",
