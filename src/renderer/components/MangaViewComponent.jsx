@@ -10,10 +10,11 @@ import IconButton from '@mui/material/IconButton'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import ImageComponent from './ImageComponent.jsx'
-import ChapterCellContainer from '../containers/ChapterCellContainer.js'
+import ChapterCellComponent from './ChapterCellComponent.jsx'
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { removeManga, visitManga } from '../actions/manga.js';
+import { DialogActions, DialogTitle, Toolbar, Typography } from '@mui/material';
 // import { ScrollContainer } from 'react-router-scroll'
 
 const styles = {
@@ -40,8 +41,6 @@ const styles = {
 }
 
 function titleComponent(type, description, imageURL, openDialog) {
-  // Dummy variable that is always true to trick eslint >:)
-  const isSecondary = true
   const deleteText = 'Delete manga'
 
   let textDescription = description
@@ -55,7 +54,7 @@ function titleComponent(type, description, imageURL, openDialog) {
       <div style={styles.div}>
         <h3>Description:</h3>
         <p>{textDescription}</p>
-        <Button variant="contained" label={deleteText} secondary={isSecondary} onClick={openDialog} />
+        <Button color="error" variant="contained" onClick={openDialog}>{deleteText}</Button>
       </div>
     </div>
   )
@@ -78,47 +77,41 @@ export default function MangaViewComponent(_props) {
     dispatch(removeManga(mangaName))
     setOpen(false)
   }
-  const actions = [
-    <Button
-      label='Yes, delete manga'
-      keyboardFocused={false}
-      onTouchTap={() => handleDelete(name)}
-    />
-  ]
 
   let chapterComponents = []
   for (let chapterNum = 0; chapterNum < specificManga.chapters.length; chapterNum++) {
-    chapterComponents.push(<ChapterCellContainer key={chapterNum} manga={specificManga} chapterNum={chapterNum} />)
+    chapterComponents.push(<ChapterCellComponent key={chapterNum} manga={specificManga} chapterNum={chapterNum} />)
   }
 
   const confirmText = `Are you sure you want to delete ${specificManga.title}?`
   return (
     <div>
-      <AppBar
-        title={specificManga.title}
-        iconElementLeft={<IconButton onClick={() => navigate(-1)}><ArrowBackIcon /></IconButton>}
-      />
-      <Dialog
-        title={confirmText}
-        actions={actions}
-        modal={false}
-        open={open}
-        onRequestClose={() => setOpen(false)}
-      />
+      <AppBar>
+        <Toolbar style={{ justifyContent: 'space-between' }}>
+          <IconButton onClick={() => navigate(-1)}><ArrowBackIcon /></IconButton>
+          <Typography variant="h6">{specificManga.title}</Typography>
+        </Toolbar>
+      </AppBar>
+      <Dialog modal={false} open={open} onClose={() => setOpen(false)}>
+        <DialogTitle>{confirmText}</DialogTitle>
+        <DialogActions>
+          <Button onClick={() => handleDelete(name)}>Yes, delete manga</Button>
+        </DialogActions>
+      </Dialog>
 
       {titleComponent(type, description, imageURL, () => setOpen(true))}
 
       {/* <ScrollContainer scrollKey={this.props.name}> */}
-      <div style={{ maxHeight: '60%', overflow: 'scroll' }}>
+      <div style={{ overflowY: 'auto' }}>
         <Table selectable={false}>
-          <TableHead displaySelectAll={false} adjustForCheckbox={false}>
+          <TableHead>
             <TableRow>
               <TableCell>Chapter</TableCell>
               <TableCell>Date</TableCell>
               <TableCell>Download</TableCell>
             </TableRow>
           </TableHead>
-          <TableBody displayRowCheckbox={false}>
+          <TableBody>
             {chapterComponents}
           </TableBody>
         </Table>

@@ -1,5 +1,5 @@
 import { actions } from 'react-redux-toastr'
-import { useNavigate } from "react-router-dom";
+import { NavigateFunction, useNavigate } from "react-router-dom";
 import { DownloadStateType, LoadStateType } from '../../../utils/constants.js'
 import { adapterFromURL, adapterFromHostname } from '../../../utils/url.js'
 import * as scraper from '../../../utils/scraper.ts'
@@ -116,8 +116,7 @@ export function downloadChapter(mangaName: string, chapterNum: number): Action {
   }
 }
 
-export function loadChapter(manga: Manga, chapterNum: number, background = false): (dispatch: Dispatch<Action | ReduxAction>) => Promise<void> {
-  const navigate = useNavigate()
+export function loadChapter(manga: Manga, chapterNum: number, navigate: NavigateFunction, background = false): (dispatch: Dispatch<Action | ReduxAction>) => Promise<void> {
   const chapterRoute = `/chapter/${manga.name}/${chapterNum}`
   return async (dispatch) => {
     const mangaName = manga.name
