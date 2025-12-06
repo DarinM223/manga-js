@@ -105,7 +105,7 @@ export default function MangaViewComponent(_props) {
 
       {/* <ScrollContainer scrollKey={this.props.name}> */}
       <div style={{ overflowY: 'auto' }}>
-        <Table selectable={false}>
+        <Table>
           <TableHead>
             <TableRow>
               <TableCell>Chapter</TableCell>

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Avatar from '@mui/material/Avatar'
 import { adapterFromURL, fileExtFromURL } from '../../../utils/url.js'
 import { useMeasure } from './utils.ts'
-import mime from 'mime-types'
+import { types } from 'mime-types'
 
 export default function ImageComponent({ src, type, onImageClick, avatar = false, downloaded = false, scrollTop = false, ...imgProps }) {
   const adapter = adapterFromURL(type)
@@ -15,7 +15,7 @@ export default function ImageComponent({ src, type, onImageClick, avatar = false
   const retrieveImage = (src) => {
     adapter.sendRequest(src, true).then((buffer) => {
       const fileExt = fileExtFromURL(src)
-      const fileType = mime.lookup(`.${fileExt}`)
+      const fileType = types[fileExt] || 'application/octet-stream'
       const blob = new Blob([buffer], { type: fileType })
       const url = URL.createObjectURL(blob)
 

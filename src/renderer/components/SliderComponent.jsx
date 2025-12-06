@@ -79,10 +79,7 @@ export default class SliderComponent extends React.Component {
       )
     } else {
       currPageComponent = (
-        <Chip
-          style={styles.pageNumberDisplay}
-          onTouchTap={editPages}
-        >
+        <Chip style={styles.pageNumberDisplay} onClick={editPages}>
           {pageLabel}
         </Chip>
       )
