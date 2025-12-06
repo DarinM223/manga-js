@@ -90,6 +90,8 @@ export default function MangaViewComponent(_props) {
         <Toolbar style={{ justifyContent: 'space-between' }}>
           <IconButton onClick={() => navigate(-1)}><ArrowBackIcon /></IconButton>
           <Typography variant="h6">{specificManga.title}</Typography>
+          {/* Hidden element to center title */}
+          <IconButton style={{ visibility: 'hidden' }}><ArrowBackIcon /></IconButton>
         </Toolbar>
       </AppBar>
       <Dialog modal={false} open={open} onClose={() => setOpen(false)}>

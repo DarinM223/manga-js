@@ -10,6 +10,7 @@ import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { updatePage } from '../actions/manga.js';
+import { Toolbar, Typography } from '@mui/material';
 
 const styles = {
   appBar: {
@@ -115,11 +116,13 @@ export default function ChapterViewComponent(_props) {
   return (
     <div>
       <div style={styles.appBar}>
-        <AppBar
-          title={title}
-          iconElementLeft={<IconButton onClick={() => navigate(-1)}><ArrowBackIcon /></IconButton>}
-          iconElementRight={<IconButton onClick={dropDownClicked}><ArrowDropDownIcon /></IconButton>}
-        />
+        <AppBar>
+          <Toolbar style={{ justifyContent: 'space-between' }}>
+            <IconButton onClick={() => navigate(-1)}><ArrowBackIcon /></IconButton>
+            <Typography variant="h6">{title}</Typography>
+            <IconButton onClick={dropDownClicked}><ArrowDropDownIcon /></IconButton>
+          </Toolbar>
+        </AppBar>
         {sliderComponent}
       </div>
       <br /><br /><br /><br />
