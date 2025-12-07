@@ -21,15 +21,14 @@ const styles = {
   container: {
     display: 'flex',
     flexDirection: 'row',
-    maxHeight: '40%',
-    overflow: 'auto'
+    height: '40%',
+    overflowY: 'auto'
   },
   image: {
     flex: 1,
     margin: '10px',
     objectFit: 'contain',
-    maxHeight: '25%',
-    maxWidth: '25%',
+    maxHeight: '100%',
     flexGrow: 0,
     flexShrink: 0
   },
@@ -41,8 +40,6 @@ const styles = {
 }
 
 function titleComponent(type, description, imageURL, openDialog) {
-  const deleteText = 'Delete manga'
-
   let textDescription = description
   if (description === null || description.length <= 0) {
     textDescription = 'No description available'
@@ -54,7 +51,7 @@ function titleComponent(type, description, imageURL, openDialog) {
       <div style={styles.div}>
         <h3>Description:</h3>
         <p>{textDescription}</p>
-        <Button color="error" variant="contained" onClick={openDialog}>{deleteText}</Button>
+        <Button color="error" variant="contained" onClick={openDialog}>Delete manga</Button>
       </div>
     </div>
   )
@@ -74,7 +71,7 @@ export default function MangaViewComponent(_props) {
   const type = `http://${specificManga.type}`
   const handleDelete = (mangaName) => {
     window.api.deleteManga(mangaName)
-    dispatch(removeManga(mangaName))
+    dispatch(removeManga(mangaName, navigate))
     setOpen(false)
   }
 

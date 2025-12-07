@@ -30,7 +30,7 @@ export default function ImageComponent({ src, type, onImageClick, avatar = false
       scrollToTop()
     }
   }, [src])
-  const [_, dimensions] = useMeasure()
+  const [ref, dimensions] = useMeasure()
   const imageClicked = (event) => {
     const offsetX = event.nativeEvent.offsetX
     const offsetY = event.nativeEvent.offsetY
@@ -40,19 +40,19 @@ export default function ImageComponent({ src, type, onImageClick, avatar = false
 
   if (downloaded) {
     return (
-      <img {...imgProps} src={state.src} onClick={imageClicked} />
+      <img {...imgProps} ref={ref} src={state.src} onClick={imageClicked} />
     )
   } else if (state.src !== null) {
     if (avatar) {
-      return <Avatar {...imgProps} src={state.src} />
+      return <Avatar {...imgProps} ref={ref} src={state.src} />
     }
     return (
-      <img {...imgProps} src={state.src} onClick={imageClicked} />
+      <img {...imgProps} ref={ref} src={state.src} onClick={imageClicked} />
     )
   } else {
     if (avatar) {
-      return <Avatar {...imgProps} />
+      return <Avatar {...imgProps} ref={ref} />
     }
-    return <div {...imgProps} />
+    return <div {...imgProps} ref={ref} />
   }
 }

@@ -1,5 +1,5 @@
 import { actions } from 'react-redux-toastr'
-import { NavigateFunction, useNavigate } from "react-router-dom";
+import { NavigateFunction } from "react-router-dom";
 import { DownloadStateType, LoadStateType } from '../../../utils/constants.js'
 import { adapterFromURL, adapterFromHostname } from '../../../utils/url.js'
 import * as scraper from '../../../utils/scraper.ts'
@@ -67,12 +67,10 @@ export function reloadManga(manga: Manga): (dispatch: Dispatch<Action>) => Promi
   return (_dispatch) => Promise.resolve()
 }
 
-export function removeManga(mangaName: string): (dispatch: Dispatch<Action>) => Promise<Action> {
-  const navigate = useNavigate()
+export function removeManga(mangaName: string, navigate: NavigateFunction): (dispatch: Dispatch<Action>) => Promise<Action> {
   return async (dispatch) => {
-    const action = await dispatch({ type: REMOVE_MANGA, name: mangaName })
     await navigate('/')
-    return action
+    return await dispatch({ type: REMOVE_MANGA, name: mangaName })
   }
 }
 
