@@ -81,9 +81,9 @@ const createWindow = () => {
       console.log(err)
       // Try to copy preloaded manga into .config directory.
       try {
-        const resourcesPath = path.join(basePath, 'resources')
+        const ubunchuPath = path.join(basePath, 'ubunchu')
         await fs.copyFile('./init.json', initPath)
-        await copyDir('resources', resourcesPath)
+        await copyDir('ubunchu', ubunchuPath)
         event.returnValue = await fs.readFile(initPath, 'utf-8')
       } catch (err) {
         console.log(err)
