@@ -29,7 +29,7 @@ const styles = {
     margin: '10px',
     objectFit: 'contain',
     maxHeight: '25%',
-    width: 'auto',
+    maxWidth: '25%',
     flexGrow: 0,
     flexShrink: 0
   },
@@ -86,7 +86,7 @@ export default function MangaViewComponent(_props) {
   const confirmText = `Are you sure you want to delete ${specificManga.title}?`
   return (
     <div>
-      <AppBar>
+      <AppBar position='static'>
         <Toolbar style={{ justifyContent: 'space-between' }}>
           <IconButton onClick={() => navigate(-1)}><ArrowBackIcon /></IconButton>
           <Typography variant="h6">{specificManga.title}</Typography>

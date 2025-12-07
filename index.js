@@ -27,6 +27,8 @@ async function copyDir(src, dest) {
 // Global reference to the main window.
 let mainWindow = null
 
+protocol.registerSchemesAsPrivileged([{ scheme: 'manga', privileges: { secure: true, standard: true, supportFetchAPI: true, }, },])
+
 const createWindow = () => {
   // Manga protocol is accessed through manga:// and allows the client to view locally downloaded files.
   protocol.registerFileProtocol('manga', (request, callback) => {

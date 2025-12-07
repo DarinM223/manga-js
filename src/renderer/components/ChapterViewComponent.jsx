@@ -89,16 +89,6 @@ export default function ChapterViewComponent(_props) {
   }
 
   const scrollTop = true
-  const imageComponent = (
-    <ImageComponent
-      src={imagePath}
-      type={type}
-      style={{ width: '100%' }}
-      downloaded={downloaded}
-      onImageClick={imageClicked}
-      scrollTop={scrollTop}
-    />
-  )
 
   let sliderComponent = <div />
   if (navigationVisible) {
@@ -116,7 +106,7 @@ export default function ChapterViewComponent(_props) {
   return (
     <div>
       <div style={styles.appBar}>
-        <AppBar>
+        <AppBar position='static'>
           <Toolbar style={{ justifyContent: 'space-between' }}>
             <IconButton onClick={() => navigate(-1)}><ArrowBackIcon /></IconButton>
             <Typography variant="h6">{title}</Typography>
@@ -126,7 +116,14 @@ export default function ChapterViewComponent(_props) {
         {sliderComponent}
       </div>
       <br /><br /><br /><br />
-      {imageComponent}
+      <ImageComponent
+        src={imagePath}
+        type={type}
+        style={{ width: '100%' }}
+        downloaded={downloaded}
+        onImageClick={imageClicked}
+        scrollTop={scrollTop}
+      />
     </div>
   )
 }
