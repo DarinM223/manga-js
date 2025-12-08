@@ -37,19 +37,19 @@ export default function HeaderComponent(_props) {
     setState({ open: false, text: '', error: NO_ERROR })
   }
   const handleOpen = () => {
-    setState({ open: true, error: NO_ERROR })
+    setState({ ...state, open: true, error: NO_ERROR })
   }
   const handleChange = (e) => {
     e.preventDefault()
-    setState({ text: e.target.value })
+    setState({ ...state, text: e.target.value })
   }
   const submit = () => {
     if (state.text.trim().length === 0) {
-      setState({ error: EMPTY_TEXT })
+      setState({ ...state, error: EMPTY_TEXT })
       return
     }
     if (!validHostname(state.text)) {
-      setState({ error: INVALID_URL })
+      setState({ ...state, error: INVALID_URL })
       return
     }
 

@@ -4,7 +4,7 @@ import { manga } from './reducers/manga.ts'
 import { log } from './reducers/log.js'
 import { saveState, loadState, State } from './storage.ts'
 import throttle from 'lodash/throttle'
-import { listenForIpc } from './ipcListener.js'
+import { listenForIpc } from './ipcListener.ts'
 import { Action } from './actions/manga.ts'
 
 export type AppStore = Store<State, Action>
