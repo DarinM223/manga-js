@@ -63,7 +63,8 @@ export class DownloadQueue {
     const adapter = adapterFromHostname(type)
     const imagePath = loc.imagePath(this.path, mangaName, chapterNum, url)
     return adapter.sendRequest(url, true)
-      .then((chunk) => fs.writeFile(imagePath, new Buffer(chunk)))
+      .then((chunk) => fs.writeFile(imagePath, Buffer.from(chunk)))
+      .catch((err) => console.error(err))
   }
 
   isDownloadedImage(mangaName, chapterNum, url) {

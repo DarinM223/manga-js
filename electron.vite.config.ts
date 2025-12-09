@@ -18,5 +18,14 @@ export default defineConfig({
   },
   renderer: {
     // Uses 'src/renderer' directory by default.
+    server: {
+      proxy: {
+        '^/preloaded/.*': {
+          target: 'http://localhost:3000',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/preloaded/, ''),
+        }
+      }
+    }
   }
 })

@@ -1,42 +1,37 @@
 // Entry point for Electron application.
 
-import { app, protocol, ipcMain, BrowserWindow } from 'electron'
+import { app, protocol, ipcMain, session, net, BrowserWindow } from 'electron'
 import path from 'path'
 import url from 'url'
+import process from 'process'
 import fs from 'fs/promises'
 import { downloadChapter, deleteChapter, deleteManga } from './downloaderUtils.js'
 import BulkSender from './utils/BulkSender.js'
 import { startQueue } from './utils/downloadQueue.js'
 import { MessageType } from './utils/constants.js'
-
-async function copyDir(src, dest) {
-  const entries = await fs.readdir(src, { recursive: true, withFileTypes: true })
-
-  for (const entry of entries) {
-    let srcPath = path.join(entry.path, entry.name);
-    let destPath = srcPath.replace(src, dest);
-    let destDir = path.dirname(destPath);
-
-    if (entry.isFile()) {
-      await fs.mkdir(destDir, { recursive: true })
-      await fs.copyFile(srcPath, destPath);
-    }
-  }
-}
+import { app as preloadedServer } from './preload-server.ts'
 
 // Global reference to the main window.
 let mainWindow = null
 
-protocol.registerSchemesAsPrivileged([{ scheme: 'manga', privileges: { secure: true, standard: true, supportFetchAPI: true, }, },])
+protocol.registerSchemesAsPrivileged([{
+  scheme: 'manga',
+  privileges: {
+    secure: true,
+    standard: true,
+    supportFetchAPI: true,
+    bypassCSP: true,
+  },
+},])
 
 const createWindow = () => {
+  const partition = 'persist:subdeveloper'
+  const ses = session.fromPartition(partition)
   // Manga protocol is accessed through manga:// and allows the client to view locally downloaded files.
-  protocol.registerFileProtocol('manga', (request, callback) => {
-    const url = request.url.substr(8)
-    const urlPath = path.join(app.getPath('userData'), path.normalize(url))
-    callback({ path: urlPath })
-  }, (err) => {
-    if (err) console.error('Failed to register protocol')
+  ses.protocol.handle('manga', (request) => {
+    const reqUrl = request.url.slice('manga://'.length)
+    const urlPath = path.join(app.getPath('userData'), path.normalize(reqUrl))
+    return net.fetch(url.pathToFileURL(urlPath).toString())
   })
 
   mainWindow = new BrowserWindow({
@@ -44,7 +39,8 @@ const createWindow = () => {
     height: 600,
     webPreferences: {
       preload: path.join(__dirname, '../preload/index.js'),
-      sandbox: false
+      sandbox: false,
+      partition,
     }
   })
 
@@ -79,11 +75,8 @@ const createWindow = () => {
       event.returnValue = state
     } catch (err) {
       console.log(err)
-      // Try to copy preloaded manga into .config directory.
       try {
-        const ubunchuPath = path.join(basePath, 'ubunchu')
         await fs.copyFile('./init.json', initPath)
-        await copyDir('ubunchu', ubunchuPath)
         event.returnValue = await fs.readFile(initPath, 'utf-8')
       } catch (err) {
         console.log(err)
@@ -106,8 +99,16 @@ const createWindow = () => {
   })
 }
 
-app.on('ready', createWindow)
+app.whenReady().then(createWindow)
 app.on('window-all-closed', () => app.quit())
+
+if (process.env.PRELOADED == 1) {
+  console.log('Starting preload server:')
+  const port = 3000
+  preloadedServer.listen(port, () => {
+    console.log(`Server listening at port ${port}:`)
+  })
+}
 
 /**
  * Sends the return value when the promise completes.
