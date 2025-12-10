@@ -2,6 +2,7 @@ import fs from 'fs/promises'
 import * as loc from './location.js'
 import path from 'path'
 import { adapterFromHostname } from './url.js'
+import process from 'process'
 
 /*
  * Queue format:
@@ -62,6 +63,9 @@ export class DownloadQueue {
   downloadImage(mangaName, chapterNum, url, type) {
     const adapter = adapterFromHostname(type)
     const imagePath = loc.imagePath(this.path, mangaName, chapterNum, url)
+    if (url.startsWith('/')) {
+      url = process.env.ELECTRON_RENDERER_URL + url
+    }
     return adapter.sendRequest(url, true)
       .then((chunk) => fs.writeFile(imagePath, Buffer.from(chunk)))
       .catch((err) => console.error(err))

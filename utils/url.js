@@ -12,7 +12,7 @@ const hostnameAdapterMap = {
   'www.mangareader.net': mangareader,
   'www.mangafreak.net': mangafreak,
   'www3.mangafreak.net': mangafreak,
-  'preloaded':preloaded,
+  'localhost': preloaded,
 }
 
 export function adapterFromURL(url) {

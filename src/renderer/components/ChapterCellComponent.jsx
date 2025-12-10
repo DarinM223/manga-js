@@ -16,7 +16,7 @@ export default function ChapterCellComponent({ manga, chapterNum, ...rowProps })
   const mangaName = manga.name
   const chapter = manga.chapters[chapterNum]
   const currentChapter = manga.currentChapter
-  const downloadState = chapter.downloadState
+  const downloadState = chapter.download.state
 
   const onDoubleClick = (manga, chapterNum) => {
     dispatch(loadChapter(manga, chapterNum, navigate))
@@ -39,7 +39,7 @@ export default function ChapterCellComponent({ manga, chapterNum, ...rowProps })
   }
 
   let downloadComponent = null
-  switch (downloadState.type) {
+  switch (downloadState) {
     case DownloadStateType.NOT_DOWNLOADED:
       downloadComponent = <IconButton onClick={downloadClicked}><GetAppIcon /></IconButton>
       break

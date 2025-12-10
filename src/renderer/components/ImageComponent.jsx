@@ -27,6 +27,7 @@ export default function ImageComponent({ src, type, onImageClick, avatar = false
     if (!downloaded) {
       retrieveImage(src)
     } else {
+      setState({ src })
       scrollToTop()
     }
   }, [src])

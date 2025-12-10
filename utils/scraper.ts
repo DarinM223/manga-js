@@ -10,7 +10,7 @@ export function scrapeChapter(url: string, adapter: Adapter): Promise<string[]> 
     .then((links) => {
       return Promise.all(links.map((link) => {
         return adapter.sendRequest(link, false)
-          .then((body) => adapter.parsePageImage(body))
+          .then((body) => adapter.parsePageImage(link, body))
       }))
     })
 }

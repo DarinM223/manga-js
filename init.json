@@ -2,7 +2,7 @@
   "how to use": "copy this file into the directory ~/.config/manga-js",
   "manga": {
     "ubunchu": {
-      "type": "preloaded",
+      "type": "localhost",
       "title": "Ubunchu!",
       "name": "ubunchu",
       "description": "Ubunchu! is a Japanese manga series featuring Ubuntu Linux. Three school students in a system-admin club  are getting into Ubuntu!",
@@ -11,11 +11,11 @@
       "chapters": [
         {
           "name": "Chapter 1",
-          "url": "https://seotch.wordpress.com/2009/04/04/ubunchu01/",
+          "url": "/preloaded/manga/ubunchu/0",
           "date": "04/04/09",
           "loadState": "LOADED",
-          "downloadState": {
-            "type": "NOT_DOWNLOADED",
+          "download": {
+            "state": "NOT_DOWNLOADED",
             "progress": 0
           },
           "currentPage": 0,

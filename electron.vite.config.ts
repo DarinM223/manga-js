@@ -26,6 +26,11 @@ export default defineConfig({
           rewrite: (path) => path.replace(/^\/preloaded/, ''),
         }
       }
+    },
+    resolve: {
+      alias: {
+        path: "path-browserify"
+      }
     }
   }
 })

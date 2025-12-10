@@ -11,6 +11,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { updatePage } from '../actions/manga.js';
 import { Toolbar, Typography } from '@mui/material';
+import * as location from '../../../utils/location.js'
 
 const styles = {
   appBar: {
@@ -47,7 +48,7 @@ export default function ChapterViewComponent(_props) {
 
   const onlineURL = chapter.pages[currPage]
   const totalPages = chapter.pages.length
-  const downloadState = chapter.downloadState.type
+  const downloadState = chapter.download.state
 
   const imageClicked = (xOffset, _yOffset, dimensions) => {
     // If click was on the right half of the image then go to the next page,
@@ -78,11 +79,7 @@ export default function ChapterViewComponent(_props) {
     downloadState === DownloadStateType.NOT_DOWNLOADED) {
     imagePath = onlineURL
   } else if (downloadState === DownloadStateType.DOWNLOADED) {
-    imagePath = 'manga://' + [
-      specificManga.name,
-      chapterNum + '',
-      encodeURIComponent(onlineURL)
-    ].join('/')
+    imagePath = 'manga://' + location.imagePath('', specificManga.name, chapterNum + '', onlineURL)
     downloaded = true
   } else {
     throw new Error('Invalid download state')
