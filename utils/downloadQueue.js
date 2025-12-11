@@ -1,7 +1,7 @@
 import fs from 'fs/promises'
 import * as loc from './location.js'
 import path from 'path'
-import { adapterFromHostname } from './url.js'
+import { adapterFromHostname } from './url.ts'
 import process from 'process'
 
 /*

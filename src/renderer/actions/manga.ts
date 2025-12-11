@@ -1,7 +1,7 @@
 import { actions } from 'react-redux-toastr'
 import { NavigateFunction } from "react-router-dom";
 import { DownloadStateType, LoadStateType } from '../../../utils/constants.js'
-import { adapterFromURL, adapterFromHostname } from '../../../utils/url.js'
+import { adapterFromURL, adapterFromHostname } from '../../../utils/url.ts'
 import * as scraper from '../../../utils/scraper.ts'
 import { Manga } from '../../../utils/manga.ts'
 import { Dispatch, Action as ReduxAction } from '@reduxjs/toolkit';

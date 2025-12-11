@@ -4,7 +4,7 @@ import { Buffer } from 'buffer'
 /**
  * Returns the URL for the given manga.
  */
-function mangaURL(mangaName: string): string {
+export function mangaURL(mangaName: string): string {
   return `/preloaded/manga/${mangaName}`
 }
 
@@ -12,7 +12,7 @@ function mangaURL(mangaName: string): string {
  * Sends a request to the specified url and
  * returns a Promise that contains the body of the response.
  */
-async function sendRequest<B extends boolean>(url: string, buffer: B): Promise<B extends true ? Buffer : string> {
+export async function sendRequest<B extends boolean>(url: string, buffer: B): Promise<B extends true ? Buffer : string> {
   const res = await fetch(url)
   if (buffer) {
     // @ts-ignore
@@ -27,7 +27,7 @@ async function sendRequest<B extends boolean>(url: string, buffer: B): Promise<B
  * Parses the html body and returns the general manga data like
  * the dates when chapters came out or the manga name.
  */
-function parseMangaData(mangaName: string, body: Buffer | string): Manga {
+export function parseMangaData(mangaName: string, body: Buffer | string): Manga {
   const manga: Manga = JSON.parse(Buffer.isBuffer(body) ? body.toString() : body)
   return manga
 }
@@ -35,7 +35,7 @@ function parseMangaData(mangaName: string, body: Buffer | string): Manga {
 /**
  * Parses the html body and returns an array of URLs to the pages of the chapter.
  */
-function parsePageLinks(url: string, body: Buffer | string): string[] {
+export function parsePageLinks(url: string, body: Buffer | string): string[] {
   const chapter: Chapter = JSON.parse(Buffer.isBuffer(body) ? body.toString() : body)
   return chapter.pages
 }
@@ -43,14 +43,6 @@ function parsePageLinks(url: string, body: Buffer | string): string[] {
 /**
  * Parses the html body and returns the URL of the image for the page of manga.
  */
-function parsePageImage(pageUrl: string, body: Buffer | string): string {
+export function parsePageImage(pageUrl: string, body: Buffer | string): string {
   return pageUrl
-}
-
-export default {
-  mangaURL,
-  sendRequest,
-  parseMangaData,
-  parsePageLinks,
-  parsePageImage
 }

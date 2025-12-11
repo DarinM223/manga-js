@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import Avatar from '@mui/material/Avatar'
-import { adapterFromURL, fileExtFromURL } from '../../../utils/url.js'
+import { adapterFromURL } from '../../../utils/url.ts'
 import { useMeasure } from './utils.ts'
-import { types } from 'mime-types'
+import mime from 'mime-types'
 
 export default function ImageComponent({ src, type, onImageClick, avatar = false, downloaded = false, scrollTop = false, ...imgProps }) {
   const adapter = adapterFromURL(type)
@@ -14,8 +14,7 @@ export default function ImageComponent({ src, type, onImageClick, avatar = false
   }
   const retrieveImage = (src) => {
     adapter.sendRequest(src, true).then((buffer) => {
-      const fileExt = fileExtFromURL(src)
-      const fileType = types[fileExt] || 'application/octet-stream'
+      const fileType = mime.lookup(src)
       const blob = new Blob([buffer], { type: fileType })
       const url = URL.createObjectURL(blob)
 
@@ -27,7 +26,6 @@ export default function ImageComponent({ src, type, onImageClick, avatar = false
     if (!downloaded) {
       retrieveImage(src)
     } else {
-      setState({ src })
       scrollToTop()
     }
   }, [src])
@@ -41,7 +39,7 @@ export default function ImageComponent({ src, type, onImageClick, avatar = false
 
   if (downloaded) {
     return (
-      <img {...imgProps} ref={ref} src={state.src} onClick={imageClicked} />
+      <img {...imgProps} ref={ref} src={src} onClick={imageClicked} />
     )
   } else if (state.src !== null) {
     if (avatar) {
