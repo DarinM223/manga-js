@@ -1,25 +1,27 @@
 import fs from 'fs/promises'
-import * as loc from './location.js'
+import * as loc from './location.ts'
 import path from 'path'
 import { adapterFromHostname } from './url.ts'
 import process from 'process'
 
-/*
- * Queue format:
- * [
- *   {
- *     mangaName: string,
- *     chapterNum: number,
- *     url: string,
- *     total: number,
- *     curr: number
- *   },
- *   ...
- * ]
- */
+type Immutable<T> = { readonly [K in keyof T]: T[K] }
+export type Task = Immutable<{
+  mangaName: string,
+  chapterNum: number,
+  type: string,
+  url: string,
+  total: number,
+  curr: number,
+}>
 
 export class DownloadQueue {
-  constructor(path, file, send, data = null) {
+  path: string
+  file: string
+  queue: Task[]
+  running: boolean
+  send: <T, >(msg: Task) => T
+
+  constructor(path: string, file: string, send: <T, >(msg: Task) => T, data: string | null = null) {
     this.path = path
     this.file = file
     this.send = send
@@ -36,12 +38,12 @@ export class DownloadQueue {
 
   // Super slow stringifies and writes the entire JSON.
   // Doesn't matter for now since the size of the queue will be small, YOLO >_<
-  write() {
+  write(): Promise<void> {
     const queuePath = path.join(this.path, this.file)
     return fs.writeFile(queuePath, JSON.stringify(this.queue), 'utf-8')
   }
 
-  enqueue(data) {
+  enqueue(data: Task): void {
     this.queue.push(data)
 
     // Restart queue if it stopped.
@@ -51,16 +53,19 @@ export class DownloadQueue {
     }
   }
 
-  dequeue() {
+  dequeue(): Task | null {
     if (this.queue.length === 0) {
       return null
     }
 
     const result = this.queue.shift()
+    if (result === undefined) {
+      return null
+    }
     return result
   }
 
-  downloadImage(mangaName, chapterNum, url, type) {
+  downloadImage(mangaName: string, chapterNum: number, url: string, type: string): Promise<void> {
     const adapter = adapterFromHostname(type)
     const imagePath = loc.imagePath(this.path, mangaName, chapterNum, url)
     if (url.startsWith('/')) {
@@ -71,10 +76,10 @@ export class DownloadQueue {
       .catch((err) => console.error(err))
   }
 
-  isDownloadedImage(mangaName, chapterNum, url) {
+  isDownloadedImage(mangaName: string, chapterNum: number, url: string): Promise<boolean> {
     const imagePath = loc.imagePath(this.path, mangaName, chapterNum, url)
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve, _reject) => {
       return fs.open(imagePath, 'r')
         .then((fd) => fd.close())
         .then(() => resolve(true))
@@ -82,11 +87,11 @@ export class DownloadQueue {
     })
   }
 
-  reply(msg) {
-    this.send(msg)
+  reply<T>(msg: Task): T {
+    return this.send(msg)
   }
 
-  start() {
+  start(): Promise<void> {
     const top = this.dequeue()
     if (top === null) {
       this.running = false
@@ -103,14 +108,14 @@ export class DownloadQueue {
         return Promise.resolve()
       })
       .then(() => {
-        this.reply(Object.assign({}, top))
+        this.reply(top)
         return this.write()
       })
       .then(() => this.start())
   }
 }
 
-export function startQueue(queuePath, file, send) {
+export function startQueue(queuePath: string, file: string, send: <T, >(msg: Task) => T) {
   const completePath = path.join(queuePath, file)
   return fs.open(completePath, 'a')
     .then((fd) => fd.close())

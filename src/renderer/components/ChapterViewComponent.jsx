@@ -11,7 +11,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { updatePage } from '../actions/manga.js';
 import { Toolbar, Typography } from '@mui/material';
-import * as location from '../../../utils/location.js'
+import * as location from '../../../utils/location.ts'
 
 const styles = {
   appBar: {

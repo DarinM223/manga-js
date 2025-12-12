@@ -7,7 +7,7 @@ import process from 'process'
 import fs from 'fs/promises'
 import { downloadChapter, deleteChapter, deleteManga } from './downloaderUtils.js'
 import BulkSender from './utils/BulkSender.js'
-import { startQueue } from './utils/downloadQueue.js'
+import { startQueue } from './utils/DownloadQueue.ts'
 import { MessageType } from './utils/constants.js'
 import { app as preloadedServer } from './preload-server.ts'
 

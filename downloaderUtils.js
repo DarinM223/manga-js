@@ -1,5 +1,5 @@
 import fs from 'fs/promises'
-import * as loc from './utils/location.js'
+import * as loc from './utils/location.ts'
 
 export function downloadChapter(event, args, queue) {
   event.sender.send('recv-download-chapter', Object.assign({}, args, { err: null }))
