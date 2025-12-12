@@ -5,8 +5,8 @@ import path from 'path'
 import url from 'url'
 import process from 'process'
 import fs from 'fs/promises'
-import { downloadChapter, deleteChapter, deleteManga } from './downloaderUtils.js'
-import BulkSender from './utils/BulkSender.js'
+import { downloadChapter, deleteChapter, deleteManga } from './downloaderUtils.ts'
+import BulkSender from './utils/BulkSender.ts'
 import { startQueue } from './utils/DownloadQueue.ts'
 import { MessageType } from './utils/constants.js'
 import { app as preloadedServer } from './preload-server.ts'
@@ -91,7 +91,7 @@ const createWindow = () => {
       // Setup ipc handlers after queue started.
       ipcMain.on(MessageType.DOWNLOAD_CHAPTER_MSG, (event, args) => downloadChapter(event, args, queue))
       ipcMain.on(MessageType.DELETE_CHAPTER_MSG, (event, args) => returnAsync(args, deleteChapter(basePath, args), event, MessageType.DELETE_CHAPTER_RECV))
-      ipcMain.on(MessageType.DELETE_MANGA_MSG, (event, args) => deleteManga(basePath, args))
+      ipcMain.on(MessageType.DELETE_MANGA_MSG, (_event, args) => deleteManga(basePath, args))
 
       // Signal to the renderer that the queue has finished starting.
       event.returnValue = null
@@ -102,7 +102,7 @@ const createWindow = () => {
 app.whenReady().then(createWindow)
 app.on('window-all-closed', () => app.quit())
 
-if (process.env.PRELOADED == 1) {
+if (process.env['PRELOADED'] === '1') {
   console.log('Starting preload server:')
   const port = 3000
   preloadedServer.listen(port, () => {
@@ -113,7 +113,7 @@ if (process.env.PRELOADED == 1) {
 /**
  * Sends the return value when the promise completes.
  */
-function returnAsync(args, promise, event, channel) {
+function returnAsync<T>(args: any, promise: Promise<T>, event: Electron.IpcMainEvent, channel: string) {
   promise
     .then((result) => event.sender.send(channel, Object.assign({}, args, { err: null, result })))
     .catch((err) => event.sender.send(channel, Object.assign({}, args, { err, result: null })))

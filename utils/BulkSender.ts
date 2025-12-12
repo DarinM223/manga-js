@@ -1,10 +1,21 @@
+export type Msg = {
+  readonly mangaName: string,
+  readonly chapterNum: number,
+  readonly total: number,
+  readonly curr: number,
+}
+
 /**
  * Sends a bunch of messages in a specified interval
  * in order to reduce the amount of messages needed to be sent
  * to the main process.
  */
 export default class BulkSender {
-  constructor (send, interval = 1000) {
+  downloadData: { [mangaName: string]: { [chapterNum: number]: { total: number, curr: number } } }
+  send: (messages: Msg[]) => void
+  interval: number
+
+  constructor(send: (messages: Msg[]) => void, interval = 1000) {
     this.downloadData = {}
     this.send = send
     this.interval = interval
@@ -12,7 +23,7 @@ export default class BulkSender {
     this.start()
   }
 
-  add (msg) {
+  add(msg: Msg) {
     if (!(msg.mangaName in this.downloadData)) {
       this.downloadData[msg.mangaName] = {}
     }
@@ -29,13 +40,13 @@ export default class BulkSender {
     }
   }
 
-  start () {
+  start() {
     setInterval(() => {
       if (Object.keys(this.downloadData).length !== 0) {
-        let messages = []
+        let messages: Msg[] = []
         Object.keys(this.downloadData).forEach((mangaName) => {
           Object.keys(this.downloadData[mangaName]).forEach((chapterNum) => {
-            const data = this.downloadData[mangaName][chapterNum]
+            const data = this.downloadData[mangaName][+chapterNum]
             messages.push({
               mangaName,
               chapterNum: parseInt(chapterNum, 10),

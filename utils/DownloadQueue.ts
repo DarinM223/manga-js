@@ -19,9 +19,9 @@ export class DownloadQueue {
   file: string
   queue: Task[]
   running: boolean
-  send: <T, >(msg: Task) => T
+  send: (msg: Task) => void
 
-  constructor(path: string, file: string, send: <T, >(msg: Task) => T, data: string | null = null) {
+  constructor(path: string, file: string, send: (msg: Task) => void, data: string | null = null) {
     this.path = path
     this.file = file
     this.send = send
@@ -87,8 +87,8 @@ export class DownloadQueue {
     })
   }
 
-  reply<T>(msg: Task): T {
-    return this.send(msg)
+  reply(msg: Task): void {
+    this.send(msg)
   }
 
   start(): Promise<void> {
@@ -115,7 +115,7 @@ export class DownloadQueue {
   }
 }
 
-export function startQueue(queuePath: string, file: string, send: <T, >(msg: Task) => T) {
+export function startQueue(queuePath: string, file: string, send: (msg: Task) => void) {
   const completePath = path.join(queuePath, file)
   return fs.open(completePath, 'a')
     .then((fd) => fd.close())
