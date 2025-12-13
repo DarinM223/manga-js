@@ -18,24 +18,18 @@ import * as preloaded from '../utils/sites/preloaded.ts'
 const port = 3000
 let server: http.Server | null = null
 
-function hostnameFromURL(urlPath: string): string {
-  console.log(urlPath)
-  if (urlPath.startsWith('/preloaded')) {
-    const url2 = `localhost:${port}/${urlPath.slice('/preloaded'.length)}`
-    console.log(url2)
-    const url = new URL(url2)
-    return url.hostname
-  }
+function routePreloaded(path: string): string {
+  return path.startsWith('/preloaded')
+    ? `http://localhost:${port}${path.slice('/preloaded'.length)}`
+    : path
+}
 
-  const url = new URL(urlPath)
-  return url.hostname
+function hostnameFromURL(urlPath: string): string {
+  return (new URL(routePreloaded(urlPath))).hostname
 }
 
 async function sendRequest<B extends boolean>(urlPath: string, buffer: B): Promise<B extends true ? Buffer : string> {
-  const url = urlPath.startsWith('/preloaded')
-    ? `http://localhost:${port}${urlPath.slice('/preloaded'.length)}`
-    : urlPath
-  const res = await fetch(url)
+  const res = await fetch(routePreloaded(urlPath))
   if (buffer) {
     // @ts-ignore
     return await res.arrayBuffer()
@@ -48,12 +42,12 @@ async function sendRequest<B extends boolean>(urlPath: string, buffer: B): Promi
 beforeAll(() => {
   server = preloadedServer.listen(port)
   vi.spyOn(preloaded, 'sendRequest').mockImplementation(sendRequest)
-  vi.spyOn(url, 'adapterFromURL').mockImplementation((url2: string) => {
-    const hostname = hostnameFromURL(url2)
+  vi.spyOn(url, 'adapterFromURL').mockImplementation((urlPath: string) => {
+    const hostname = hostnameFromURL(urlPath)
     return url.adapterFromHostname(hostname)
   })
-  vi.spyOn(url, 'validHostname').mockImplementation((url2: string) => {
-    const hostname = hostnameFromURL(url2)
+  vi.spyOn(url, 'validHostname').mockImplementation((urlPath: string) => {
+    const hostname = hostnameFromURL(urlPath)
     return hostname in url.hostnameAdapterMap
   })
 })
