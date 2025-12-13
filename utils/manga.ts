@@ -25,6 +25,7 @@ export type Manga = {
 }
 
 export interface Adapter {
+  mangaURL: (mangaName: string) => string,
   sendRequest: <B extends boolean, >(url: string, buffer: B) => Promise<B extends true ? Buffer : string>,
   parseMangaData: (mangaName: string, body: string | Buffer) => Manga,
   parsePageLinks: (url: string, body: string | Buffer) => string[],

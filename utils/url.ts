@@ -9,8 +9,9 @@ function hostnameFromURL(url: string): string {
 
 type AdapterMap = { readonly [hostname: string]: Adapter }
 
-const hostnameAdapterMap: AdapterMap = {
+export const hostnameAdapterMap: AdapterMap = {
   'localhost': preloaded,
+  '': preloaded,
 } as const
 
 export function adapterFromURL(url: string): Adapter {

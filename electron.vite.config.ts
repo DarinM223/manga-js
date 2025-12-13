@@ -1,6 +1,23 @@
 import { defineConfig } from 'electron-vite'
 import { resolve } from 'path'
 
+export const config = {
+  server: {
+    proxy: {
+      '^/preloaded/.*': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+        rewrite: (path: string) => path.replace(/^\/preloaded/, ''),
+      }
+    }
+  },
+  resolve: {
+    alias: {
+      path: "path-browserify"
+    }
+  }
+}
+
 export default defineConfig({
   main: {
     build: {
@@ -18,19 +35,6 @@ export default defineConfig({
   },
   renderer: {
     // Uses 'src/renderer' directory by default.
-    server: {
-      proxy: {
-        '^/preloaded/.*': {
-          target: 'http://localhost:3000',
-          changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/preloaded/, ''),
-        }
-      }
-    },
-    resolve: {
-      alias: {
-        path: "path-browserify"
-      }
-    }
+    ...config
   }
 })
