@@ -1,5 +1,5 @@
 {
-  "name": "manga-js",
+  "name": "manga-ts",
   "version": "1.0.0",
   "description": "",
   "main": "./out/main/index.js",

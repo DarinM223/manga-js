@@ -1,5 +1,5 @@
 {
-  "how to use": "copy this file into the directory ~/.config/manga-js",
+  "how to use": "copy this file into the directory ~/.config/manga-ts",
   "manga": {
     "ubunchu": {
       "type": "localhost",
