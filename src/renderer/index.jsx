@@ -4,7 +4,6 @@ import { Provider } from 'react-redux'
 import { HashRouter, Routes, Route } from 'react-router-dom'
 import loadStore from './configureStore.ts'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
-import ReduxToastr from 'react-redux-toastr'
 // import { useScroll } from 'react-router-scroll'
 
 import MangaViewComponent from './components/MangaViewComponent.jsx'
@@ -23,14 +22,6 @@ root.render(
   <React.StrictMode>
     <Provider store={store}>
       <div>
-        <ReduxToastr
-          timeOut={4000}
-          newestOnTop={false}
-          position='top-right'
-          transitionIn='fadeIn'
-          transitionOut='fadeOut'
-          progressBar
-        />
         <ThemeProvider theme={theme}>
           <HashRouter
           // render={applyRouterMiddleware(useScroll())}

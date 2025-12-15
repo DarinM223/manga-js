@@ -5,7 +5,7 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemText from '@mui/material/ListItemText';
 import ListSubheader from '@mui/material/ListSubheader'
 import Divider from '@mui/material/Divider'
-import HeaderComponent from './HeaderComponent.jsx'
+import HeaderComponent from './HeaderComponent.tsx'
 import { Link } from 'react-router-dom'
 import ImageComponent from './ImageComponent.jsx'
 

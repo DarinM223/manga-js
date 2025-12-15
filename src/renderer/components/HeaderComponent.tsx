@@ -9,25 +9,31 @@ import TextField from '@mui/material/TextField'
 import { validHostname } from '../../../utils/url.ts'
 import { DialogActions, DialogContent, DialogTitle, Toolbar, Typography } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';
-import { addManga, reloadManga } from '../actions/manga.js';
+import { ThunkDispatch } from '@reduxjs/toolkit';
+import { Action, addManga, ALREADY_EXISTS, EMPTY_CHAPTER, reloadManga } from '../actions/manga.js';
+import { State as MangaState } from '../reducers/manga.ts'
+import { State } from '../storage.ts';
 
 const EMPTY_TEXT = 'EMPTY_TEXT'
 const INVALID_URL = 'INVALID_URL'
 const NO_ERROR = 'NO_ERROR'
 
-export default function HeaderComponent(_props) {
-  const dispatch = useDispatch()
-  const manga = useSelector((state) => state.manga)
+export default function HeaderComponent() {
+  const dispatch = useDispatch<ThunkDispatch<State, any, Action>>()
+  const manga = useSelector((state: State) => state.manga)
   const [state, setState] = useState({
     open: false,
     text: '',
     error: NO_ERROR
   })
 
-  const onAddManga = (url, mangaList) => {
-    dispatch(addManga(url, mangaList))
+  const onAddManga = async (url: string, mangaList: MangaState) => {
+    const action: Action = await dispatch(addManga(url, mangaList))
+    if (action.type === 'ERROR') {
+      setState({ ...state, error: action.error })
+    }
   }
-  const onReload = (mangaList) => {
+  const onReload = (mangaList: MangaState) => {
     for (const name in mangaList) {
       const manga = mangaList[name]
       dispatch(reloadManga(manga))
@@ -39,7 +45,7 @@ export default function HeaderComponent(_props) {
   const handleOpen = () => {
     setState({ ...state, open: true, error: NO_ERROR })
   }
-  const handleChange = (e) => {
+  const handleChange: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement> = (e) => {
     e.preventDefault()
     setState({ ...state, text: e.target.value })
   }
@@ -65,6 +71,9 @@ export default function HeaderComponent(_props) {
     case INVALID_URL:
       errorText = 'Please enter a valid manga url into the text field'
       break
+    case ALREADY_EXISTS:
+      errorText = 'Manga with name already exists'
+      break
   }
 
   let textField = <TextField id='text-field-default' onChange={handleChange} />;
@@ -78,7 +87,7 @@ export default function HeaderComponent(_props) {
         <Toolbar style={{ justifyContent: 'space-between' }}>
           <IconButton onClick={handleOpen}><NoteAddIcon /></IconButton>
           <Typography variant="h6">Manga list</Typography>
-          <IconButton onClick={handleClose}><LoopIcon /></IconButton>
+          <IconButton onClick={handleReload}><LoopIcon /></IconButton>
         </Toolbar>
       </AppBar>
       <Dialog open={state.open} onClose={handleClose}>

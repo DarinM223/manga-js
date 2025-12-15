@@ -59,10 +59,9 @@ afterAll(() => {
 })
 
 test('manga reducer', async () => {
-  const store = configureStore(false)
+  const store: AppStore = configureStore(false)
   const mangaName = 'ubunchu'
   const getManga = (store: AppStore) => store.getState().manga[mangaName]
-  // @ts-ignore
   await store.dispatch(addManga(`/preloaded/manga/${mangaName}`, store.getState().manga))
   expect(mangaName in store.getState().manga).toEqual(true)
 
@@ -72,7 +71,6 @@ test('manga reducer', async () => {
   expect(getManga(store).new).toEqual(false)
 
   // Test loading a chapter.
-  // @ts-ignore
   await store.dispatch(loadChapter(store.getState().manga[mangaName], 0, () => { }, true))
   // Test that chapter was loaded.
   expect(getManga(store).chapters[0].loadState).toEqual(LoadStateType.LOADED)
@@ -118,7 +116,6 @@ test('manga reducer', async () => {
   expect(getManga(store).chapters.length).toEqual(newManga.chapters.length)
 
   // Test removing the manga.
-  // @ts-ignore
   await store.dispatch(removeManga(mangaName, () => { }))
   expect(mangaName in store.getState().manga).toEqual(false)
 })

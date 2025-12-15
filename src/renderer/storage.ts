@@ -1,10 +1,9 @@
-import { ToastrState } from 'react-redux-toastr'
 import { State as LogState } from './reducers/log.ts'
 import { State as MangaState } from './reducers/manga.ts'
 import { restoreFromLog } from './restoreFromLog.ts'
 import { } from './window.ts'
 
-export type State = { manga: MangaState, log: LogState, toastr: ToastrState }
+export type State = { manga: MangaState, log: LogState }
 
 export function loadState(): State | undefined {
   try {

@@ -1,5 +1,5 @@
 import React from 'react'
-import HeaderComponent from './HeaderComponent.jsx'
+import HeaderComponent from './HeaderComponent.tsx'
 
 const styles = {
   divStyle: {

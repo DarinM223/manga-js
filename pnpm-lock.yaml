@@ -56,12 +56,12 @@ importers:
       react-redux:
         specifier: ^9.2.0
         version: 9.2.0(@types/react@19.2.7)(react@19.2.0)(redux@5.0.1)
-      react-redux-toastr:
-        specifier: ^8.0.0
-        version: 8.0.0(prop-types@15.8.1)(react-redux@9.2.0(@types/react@19.2.7)(react@19.2.0)(redux@5.0.1))(react@19.2.0)(redux@5.0.1)
       react-router-dom:
         specifier: ^7.9.6
         version: 7.9.6(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      redux-thunk:
+        specifier: ^3.1.0
+        version: 3.1.0(redux@5.0.1)
     devDependencies:
       '@types/express':
         specifier: ^5.0.6
@@ -75,9 +75,6 @@ importers:
       '@types/react':
         specifier: ^19.2.7
         version: 19.2.7
-      '@types/react-redux-toastr':
-        specifier: ^8.0.0
-        version: 8.0.0
       electron:
         specifier: ^38.1.2
         version: 38.7.2
@@ -797,9 +794,6 @@ packages:
   '@types/range-parser@1.2.7':
     resolution: {integrity: sha512-hKormJbkJqzQGhziax5PItDUTMAM9uE2XXQmM37dyd4hVM+5aVl7oVxMVUiVQn2oCQFN/LKCZdvSM0pFRqbSmQ==}
 
-  '@types/react-redux-toastr@8.0.0':
-    resolution: {integrity: sha512-QU2W1ik/h5vgonidIhoM+2scCTFrVfbtp8y7XUW0DCkat8TJE/DUQsIiFB3XlhIKV+C0aj2qEUiYfLqYA+d8jA==}
-
   '@types/react-transition-group@4.4.12':
     resolution: {integrity: sha512-8TV6R3h2j7a91c+1DXdJi3Syo69zzIZbz7Lg5tORM5LEJG7X/E6a1V3drRyBRZq7/utz7A+c4OgYLiLcYGHG6w==}
     peerDependencies:
@@ -1063,9 +1057,6 @@ packages:
   ci-info@3.9.0:
     resolution: {integrity: sha512-NIxF55hv4nSqQswkAeiOi1r83xy8JldOFDTWiug55KBu9Jnblncd2U6ViHmYgHf01TPZS77NJBhBMKdWj9HQMQ==}
     engines: {node: '>=8'}
-
-  classnames@2.5.1:
-    resolution: {integrity: sha512-saHYOzhIQs6wy2sVxTM6bUDsQO4F50V9RQ22qBpEdCW+I+/Wmke2HOl6lS6dTpdxVhb88/I6+Hs+438c3lfUow==}
 
   clean-stack@2.2.0:
     resolution: {integrity: sha512-4diC9HaTE+KRAMWhDhrGOECgWZxoevMc5TlkObMqNSsVU62PYzXZ/SMTjzyGAFF1YusgxGcSWTEXBhp0CPwQ1A==}
@@ -1389,9 +1380,6 @@ packages:
   etag@1.8.1:
     resolution: {integrity: sha512-aIL5Fx7mawVa300al2BnEE4iNvo1qETxLrPI/o05L7z6go7fCw1J6EQmbK4FmJ2AS7kgVF/KEZWufBfdClMcPg==}
     engines: {node: '>= 0.6'}
-
-  eventemitter3@3.1.2:
-    resolution: {integrity: sha512-tvtQIeLVHjDkJYnzf2dgVMxfuSGJeM/7UCG17TT4EumTfNtF+0nebF/4zWOIkCreAbtNqhGEboB6BWrwqNaw4Q==}
 
   expect-type@1.2.2:
     resolution: {integrity: sha512-JhFGDVJ7tmDJItKhYgJCGLOWjuK9vPxiXoUFLwLDc99NlmklilbiQJwoctZtt13+xMw91MCk/REan6MWHqDjyA==}
@@ -2114,14 +2102,6 @@ packages:
 
   react-is@19.2.0:
     resolution: {integrity: sha512-x3Ax3kNSMIIkyVYhWPyO09bu0uttcAIoecO/um/rKGQ4EltYWVYtyiGkS/3xMynrbVQdS69Jhlv8FXUEZehlzA==}
-
-  react-redux-toastr@8.0.0:
-    resolution: {integrity: sha512-rB/T25Gu3XLYB11hr0YL0IsyekXA0fTFkw+i1+2vTtdwp+GLL7EvwtovGvJHvoxm9oRvipg+CzAVK2/8gelSzw==}
-    peerDependencies:
-      prop-types: ^15.5.7
-      react: ^0.14 || ^15.0.1 || ^16.0.0 || ^17.0.0 || ^18.0.0
-      react-redux: ^4.0.1 || ^5.0.1 || ^6.0.0 || ^7.0.0 || ^8.0.0 || ^9.0.0
-      redux: ^3.0.5 || ^4.0.0 || ^5.0.0
 
   react-redux@9.2.0:
     resolution: {integrity: sha512-ROY9fvHhwOD9ySfrF0wmvu//bKCQ6AeZZq1nJNtbDC+kk5DuSuNX/n6YWYF/SYy7bSba4D4FSz8DJeKY/S/r+g==}
@@ -3374,11 +3354,6 @@ snapshots:
 
   '@types/range-parser@1.2.7': {}
 
-  '@types/react-redux-toastr@8.0.0':
-    dependencies:
-      '@types/react': 19.2.7
-      redux: 5.0.1
-
   '@types/react-transition-group@4.4.12(@types/react@19.2.7)':
     dependencies:
       '@types/react': 19.2.7
@@ -3742,8 +3717,6 @@ snapshots:
   chromium-pickle-js@0.2.0: {}
 
   ci-info@3.9.0: {}
-
-  classnames@2.5.1: {}
 
   clean-stack@2.2.0: {}
 
@@ -4126,8 +4099,6 @@ snapshots:
       '@types/estree': 1.0.8
 
   etag@1.8.1: {}
-
-  eventemitter3@3.1.2: {}
 
   expect-type@1.2.2: {}
 
@@ -4889,15 +4860,6 @@ snapshots:
   react-is@16.13.1: {}
 
   react-is@19.2.0: {}
-
-  react-redux-toastr@8.0.0(prop-types@15.8.1)(react-redux@9.2.0(@types/react@19.2.7)(react@19.2.0)(redux@5.0.1))(react@19.2.0)(redux@5.0.1):
-    dependencies:
-      classnames: 2.5.1
-      eventemitter3: 3.1.2
-      prop-types: 15.8.1
-      react: 19.2.0
-      react-redux: 9.2.0(@types/react@19.2.7)(react@19.2.0)(redux@5.0.1)
-      redux: 5.0.1
 
   react-redux@9.2.0(@types/react@19.2.7)(react@19.2.0)(redux@5.0.1):
     dependencies:

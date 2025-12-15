@@ -28,15 +28,14 @@
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-redux": "^9.2.0",
-    "react-redux-toastr": "^8.0.0",
-    "react-router-dom": "^7.9.6"
+    "react-router-dom": "^7.9.6",
+    "redux-thunk": "^3.1.0"
   },
   "devDependencies": {
     "@types/express": "^5.0.6",
     "@types/lodash": "^4.17.21",
     "@types/node": "^24.10.1",
     "@types/react": "^19.2.7",
-    "@types/react-redux-toastr": "^8.0.0",
     "electron": "^38.1.2",
     "electron-builder": "^26.0.12",
     "electron-vite": "^4.0.1",

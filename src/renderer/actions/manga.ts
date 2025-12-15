@@ -1,10 +1,9 @@
-import { actions } from 'react-redux-toastr'
 import { NavigateFunction } from "react-router-dom";
 import { DownloadStateType, LoadStateType } from '../../../utils/constants.js'
 import { adapterFromURL, adapterFromHostname } from '../../../utils/url.ts'
 import * as scraper from '../../../utils/scraper.ts'
 import { Manga } from '../../../utils/manga.ts'
-import { Dispatch, Action as ReduxAction } from '@reduxjs/toolkit';
+import { Dispatch } from '@reduxjs/toolkit';
 import { State as MangaState } from '../reducers/manga.ts'
 
 export const ADD_MANGA = 'ADD_MANGA'
@@ -18,7 +17,11 @@ export const DOWNLOAD_CHAPTER = 'DOWNLOAD_CHAPTER'
 export const DOWNLOADED_PAGE = 'DOWNLOADED_PAGE'
 export const SET_LOADING = 'SET_LOADING'
 export const DIFF_CHANGES = 'DIFF_CHANGES'
+export const ALREADY_EXISTS = 'ALREADY_EXISTS'
+export const EMPTY_CHAPTER = 'EMPTY_CHAPTER'
+export const ERROR = 'ERROR'
 
+export type Error = typeof ALREADY_EXISTS | typeof EMPTY_CHAPTER
 export type Action =
   | { type: 'ADD_MANGA', manga: Manga }
   | { type: 'REMOVE_MANGA', name: string }
@@ -31,26 +34,15 @@ export type Action =
   | { type: 'DOWNLOADED_PAGE', curr: number, mangaName: string, chapterNum: number }
   | { type: 'SET_LOADING', mangaName: string, chapterNum: number }
   | { type: 'DIFF_CHANGES', manga: Manga }
+  | { type: 'ERROR', error: Error }
 
-function errorNotify(title: string, message: string): ReduxAction {
-  return actions.add({
-    type: 'error',
-    title,
-    message,
-    options: {
-      showCloseButton: true,
-      timeOut: 3000
-    }
-  })
-}
-
-export function addManga(url: string, mangaList: MangaState): (dispatch: Dispatch<Action | ReduxAction>) => Promise<Action | ReduxAction> {
+export function addManga(url: string, mangaList: MangaState): (dispatch: Dispatch<Action>) => Promise<Action> {
   const adapter = adapterFromURL(url)
 
   return (dispatch) => {
     return scraper.scrape(url, adapter).then((manga) =>
       manga.name in mangaList
-        ? dispatch(errorNotify('Manga already exists', 'The manga with the given name already exists in the list'))
+        ? dispatch({ type: 'ERROR', error: 'ALREADY_EXISTS' })
         : dispatch({ type: ADD_MANGA, manga })
     )
   }
@@ -111,7 +103,7 @@ export function downloadChapter(mangaName: string, chapterNum: number): Action {
   }
 }
 
-export function loadChapter(manga: Manga, chapterNum: number, navigate: NavigateFunction, background = false): (dispatch: Dispatch<Action | ReduxAction>) => Promise<void> {
+export function loadChapter(manga: Manga, chapterNum: number, navigate: NavigateFunction, background = false): (dispatch: Dispatch<Action>) => Promise<void> {
   const chapterRoute = `/chapter/${manga.name}/${chapterNum}`
   return async (dispatch) => {
     const mangaName = manga.name
@@ -136,7 +128,7 @@ export function loadChapter(manga: Manga, chapterNum: number, navigate: Navigate
         // Load chapter, then dispatch to update state, then dispatch to update router.
         const links = await scraper.scrapeChapter(chapterURL, adapter)
         if (links.length === 0) {
-          await dispatch(errorNotify('Chapter is empty', 'The chapter being loaded has no pages'))
+          await dispatch({ type: 'ERROR', error: 'EMPTY_CHAPTER' })
         } else {
           await dispatch({
             type: LOAD_CHAPTER,
