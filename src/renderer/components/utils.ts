@@ -5,7 +5,7 @@ export type Dimensions = {
   height: number | null,
 }
 
-export function useMeasure(): [(node: Element | undefined) => void, Dimensions] {
+export function useMeasure(): [(node: HTMLImageElement | null) => void, Dimensions] {
   const [dimensions, setDimensions] = React.useState<Dimensions>({
     width: null,
     height: null,
@@ -13,7 +13,7 @@ export function useMeasure(): [(node: Element | undefined) => void, Dimensions] 
 
   const previousObserver: React.RefObject<ResizeObserver | null> = React.useRef(null);
 
-  const customRef = React.useCallback((node: Element | undefined) => {
+  const customRef = React.useCallback((node: HTMLImageElement | null) => {
     if (previousObserver.current) {
       previousObserver.current.disconnect();
       previousObserver.current = null;

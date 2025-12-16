@@ -9,7 +9,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import IconButton from '@mui/material/IconButton'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
-import ImageComponent from './ImageComponent.jsx'
+import ImageComponent from './ImageComponent.tsx'
 import ChapterCellComponent from './ChapterCellComponent.jsx'
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';

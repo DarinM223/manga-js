@@ -7,7 +7,7 @@ import ListSubheader from '@mui/material/ListSubheader'
 import Divider from '@mui/material/Divider'
 import HeaderComponent from './HeaderComponent.tsx'
 import { Link } from 'react-router-dom'
-import ImageComponent from './ImageComponent.jsx'
+import ImageComponent from './ImageComponent.tsx'
 
 function mangaComponent(manga) {
   const type = `http://${manga.type}`
