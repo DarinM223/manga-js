@@ -7,7 +7,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles'
 // import { useScroll } from 'react-router-scroll'
 
 import MangaViewComponent from './components/MangaViewComponent.jsx'
-import MainComponent from './components/MainComponent.jsx'
+import MainComponent from './components/MainComponent.tsx'
 import ChapterViewComponent from './components/ChapterViewComponent.jsx'
 
 // Start the image downloader queue on the main process.

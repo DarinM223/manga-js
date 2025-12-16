@@ -1,7 +1,7 @@
 import React from 'react'
 import HeaderComponent from './HeaderComponent.tsx'
 
-const styles = {
+const styles: { divStyle: React.CSSProperties, textStyle: React.CSSProperties } = {
   divStyle: {
     fontFamily: 'Arial'
   },

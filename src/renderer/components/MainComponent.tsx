@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import NoMangaComponent from './NoMangaComponent.jsx'
-import SomeMangaComponent from './SomeMangaComponent.jsx'
+import NoMangaComponent from './NoMangaComponent.tsx'
+import SomeMangaComponent from './SomeMangaComponent.tsx'
 import { useSelector, useDispatch } from 'react-redux'
-import { reloadManga } from '../actions/manga.js'
+import { Action, reloadManga } from '../actions/manga.js'
+import { ThunkDispatch } from 'redux-thunk'
+import { State } from '../storage.ts'
 
 /**
  * The main page of the manga reader.
@@ -11,9 +13,9 @@ import { reloadManga } from '../actions/manga.js'
  * if there is manga saved.
  */
 
-export default function MainComponent(_props) {
-  const manga = useSelector((state) => state.manga)
-  const dispatch = useDispatch()
+export default function MainComponent() {
+  const manga = useSelector((state: State) => state.manga)
+  const dispatch = useDispatch<ThunkDispatch<State, any, Action>>()
   const [reloaded, setReloaded] = useState(false)
   useEffect(() => {
     // Only automatically reload manga list when you first open the application.
