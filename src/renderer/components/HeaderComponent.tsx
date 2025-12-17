@@ -10,7 +10,7 @@ import { validHostname } from '../../../utils/url.ts'
 import { DialogActions, DialogContent, DialogTitle, Toolbar, Typography } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';
 import { ThunkDispatch } from '@reduxjs/toolkit';
-import { Action, addManga, ALREADY_EXISTS, EMPTY_CHAPTER, reloadManga } from '../actions/manga.js';
+import { Action, addManga, ALREADY_EXISTS, EMPTY_CHAPTER, reloadManga } from '../actions/manga.ts';
 import { State as MangaState } from '../reducers/manga.ts'
 import { State } from '../storage.ts';
 

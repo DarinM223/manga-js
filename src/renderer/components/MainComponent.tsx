@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import NoMangaComponent from './NoMangaComponent.tsx'
 import SomeMangaComponent from './SomeMangaComponent.tsx'
 import { useSelector, useDispatch } from 'react-redux'
-import { Action, reloadManga } from '../actions/manga.js'
+import { Action, reloadManga } from '../actions/manga.ts'
 import { ThunkDispatch } from 'redux-thunk'
 import { State } from '../storage.ts'
 

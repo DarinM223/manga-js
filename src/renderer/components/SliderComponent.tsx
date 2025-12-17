@@ -55,8 +55,8 @@ export default class SliderComponent extends React.Component<Props> {
   render() {
     const editPages = () => this.setState({ editing: true, pageText: this.props.currValue + '' })
     const pageTextChanged: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement> = (event) => {
-      const num = parseInt(event.target.value, 10)
-      if (event.target.value.length === 0 || (!isNaN(num) && num <= this.props.totalPages && num > 0)) {
+      const num = Number(event.target.value)
+      if (event.target.value.length === 0 || (!Number.isNaN(num) && num <= this.props.totalPages && num > 0)) {
         this.setState({ pageText: event.target.value })
       }
     }
@@ -64,7 +64,7 @@ export default class SliderComponent extends React.Component<Props> {
       if (this.state.pageText.length === 0) {
         this.setState({ pageText: this.props.currValue })
       } else {
-        this.props.onSliderChanged(parseInt(this.state.pageText, 10))
+        this.props.onSliderChanged(Number(this.state.pageText))
       }
 
       this.setState({ editing: false })

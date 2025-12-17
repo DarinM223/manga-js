@@ -1,4 +1,4 @@
-import { LoadStateType, DownloadStateType } from '../../../utils/constants.js'
+import { LoadStateType, DownloadStateType } from '../../../utils/constants.ts'
 import { Manga } from '../../../utils/manga.ts'
 import {
   ADD_MANGA,

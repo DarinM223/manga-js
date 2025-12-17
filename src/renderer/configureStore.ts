@@ -1,6 +1,6 @@
 import { configureStore, EnhancedStore, ThunkDispatch } from '@reduxjs/toolkit'
 import { manga } from './reducers/manga.ts'
-import { log } from './reducers/log.js'
+import { log } from './reducers/log.ts'
 import { saveState, loadState, State } from './storage.ts'
 import throttle from 'lodash/throttle'
 import { listenForIpc } from './ipcListener.ts'

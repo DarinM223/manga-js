@@ -10,10 +10,10 @@ import IconButton from '@mui/material/IconButton'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import ImageComponent from './ImageComponent.tsx'
-import ChapterCellComponent from './ChapterCellComponent.jsx'
+import ChapterCellComponent from './ChapterCellComponent.tsx'
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Action, removeManga, visitManga } from '../actions/manga.js';
+import { Action, removeManga, visitManga } from '../actions/manga.ts';
 import { DialogActions, DialogTitle, Toolbar, Typography } from '@mui/material';
 import { State } from '../storage.ts';
 import { ThunkDispatch } from 'redux-thunk';

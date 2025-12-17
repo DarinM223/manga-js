@@ -49,7 +49,7 @@ export default class BulkSender {
             const data = this.downloadData[mangaName][+chapterNum]
             messages.push({
               mangaName,
-              chapterNum: parseInt(chapterNum, 10),
+              chapterNum: +chapterNum,
               total: data.total,
               curr: data.curr
             })
