@@ -13,11 +13,13 @@ import ImageComponent from './ImageComponent.tsx'
 import ChapterCellComponent from './ChapterCellComponent.jsx'
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import { removeManga, visitManga } from '../actions/manga.js';
+import { Action, removeManga, visitManga } from '../actions/manga.js';
 import { DialogActions, DialogTitle, Toolbar, Typography } from '@mui/material';
+import { State } from '../storage.ts';
+import { ThunkDispatch } from 'redux-thunk';
 // import { ScrollContainer } from 'react-router-scroll'
 
-const styles = {
+const styles: { container: React.CSSProperties, image: React.CSSProperties, div: React.CSSProperties } = {
   container: {
     display: 'flex',
     flexDirection: 'row',
@@ -39,7 +41,7 @@ const styles = {
   }
 }
 
-function titleComponent(type, description, imageURL, openDialog) {
+function titleComponent(type: string, description: string, imageURL: string, openDialog: () => void) {
   let textDescription = description
   if (description === null || description.length <= 0) {
     textDescription = 'No description available'
@@ -47,7 +49,7 @@ function titleComponent(type, description, imageURL, openDialog) {
 
   return (
     <div style={styles.container}>
-      <ImageComponent src={imageURL} type={type} style={styles.image} />
+      <ImageComponent src={imageURL} type={type} style={styles.image} onImageClick={() => { }} />
       <div style={styles.div}>
         <h3>Description:</h3>
         <p>{textDescription}</p>
@@ -57,19 +59,22 @@ function titleComponent(type, description, imageURL, openDialog) {
   )
 }
 
-export default function MangaViewComponent(_props) {
+export default function MangaViewComponent() {
   const { name } = useParams()
-  const manga = useSelector((state) => state.manga)
+  const manga = useSelector((state: State) => state.manga)
   const [open, setOpen] = useState(false)
   const navigate = useNavigate()
-  const dispatch = useDispatch()
+  const dispatch = useDispatch<ThunkDispatch<State, any, Action>>()
+  if (name === undefined) {
+    return <h1>Manga has no name</h1>
+  }
   useEffect(() => { dispatch(visitManga(name)) })
 
   const specificManga = manga[name]
   const imageURL = specificManga.image
   const description = specificManga.description
   const type = `http://${specificManga.type}`
-  const handleDelete = (mangaName) => {
+  const handleDelete = (mangaName: string) => {
     window.api.deleteManga(mangaName)
     dispatch(removeManga(mangaName, navigate))
     setOpen(false)
@@ -91,7 +96,7 @@ export default function MangaViewComponent(_props) {
           <IconButton style={{ visibility: 'hidden' }}><ArrowBackIcon /></IconButton>
         </Toolbar>
       </AppBar>
-      <Dialog modal={false} open={open} onClose={() => setOpen(false)}>
+      <Dialog open={open} onClose={() => setOpen(false)}>
         <DialogTitle>{confirmText}</DialogTitle>
         <DialogActions>
           <Button onClick={() => handleDelete(name)}>Yes, delete manga</Button>

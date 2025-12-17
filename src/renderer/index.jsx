@@ -6,7 +6,7 @@ import loadStore from './configureStore.ts'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 // import { useScroll } from 'react-router-scroll'
 
-import MangaViewComponent from './components/MangaViewComponent.jsx'
+import MangaViewComponent from './components/MangaViewComponent.tsx'
 import MainComponent from './components/MainComponent.tsx'
 import ChapterViewComponent from './components/ChapterViewComponent.jsx'
 

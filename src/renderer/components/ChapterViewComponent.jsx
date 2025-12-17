@@ -4,7 +4,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import IconButton from '@mui/material/IconButton'
 import ImageComponent from './ImageComponent.tsx'
-import SliderComponent from './SliderComponent.jsx'
+import SliderComponent from './SliderComponent.tsx'
 import { DownloadStateType } from '../../../utils/constants.js'
 import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';

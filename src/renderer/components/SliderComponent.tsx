@@ -2,8 +2,9 @@ import React from 'react'
 import Slider from '@mui/material/Slider'
 import Chip from '@mui/material/Chip'
 import TextField from '@mui/material/TextField'
+import { styled } from '@mui/material/styles'
 
-const styles = {
+const styles: { slider: React.CSSProperties, pageNumberDisplay: React.CSSProperties, pageNumberEditing: React.CSSProperties } = {
   slider: {
     display: 'flex',
     flexDirection: 'row',
@@ -11,22 +12,38 @@ const styles = {
   },
   pageNumberDisplay: {
     position: 'relative',
-    top: '18px',
-    height: '30px'
+    height: '30px',
+    color: 'white'
   },
   pageNumberEditing: {
     display: 'flex',
-    width: '10%',
+    width: '70px',
     height: '30px',
     position: 'relative',
-    top: '12px',
     flexDirection: 'row',
-    justifyContent: 'space-around'
+    justifyContent: 'space-around',
+    opacity: 1
   }
 }
 
-export default class SliderComponent extends React.Component {
-  constructor (props) {
+const CSSTextField = styled(TextField)({
+  input: {
+    color: 'white',
+    textAlign: 'center',
+    maxHeight: '10px'
+  }
+})
+
+type Props = {
+  currValue: number,
+  totalPages: number,
+  onSliderChanged: (value: number) => void,
+}
+
+export default class SliderComponent extends React.Component<Props> {
+  state: { editing: boolean, pageText: string }
+
+  constructor(props: Props) {
     super(props)
 
     this.state = {
@@ -35,12 +52,12 @@ export default class SliderComponent extends React.Component {
     }
   }
 
-  render () {
+  render() {
     const editPages = () => this.setState({ editing: true, pageText: this.props.currValue + '' })
-    const pageTextChanged = (event, newValue) => {
-      const num = parseInt(newValue, 10)
-      if (newValue.length === 0 || (!isNaN(num) && num <= this.props.totalPages && num > 0)) {
-        this.setState({ pageText: newValue })
+    const pageTextChanged: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement> = (event) => {
+      const num = parseInt(event.target.value, 10)
+      if (event.target.value.length === 0 || (!isNaN(num) && num <= this.props.totalPages && num > 0)) {
+        this.setState({ pageText: event.target.value })
       }
     }
     const savePageText = () => {
@@ -52,7 +69,7 @@ export default class SliderComponent extends React.Component {
 
       this.setState({ editing: false })
     }
-    const pageTextKeyPress = (event) => {
+    const pageTextKeyPress: React.KeyboardEventHandler<HTMLDivElement> = (event) => {
       if (event.key === 'Enter') {
         savePageText()
       }
@@ -63,25 +80,23 @@ export default class SliderComponent extends React.Component {
     if (this.state.editing) {
       currPageComponent = (
         <div style={styles.pageNumberEditing}>
-          <TextField
+          <CSSTextField
+            size='small'
             value={this.state.pageText}
             onChange={pageTextChanged}
             onBlur={savePageText}
-            onKeyPress={pageTextKeyPress}
+            onKeyDown={pageTextKeyPress}
             autoFocus
-            inputStyle={{ color: 'white', textAlign: 'center' }}
             style={{ marginRight: '3px' }}
           />
-          <p style={{ color: 'white', fontFamily: 'Sans-Serif' }}>
+          <p style={{ color: 'white', fontFamily: 'Sans-Serif', marginTop: '6px' }}>
             /{this.props.totalPages}
           </p>
         </div>
       )
     } else {
       currPageComponent = (
-        <Chip style={styles.pageNumberDisplay} onClick={editPages}>
-          {pageLabel}
-        </Chip>
+        <Chip label={pageLabel} style={styles.pageNumberDisplay} onClick={editPages} />
       )
     }
 
@@ -93,7 +108,7 @@ export default class SliderComponent extends React.Component {
           max={this.props.totalPages}
           step={1}
           value={this.props.currValue}
-          onChange={(event, newValue) => this.props.onSliderChanged(newValue)}
+          onChange={(_event, newValue) => this.props.onSliderChanged(newValue)}
         />
         {currPageComponent}
       </div>
