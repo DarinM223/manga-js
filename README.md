@@ -19,7 +19,8 @@ In order to build and run manga-ts, first have pnpm installed. Then run `pnpm in
 
 If you want to run manga-ts in development mode you can just run `pnpm dev`.
 
-If you want to build the packaged electron app you should run `pnpm electron-vite build` to compile the front end Javascript and then ... TODO: packaging instructions here
+If you want to build the packaged electron app you should run `pnpm build` to compile the front end Javascript and then `pnpm build:linux` to package the code into an executable where `linux` can
+be replaced with your platform.
 
 ## Supported sites
 

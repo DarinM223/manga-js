@@ -4,8 +4,12 @@
   "description": "",
   "main": "./out/main/index.js",
   "scripts": {
+    "build": "electron-vite build",
     "dev": "PRELOADED=1 electron-vite dev",
-    "test": "vitest"
+    "test": "vitest",
+    "build:win": "pnpm run build && electron-builder --win --config",
+    "build:mac": "pnpm run build && electron-builder --mac --config",
+    "build:linux": "pnpm run build && electron-builder --linux --config"
   },
   "keywords": [],
   "author": "",
