@@ -1,27 +1,25 @@
-/* global test, expect */
-
-import { restoreFromLog } from '../client/restoreFromLog.js'
-import { NOT_LOADED, LOADED } from '../utils/constants.js'
-import Immutable from 'immutable'
+import { test, expect } from 'vitest'
+import { restoreFromLog } from '../src/renderer/restoreFromLog.ts'
+import { LoadStateType } from '../utils/constants.ts'
 
 test('restoreFromLog', () => {
-  const state = Immutable.fromJS({
+  const state = {
     manga: {
       'a': {
         'chapters': [
-          { loadState: LOADED },
-          { loadState: LOADED },
-          { loadState: LOADED }
+          { loadState: LoadStateType.LOADED },
+          { loadState: LoadStateType.LOADED },
+          { loadState: LoadStateType.LOADED }
         ]
       },
       'b': {
         'chapters': [
-          { loadState: LOADED },
-          { loadState: LOADED },
-          { loadState: LOADED }
+          { loadState: LoadStateType.LOADED },
+          { loadState: LoadStateType.LOADED },
+          { loadState: LoadStateType.LOADED }
         ]
       },
-      'c': { 'chapters': [{ loadState: LOADED }] }
+      'c': { 'chapters': [{ loadState: LoadStateType.LOADED }] }
     },
     log: {
       'a': {
@@ -32,28 +30,28 @@ test('restoreFromLog', () => {
         '1': true
       }
     }
-  })
+  }
 
   const expectedManga = {
     'a': {
       'chapters': [
-        { loadState: NOT_LOADED },
-        { loadState: LOADED },
-        { loadState: NOT_LOADED }
+        { loadState: LoadStateType.NOT_LOADED },
+        { loadState: LoadStateType.LOADED },
+        { loadState: LoadStateType.NOT_LOADED }
       ]
     },
     'b': {
       'chapters': [
-        { loadState: LOADED },
-        { loadState: NOT_LOADED },
-        { loadState: LOADED }
+        { loadState: LoadStateType.LOADED },
+        { loadState: LoadStateType.NOT_LOADED },
+        { loadState: LoadStateType.LOADED }
       ]
     },
-    'c': { 'chapters': [{ loadState: LOADED }] }
+    'c': { 'chapters': [{ loadState: LoadStateType.LOADED }] }
   }
 
-  const [newManga, newLog] = restoreFromLog(state.get('manga'), state.get('log'))
+  const [newManga, newLog] = restoreFromLog(state.manga, state.log)
 
-  expect(newManga.toJS()).toEqual(expectedManga)
-  expect(newLog.toJS()).toEqual({})
+  expect(newManga).toEqual(expectedManga)
+  expect(newLog).toEqual({})
 })

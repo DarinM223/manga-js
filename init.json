@@ -1,0 +1,42 @@
+{
+  "how to use": "copy this file into the directory ~/.config/manga-ts",
+  "manga": {
+    "ubunchu": {
+      "type": "localhost",
+      "title": "Ubunchu!",
+      "name": "ubunchu",
+      "description": "Ubunchu! is a Japanese manga series featuring Ubuntu Linux. Three school students in a system-admin club  are getting into Ubuntu!",
+      "new": true,
+      "image": "/preloaded/20090912.png",
+      "chapters": [
+        {
+          "name": "Chapter 1",
+          "url": "/preloaded/manga/ubunchu/0",
+          "date": "04/04/09",
+          "loadState": "LOADED",
+          "download": {
+            "state": "NOT_DOWNLOADED",
+            "progress": 0
+          },
+          "currentPage": 0,
+          "pages": [
+            "/preloaded/ubunchu01_ja/ubunchu01_00.png",
+            "/preloaded/ubunchu01_ja/ubunchu01_01.png",
+            "/preloaded/ubunchu01_ja/ubunchu01_02.png",
+            "/preloaded/ubunchu01_ja/ubunchu01_03.png",
+            "/preloaded/ubunchu01_ja/ubunchu01_04.png",
+            "/preloaded/ubunchu01_ja/ubunchu01_05.png",
+            "/preloaded/ubunchu01_ja/ubunchu01_06.png",
+            "/preloaded/ubunchu01_ja/ubunchu01_07.png",
+            "/preloaded/ubunchu01_ja/ubunchu01_08.png",
+            "/preloaded/ubunchu01_ja/ubunchu01_09.png",
+            "/preloaded/ubunchu01_ja/ubunchu01_10.png",
+            "/preloaded/ubunchu01_ja/ubunchu01_11.png"
+          ]
+        }
+      ],
+      "currentChapter": 0
+    }
+  },
+  "log": {}
+}

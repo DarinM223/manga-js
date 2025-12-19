@@ -1,2 +1,5 @@
 release-builds/
+out/
 build/
+node_modules/
+dist/

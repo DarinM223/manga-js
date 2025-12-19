@@ -1,8 +1,7 @@
-/* global test, expect, jest */
+import { vi, test, expect } from 'vitest'
+import BulkSender from '../utils/BulkSender.ts'
 
-import BulkSender from '../utils/BulkSender.js'
-
-jest.useFakeTimers()
+vi.useFakeTimers()
 
 test('Bulk sender', () => {
   let bulkMessage = null
@@ -52,7 +51,7 @@ test('Bulk sender', () => {
     }
   ]
 
-  jest.runOnlyPendingTimers()
+  vi.runOnlyPendingTimers()
 
   expect(bulkMessage).toEqual(expectedBulkMessage)
 })
