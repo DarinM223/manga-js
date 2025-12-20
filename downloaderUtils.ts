@@ -3,16 +3,23 @@ import * as loc from './utils/location.ts'
 import { DownloadQueue } from './utils/DownloadQueue.ts'
 
 type DeleteChapterArgs = {
-  readonly mangaName: string,
-  readonly chapterNum: number,
+  readonly mangaName: string
+  readonly chapterNum: number
 }
 type DownloadChapterArgs = DeleteChapterArgs & {
-  readonly pages: string[],
-  readonly type: string,
+  readonly pages: string[]
+  readonly type: string
 }
 
-export function downloadChapter(event: Electron.IpcMainEvent, args: DownloadChapterArgs, queue: DownloadQueue) {
-  event.sender.send('recv-download-chapter', Object.assign({}, args, { err: null }))
+export function downloadChapter(
+  event: Electron.IpcMainEvent,
+  args: DownloadChapterArgs,
+  queue: DownloadQueue
+) {
+  event.sender.send(
+    'recv-download-chapter',
+    Object.assign({}, args, { err: null })
+  )
   const { mangaName, chapterNum, type } = args
 
   // Enqueue download tasks for each image.
@@ -23,7 +30,7 @@ export function downloadChapter(event: Electron.IpcMainEvent, args: DownloadChap
       type,
       url,
       total: args.pages.length,
-      curr: i
+      curr: i,
     })
   })
 }

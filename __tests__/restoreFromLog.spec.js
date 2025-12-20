@@ -5,49 +5,49 @@ import { LoadStateType } from '../utils/constants.ts'
 test('restoreFromLog', () => {
   const state = {
     manga: {
-      'a': {
-        'chapters': [
+      a: {
+        chapters: [
           { loadState: LoadStateType.LOADED },
           { loadState: LoadStateType.LOADED },
-          { loadState: LoadStateType.LOADED }
-        ]
+          { loadState: LoadStateType.LOADED },
+        ],
       },
-      'b': {
-        'chapters': [
+      b: {
+        chapters: [
           { loadState: LoadStateType.LOADED },
           { loadState: LoadStateType.LOADED },
-          { loadState: LoadStateType.LOADED }
-        ]
+          { loadState: LoadStateType.LOADED },
+        ],
       },
-      'c': { 'chapters': [{ loadState: LoadStateType.LOADED }] }
+      c: { chapters: [{ loadState: LoadStateType.LOADED }] },
     },
     log: {
-      'a': {
-        '0': true,
-        '2': true
+      a: {
+        0: true,
+        2: true,
       },
-      'b': {
-        '1': true
-      }
-    }
+      b: {
+        1: true,
+      },
+    },
   }
 
   const expectedManga = {
-    'a': {
-      'chapters': [
+    a: {
+      chapters: [
         { loadState: LoadStateType.NOT_LOADED },
         { loadState: LoadStateType.LOADED },
-        { loadState: LoadStateType.NOT_LOADED }
-      ]
+        { loadState: LoadStateType.NOT_LOADED },
+      ],
     },
-    'b': {
-      'chapters': [
+    b: {
+      chapters: [
         { loadState: LoadStateType.LOADED },
         { loadState: LoadStateType.NOT_LOADED },
-        { loadState: LoadStateType.LOADED }
-      ]
+        { loadState: LoadStateType.LOADED },
+      ],
     },
-    'c': { 'chapters': [{ loadState: LoadStateType.LOADED }] }
+    c: { chapters: [{ loadState: LoadStateType.LOADED }] },
   }
 
   const [newManga, newLog] = restoreFromLog(state.manga, state.log)

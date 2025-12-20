@@ -22,9 +22,12 @@ root.render(
         <ThemeProvider theme={theme}>
           <HashRouter>
             <Routes>
-              <Route path='/' element={<MainComponent />} />
-              <Route path='/manga/:name' element={<MangaViewComponent />} />
-              <Route path='/chapter/:mangaName/:chapterNum' element={<ChapterViewComponent />} />
+              <Route path="/" element={<MainComponent />} />
+              <Route path="/manga/:name" element={<MangaViewComponent />} />
+              <Route
+                path="/chapter/:mangaName/:chapterNum"
+                element={<ChapterViewComponent />}
+              />
             </Routes>
           </HashRouter>
         </ThemeProvider>

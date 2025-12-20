@@ -7,7 +7,7 @@ import { listenForIpc } from './ipcListener.ts'
 import { Action } from './actions/manga.ts'
 
 export type AppStore = {
-  dispatch: ThunkDispatch<State, undefined, Action>;
+  dispatch: ThunkDispatch<State, undefined, Action>
 } & EnhancedStore<State, Action>
 
 export default function loadStore(loadFromDisk = true): AppStore {
@@ -21,9 +21,11 @@ export default function loadStore(loadFromDisk = true): AppStore {
     const store = configureStore<State, Action>({ reducer, preloadedState })
 
     listenForIpc(store)
-    store.subscribe(throttle(() => {
-      saveState(store.getState())
-    }, 1000))
+    store.subscribe(
+      throttle(() => {
+        saveState(store.getState())
+      }, 1000)
+    )
     return store
   } else {
     return configureStore<State, Action>({ reducer })

@@ -6,12 +6,12 @@ import process from 'process'
 
 type Immutable<T> = { readonly [K in keyof T]: T[K] }
 export type Task = Immutable<{
-  mangaName: string,
-  chapterNum: number,
-  type: string,
-  url: string,
-  total: number,
-  curr: number,
+  mangaName: string
+  chapterNum: number
+  type: string
+  url: string
+  total: number
+  curr: number
 }>
 
 export class DownloadQueue {
@@ -21,7 +21,12 @@ export class DownloadQueue {
   running: boolean
   send: (msg: Task) => void
 
-  constructor(path: string, file: string, send: (msg: Task) => void, data: string | null = null) {
+  constructor(
+    path: string,
+    file: string,
+    send: (msg: Task) => void,
+    data: string | null = null
+  ) {
     this.path = path
     this.file = file
     this.send = send
@@ -65,22 +70,33 @@ export class DownloadQueue {
     return result
   }
 
-  downloadImage(mangaName: string, chapterNum: number, url: string, type: string): Promise<void> {
+  downloadImage(
+    mangaName: string,
+    chapterNum: number,
+    url: string,
+    type: string
+  ): Promise<void> {
     const adapter = adapterFromHostname(type)
     const imagePath = loc.imagePath(this.path, mangaName, chapterNum, url)
     if (url.startsWith('/')) {
       url = process.env.ELECTRON_RENDERER_URL + url
     }
-    return adapter.sendRequest(url, true)
+    return adapter
+      .sendRequest(url, true)
       .then((chunk) => fs.writeFile(imagePath, Buffer.from(chunk)))
       .catch((err) => console.error(err))
   }
 
-  isDownloadedImage(mangaName: string, chapterNum: number, url: string): Promise<boolean> {
+  isDownloadedImage(
+    mangaName: string,
+    chapterNum: number,
+    url: string
+  ): Promise<boolean> {
     const imagePath = loc.imagePath(this.path, mangaName, chapterNum, url)
 
     return new Promise((resolve, _reject) => {
-      return fs.open(imagePath, 'r')
+      return fs
+        .open(imagePath, 'r')
         .then((fd) => fd.close())
         .then(() => resolve(true))
         .catch(() => resolve(false))
@@ -98,11 +114,21 @@ export class DownloadQueue {
       return Promise.resolve()
     }
 
-    return fs.mkdir(loc.chapterPath(this.path, top.mangaName, top.chapterNum), { recursive: true })
-      .then(() => this.isDownloadedImage(top.mangaName, top.chapterNum, top.url))
+    return fs
+      .mkdir(loc.chapterPath(this.path, top.mangaName, top.chapterNum), {
+        recursive: true,
+      })
+      .then(() =>
+        this.isDownloadedImage(top.mangaName, top.chapterNum, top.url)
+      )
       .then((downloaded) => {
         if (!downloaded) {
-          return this.downloadImage(top.mangaName, top.chapterNum, top.url, top.type)
+          return this.downloadImage(
+            top.mangaName,
+            top.chapterNum,
+            top.url,
+            top.type
+          )
         }
 
         return Promise.resolve()
@@ -115,9 +141,14 @@ export class DownloadQueue {
   }
 }
 
-export function startQueue(queuePath: string, file: string, send: (msg: Task) => void) {
+export function startQueue(
+  queuePath: string,
+  file: string,
+  send: (msg: Task) => void
+) {
   const completePath = path.join(queuePath, file)
-  return fs.open(completePath, 'a')
+  return fs
+    .open(completePath, 'a')
     .then((fd) => fd.close())
     .then(() => fs.readFile(completePath, 'utf-8'))
     .then((data) => new DownloadQueue(queuePath, file, send, data.trim()))

@@ -6,7 +6,7 @@ import {
   updatePage,
   loadChapter,
   VISIT_MANGA,
-  DIFF_CHANGES
+  DIFF_CHANGES,
 } from '../src/renderer/actions/manga.ts'
 import { test, expect, beforeAll, afterAll, vi } from 'vitest'
 import { app as preloadedServer } from '../preload-server.ts'
@@ -25,10 +25,13 @@ function routePreloaded(path: string): string {
 }
 
 function hostnameFromURL(urlPath: string): string {
-  return (new URL(routePreloaded(urlPath))).hostname
+  return new URL(routePreloaded(urlPath)).hostname
 }
 
-async function sendRequest<B extends boolean>(urlPath: string, buffer: B): Promise<B extends true ? Buffer : string> {
+async function sendRequest<B extends boolean>(
+  urlPath: string,
+  buffer: B
+): Promise<B extends true ? Buffer : string> {
   const res = await fetch(routePreloaded(urlPath))
   if (buffer) {
     // @ts-ignore
@@ -62,7 +65,9 @@ test('manga reducer', async () => {
   const store: AppStore = configureStore(false)
   const mangaName = 'ubunchu'
   const getManga = (store: AppStore) => store.getState().manga[mangaName]
-  await store.dispatch(addManga(`/preloaded/manga/${mangaName}`, store.getState().manga))
+  await store.dispatch(
+    addManga(`/preloaded/manga/${mangaName}`, store.getState().manga)
+  )
   expect(mangaName in store.getState().manga).toEqual(true)
 
   // Test if visiting the manga sets the 'new' property to false.
@@ -71,7 +76,9 @@ test('manga reducer', async () => {
   expect(getManga(store).new).toEqual(false)
 
   // Test loading a chapter.
-  await store.dispatch(loadChapter(store.getState().manga[mangaName], 0, () => { }, true))
+  await store.dispatch(
+    loadChapter(store.getState().manga[mangaName], 0, () => {}, true)
+  )
   // Test that chapter was loaded.
   expect(getManga(store).chapters[0].loadState).toEqual(LoadStateType.LOADED)
 
@@ -98,10 +105,10 @@ test('manga reducer', async () => {
       loadState: LoadStateType.NOT_LOADED,
       download: {
         state: DownloadStateType.NOT_DOWNLOADED,
-        progress: 0
+        progress: 0,
       },
       currentPage: 0,
-      pages: []
+      pages: [],
     })
   })
 
@@ -116,6 +123,6 @@ test('manga reducer', async () => {
   expect(getManga(store).chapters.length).toEqual(newManga.chapters.length)
 
   // Test removing the manga.
-  await store.dispatch(removeManga(mangaName, () => { }))
+  await store.dispatch(removeManga(mangaName, () => {}))
   expect(mangaName in store.getState().manga).toEqual(false)
 })

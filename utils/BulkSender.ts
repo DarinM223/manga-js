@@ -1,8 +1,8 @@
 export type Msg = {
-  readonly mangaName: string,
-  readonly chapterNum: number,
-  readonly total: number,
-  readonly curr: number,
+  readonly mangaName: string
+  readonly chapterNum: number
+  readonly total: number
+  readonly curr: number
 }
 
 /**
@@ -11,7 +11,11 @@ export type Msg = {
  * to the main process.
  */
 export default class BulkSender {
-  downloadData: { [mangaName: string]: { [chapterNum: number]: { total: number, curr: number } } }
+  downloadData: {
+    [mangaName: string]: {
+      [chapterNum: number]: { total: number; curr: number }
+    }
+  }
   send: (messages: Msg[]) => void
   interval: number
 
@@ -30,7 +34,7 @@ export default class BulkSender {
     if (!(msg.chapterNum in this.downloadData[msg.mangaName])) {
       this.downloadData[msg.mangaName][msg.chapterNum] = {
         total: msg.total,
-        curr: msg.curr
+        curr: msg.curr,
       }
     } else {
       this.downloadData[msg.mangaName][msg.chapterNum].curr = Math.max(
@@ -51,7 +55,7 @@ export default class BulkSender {
               mangaName,
               chapterNum: +chapterNum,
               total: data.total,
-              curr: data.curr
+              curr: data.curr,
             })
           })
         })

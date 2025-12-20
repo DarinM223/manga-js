@@ -12,7 +12,10 @@ export function mangaURL(mangaName: string): string {
  * Sends a request to the specified url and
  * returns a Promise that contains the body of the response.
  */
-export async function sendRequest<B extends boolean>(url: string, buffer: B): Promise<B extends true ? Buffer : string> {
+export async function sendRequest<B extends boolean>(
+  url: string,
+  buffer: B
+): Promise<B extends true ? Buffer : string> {
   const res = await fetch(url)
   if (buffer) {
     // @ts-ignore
@@ -27,8 +30,13 @@ export async function sendRequest<B extends boolean>(url: string, buffer: B): Pr
  * Parses the html body and returns the general manga data like
  * the dates when chapters came out or the manga name.
  */
-export function parseMangaData(mangaName: string, body: Buffer | string): Manga {
-  const manga: Manga = JSON.parse(Buffer.isBuffer(body) ? body.toString() : body)
+export function parseMangaData(
+  mangaName: string,
+  body: Buffer | string
+): Manga {
+  const manga: Manga = JSON.parse(
+    Buffer.isBuffer(body) ? body.toString() : body
+  )
   return manga
 }
 
@@ -36,7 +44,9 @@ export function parseMangaData(mangaName: string, body: Buffer | string): Manga 
  * Parses the html body and returns an array of URLs to the pages of the chapter.
  */
 export function parsePageLinks(url: string, body: Buffer | string): string[] {
-  const chapter: Chapter = JSON.parse(Buffer.isBuffer(body) ? body.toString() : body)
+  const chapter: Chapter = JSON.parse(
+    Buffer.isBuffer(body) ? body.toString() : body
+  )
   return chapter.pages
 }
 

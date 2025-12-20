@@ -1,4 +1,4 @@
-import { defineConfig } from "vite"
-import { config } from "./electron.vite.config"
+import { defineConfig } from 'vite'
+import { config } from './electron.vite.config'
 
 export default defineConfig(config)
