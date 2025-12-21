@@ -5,16 +5,28 @@ import { Dimensions, useMeasure } from './utils.ts'
 import mime from 'mime-types'
 
 type Props = {
-  src: string,
-  type: string,
-  onImageClick: (offsetX: number, offsetY: number, dimensions: Dimensions) => void,
-  avatar?: boolean,
-  downloaded?: boolean,
-  scrollTop?: boolean,
-  [key: string]: any,
+  src: string
+  type: string
+  onImageClick: (
+    offsetX: number,
+    offsetY: number,
+    dimensions: Dimensions
+  ) => void
+  avatar?: boolean
+  downloaded?: boolean
+  scrollTop?: boolean
+  [key: string]: any
 }
 
-export default function ImageComponent({ src, type, onImageClick, avatar = false, downloaded = false, scrollTop = false, ...imgProps }: Props) {
+export default function ImageComponent({
+  src,
+  type,
+  onImageClick,
+  avatar = false,
+  downloaded = false,
+  scrollTop = false,
+  ...imgProps
+}: Props) {
   const adapter = adapterFromURL(type)
   const [state, setState] = useState<{ src: string | null }>({ src: null })
   const scrollToTop = () => {
@@ -25,7 +37,9 @@ export default function ImageComponent({ src, type, onImageClick, avatar = false
   const retrieveImage = (src: string) => {
     adapter.sendRequest(src, true).then((buffer) => {
       const fileType = mime.lookup(src)
-      const blob = new Blob([new Uint8Array(buffer).buffer], { type: fileType === false ? undefined : fileType })
+      const blob = new Blob([new Uint8Array(buffer).buffer], {
+        type: fileType === false ? undefined : fileType,
+      })
       const url = URL.createObjectURL(blob)
 
       scrollToTop()
@@ -48,9 +62,7 @@ export default function ImageComponent({ src, type, onImageClick, avatar = false
   }
 
   if (downloaded) {
-    return (
-      <img {...imgProps} ref={ref} src={src} onClick={imageClicked} />
-    )
+    return <img {...imgProps} ref={ref} src={src} onClick={imageClicked} />
   } else if (state.src !== null) {
     if (avatar) {
       return <Avatar {...imgProps} ref={ref} src={state.src} />

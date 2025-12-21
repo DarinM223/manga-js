@@ -1,30 +1,34 @@
-import React, { useState, useEffect } from 'react';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
+import React, { useState, useEffect } from 'react'
+import Table from '@mui/material/Table'
+import TableBody from '@mui/material/TableBody'
+import TableCell from '@mui/material/TableCell'
+import TableHead from '@mui/material/TableHead'
+import TableRow from '@mui/material/TableRow'
 import AppBar from '@mui/material/AppBar'
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import IconButton from '@mui/material/IconButton'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import ImageComponent from './ImageComponent.tsx'
 import ChapterCellComponent from './ChapterCellComponent.tsx'
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
-import { Action, removeManga, visitManga } from '../actions/manga.ts';
-import { DialogActions, DialogTitle, Toolbar, Typography } from '@mui/material';
-import { State } from '../storage.ts';
-import { ThunkDispatch } from 'redux-thunk';
+import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate, useParams } from 'react-router-dom'
+import { Action, removeManga, visitManga } from '../actions/manga.ts'
+import { DialogActions, DialogTitle, Toolbar, Typography } from '@mui/material'
+import { State } from '../storage.ts'
+import { ThunkDispatch } from 'redux-thunk'
 // import { ScrollContainer } from 'react-router-scroll'
 
-const styles: { container: React.CSSProperties, image: React.CSSProperties, div: React.CSSProperties } = {
+const styles: {
+  container: React.CSSProperties
+  image: React.CSSProperties
+  div: React.CSSProperties
+} = {
   container: {
     display: 'flex',
     flexDirection: 'row',
     height: '40%',
-    overflowY: 'auto'
+    overflowY: 'auto',
   },
   image: {
     flex: 1,
@@ -32,16 +36,21 @@ const styles: { container: React.CSSProperties, image: React.CSSProperties, div:
     objectFit: 'contain',
     maxHeight: '100%',
     flexGrow: 0,
-    flexShrink: 0
+    flexShrink: 0,
   },
   div: {
     flex: 1,
     fontFamily: 'Arial',
-    marginRight: '10px'
-  }
+    marginRight: '10px',
+  },
 }
 
-function titleComponent(type: string, description: string, imageURL: string, openDialog: () => void) {
+function titleComponent(
+  type: string,
+  description: string,
+  imageURL: string,
+  openDialog: () => void
+) {
   let textDescription = description
   if (description === null || description.length <= 0) {
     textDescription = 'No description available'
@@ -49,11 +58,18 @@ function titleComponent(type: string, description: string, imageURL: string, ope
 
   return (
     <div style={styles.container}>
-      <ImageComponent src={imageURL} type={type} style={styles.image} onImageClick={() => { }} />
+      <ImageComponent
+        src={imageURL}
+        type={type}
+        style={styles.image}
+        onImageClick={() => {}}
+      />
       <div style={styles.div}>
         <h3>Description:</h3>
         <p>{textDescription}</p>
-        <Button color="error" variant="contained" onClick={openDialog}>Delete manga</Button>
+        <Button color="error" variant="contained" onClick={openDialog}>
+          Delete manga
+        </Button>
       </div>
     </div>
   )
@@ -68,7 +84,9 @@ export default function MangaViewComponent() {
   if (name === undefined) {
     return <h1>Manga has no name</h1>
   }
-  useEffect(() => { dispatch(visitManga(name)) })
+  useEffect(() => {
+    dispatch(visitManga(name))
+  })
 
   const specificManga = manga[name]
   const imageURL = specificManga.image
@@ -81,19 +99,33 @@ export default function MangaViewComponent() {
   }
 
   let chapterComponents = []
-  for (let chapterNum = 0; chapterNum < specificManga.chapters.length; chapterNum++) {
-    chapterComponents.push(<ChapterCellComponent key={chapterNum} manga={specificManga} chapterNum={chapterNum} />)
+  for (
+    let chapterNum = 0;
+    chapterNum < specificManga.chapters.length;
+    chapterNum++
+  ) {
+    chapterComponents.push(
+      <ChapterCellComponent
+        key={chapterNum}
+        manga={specificManga}
+        chapterNum={chapterNum}
+      />
+    )
   }
 
   const confirmText = `Are you sure you want to delete ${specificManga.title}?`
   return (
     <div>
-      <AppBar position='static'>
+      <AppBar position="static">
         <Toolbar style={{ justifyContent: 'space-between' }}>
-          <IconButton onClick={() => navigate(-1)}><ArrowBackIcon /></IconButton>
+          <IconButton onClick={() => navigate(-1)}>
+            <ArrowBackIcon />
+          </IconButton>
           <Typography variant="h6">{specificManga.title}</Typography>
           {/* Hidden element to center title */}
-          <IconButton style={{ visibility: 'hidden' }}><ArrowBackIcon /></IconButton>
+          <IconButton style={{ visibility: 'hidden' }}>
+            <ArrowBackIcon />
+          </IconButton>
         </Toolbar>
       </AppBar>
       <Dialog open={open} onClose={() => setOpen(false)}>
@@ -115,9 +147,7 @@ export default function MangaViewComponent() {
               <TableCell>Download</TableCell>
             </TableRow>
           </TableHead>
-          <TableBody>
-            {chapterComponents}
-          </TableBody>
+          <TableBody>{chapterComponents}</TableBody>
         </Table>
       </div>
       {/* </ScrollContainer> */}

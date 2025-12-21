@@ -1,30 +1,33 @@
 import React, { useState } from 'react'
 import AppBar from '@mui/material/AppBar'
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack'
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
 import IconButton from '@mui/material/IconButton'
 import ImageComponent from './ImageComponent.tsx'
 import SliderComponent from './SliderComponent.tsx'
 import { DownloadStateType } from '../../../utils/constants.ts'
-import { useSelector } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { updatePage } from '../actions/manga.ts';
-import { Toolbar, Typography } from '@mui/material';
+import { useSelector } from 'react-redux'
+import { useNavigate, useParams } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { updatePage } from '../actions/manga.ts'
+import { Toolbar, Typography } from '@mui/material'
 import * as location from '../../../utils/location.ts'
-import { State } from '../storage.ts';
-import { Manga } from '../../../utils/manga.ts';
-import { Dimensions } from './utils.ts';
+import { State } from '../storage.ts'
+import { Manga } from '../../../utils/manga.ts'
+import { Dimensions } from './utils.ts'
 
-const styles: { appBar: React.CSSProperties, transparent: React.CSSProperties } = {
+const styles: {
+  appBar: React.CSSProperties
+  transparent: React.CSSProperties
+} = {
   appBar: {
     position: 'fixed',
     width: '100%',
-    margin: 0
+    margin: 0,
   },
   transparent: {
-    backgroundColor: 'rgba(50, 50, 50, 0.7)'
-  }
+    backgroundColor: 'rgba(50, 50, 50, 0.7)',
+  },
 }
 
 export default function ChapterViewComponent() {
@@ -57,7 +60,11 @@ export default function ChapterViewComponent() {
   const totalPages = chapter.pages.length
   const downloadState = chapter.download.state
 
-  const imageClicked = (xOffset: number, _yOffset: number, dimensions: Dimensions) => {
+  const imageClicked = (
+    xOffset: number,
+    _yOffset: number,
+    dimensions: Dimensions
+  ) => {
     if (dimensions.width === null) {
       return
     }
@@ -85,11 +92,15 @@ export default function ChapterViewComponent() {
 
   let imagePath = null
   let downloaded = false
-  if (downloadState === DownloadStateType.DOWNLOADING ||
-    downloadState === DownloadStateType.NOT_DOWNLOADED) {
+  if (
+    downloadState === DownloadStateType.DOWNLOADING ||
+    downloadState === DownloadStateType.NOT_DOWNLOADED
+  ) {
     imagePath = onlineURL
   } else if (downloadState === DownloadStateType.DOWNLOADED) {
-    imagePath = 'manga://' + location.imagePath('', specificManga.name, chapterNum2, onlineURL)
+    imagePath =
+      'manga://' +
+      location.imagePath('', specificManga.name, chapterNum2, onlineURL)
     downloaded = true
   } else {
     throw new Error('Invalid download state')
@@ -113,16 +124,23 @@ export default function ChapterViewComponent() {
   return (
     <div>
       <div style={styles.appBar}>
-        <AppBar position='static'>
+        <AppBar position="static">
           <Toolbar style={{ justifyContent: 'space-between' }}>
-            <IconButton onClick={() => navigate(-1)}><ArrowBackIcon /></IconButton>
+            <IconButton onClick={() => navigate(-1)}>
+              <ArrowBackIcon />
+            </IconButton>
             <Typography variant="h6">{title}</Typography>
-            <IconButton onClick={dropDownClicked}><ArrowDropDownIcon /></IconButton>
+            <IconButton onClick={dropDownClicked}>
+              <ArrowDropDownIcon />
+            </IconButton>
           </Toolbar>
         </AppBar>
         {sliderComponent}
       </div>
-      <br /><br /><br /><br />
+      <br />
+      <br />
+      <br />
+      <br />
       <ImageComponent
         src={imagePath}
         type={type}

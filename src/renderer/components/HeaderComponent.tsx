@@ -1,18 +1,30 @@
 import React, { useState } from 'react'
 import AppBar from '@mui/material/AppBar'
-import NoteAddIcon from '@mui/icons-material/NoteAdd';
-import LoopIcon from '@mui/icons-material/Loop';
+import NoteAddIcon from '@mui/icons-material/NoteAdd'
+import LoopIcon from '@mui/icons-material/Loop'
 import IconButton from '@mui/material/IconButton'
 import Dialog from '@mui/material/Dialog'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import { validHostname } from '../../../utils/url.ts'
-import { DialogActions, DialogContent, DialogTitle, Toolbar, Typography } from '@mui/material';
-import { useSelector, useDispatch } from 'react-redux';
-import { ThunkDispatch } from '@reduxjs/toolkit';
-import { Action, addManga, ALREADY_EXISTS, EMPTY_CHAPTER, reloadManga } from '../actions/manga.ts';
+import {
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Toolbar,
+  Typography,
+} from '@mui/material'
+import { useSelector, useDispatch } from 'react-redux'
+import { ThunkDispatch } from '@reduxjs/toolkit'
+import {
+  Action,
+  addManga,
+  ALREADY_EXISTS,
+  EMPTY_CHAPTER,
+  reloadManga,
+} from '../actions/manga.ts'
 import { State as MangaState } from '../reducers/manga.ts'
-import { State } from '../storage.ts';
+import { State } from '../storage.ts'
 
 const EMPTY_TEXT = 'EMPTY_TEXT'
 const INVALID_URL = 'INVALID_URL'
@@ -24,7 +36,7 @@ export default function HeaderComponent() {
   const [state, setState] = useState({
     open: false,
     text: '',
-    error: NO_ERROR
+    error: NO_ERROR,
   })
 
   const onAddManga = async (url: string, mangaList: MangaState) => {
@@ -45,7 +57,9 @@ export default function HeaderComponent() {
   const handleOpen = () => {
     setState({ ...state, open: true, error: NO_ERROR })
   }
-  const handleChange: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement> = (e) => {
+  const handleChange: React.ChangeEventHandler<
+    HTMLInputElement | HTMLTextAreaElement
+  > = (e) => {
     e.preventDefault()
     setState({ ...state, text: e.target.value })
   }
@@ -62,7 +76,9 @@ export default function HeaderComponent() {
     onAddManga(state.text, manga)
     handleClose()
   }
-  const handleReload = () => { onReload(manga) }
+  const handleReload = () => {
+    onReload(manga)
+  }
   let errorText = null
   switch (state.error) {
     case EMPTY_TEXT:
@@ -76,18 +92,29 @@ export default function HeaderComponent() {
       break
   }
 
-  let textField = <TextField id='text-field-default' onChange={handleChange} />;
+  let textField = <TextField id="text-field-default" onChange={handleChange} />
   if (errorText !== null) {
-    textField = <TextField error id='text-field-default' helperText={errorText} onChange={handleChange} />;
+    textField = (
+      <TextField
+        error
+        id="text-field-default"
+        helperText={errorText}
+        onChange={handleChange}
+      />
+    )
   }
 
   return (
     <div>
-      <AppBar position='static'>
+      <AppBar position="static">
         <Toolbar style={{ justifyContent: 'space-between' }}>
-          <IconButton onClick={handleOpen}><NoteAddIcon /></IconButton>
+          <IconButton onClick={handleOpen}>
+            <NoteAddIcon />
+          </IconButton>
           <Typography variant="h6">Manga list</Typography>
-          <IconButton onClick={handleReload}><LoopIcon /></IconButton>
+          <IconButton onClick={handleReload}>
+            <LoopIcon />
+          </IconButton>
         </Toolbar>
       </AppBar>
       <Dialog open={state.open} onClose={handleClose}>

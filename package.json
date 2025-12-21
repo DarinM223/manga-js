@@ -44,6 +44,7 @@
     "electron": "^38.1.2",
     "electron-builder": "^26.0.12",
     "electron-vite": "^4.0.1",
+    "prettier": "3.7.4",
     "vite": "^7.2.4",
     "vitest": "^4.0.14"
   },

@@ -5,7 +5,11 @@ import path from 'path'
 import url from 'url'
 import process from 'process'
 import fs from 'fs/promises'
-import { downloadChapter, deleteChapter, deleteManga } from './downloaderUtils.ts'
+import {
+  downloadChapter,
+  deleteChapter,
+  deleteManga,
+} from './downloaderUtils.ts'
 import BulkSender from './utils/BulkSender.ts'
 import { startQueue } from './utils/DownloadQueue.ts'
 import { MessageType } from './utils/constants.ts'
@@ -14,15 +18,17 @@ import { app as preloadedServer } from './preload-server.ts'
 // Global reference to the main window.
 let mainWindow = null
 
-protocol.registerSchemesAsPrivileged([{
-  scheme: 'manga',
-  privileges: {
-    secure: true,
-    standard: true,
-    supportFetchAPI: true,
-    bypassCSP: true,
+protocol.registerSchemesAsPrivileged([
+  {
+    scheme: 'manga',
+    privileges: {
+      secure: true,
+      standard: true,
+      supportFetchAPI: true,
+      bypassCSP: true,
+    },
   },
-},])
+])
 
 const createWindow = () => {
   const partition = 'persist:subdeveloper'
@@ -41,23 +47,27 @@ const createWindow = () => {
       preload: path.join(__dirname, '../preload/index.js'),
       sandbox: false,
       partition,
-    }
+    },
   })
 
   if (!app.isPackaged && process.env['ELECTRON_RENDERER_URL']) {
     mainWindow.loadURL(`${process.env['ELECTRON_RENDERER_URL']}/index.html`)
   } else {
-    mainWindow.loadURL(url.format({
-      pathname: path.join(__dirname, '../renderer/index.html'),
-      protocol: 'file:',
-      slashes: true
-    }))
+    mainWindow.loadURL(
+      url.format({
+        pathname: path.join(__dirname, '../renderer/index.html'),
+        protocol: 'file:',
+        slashes: true,
+      })
+    )
   }
 
   // Uncomment this line to debug the application.
   // mainWindow.webContents.openDevTools()
 
-  mainWindow.on('closed', () => { mainWindow = null })
+  mainWindow.on('closed', () => {
+    mainWindow = null
+  })
 
   const basePath = app.getPath('userData')
   const initPath = path.join(basePath, 'init.json')
@@ -86,12 +96,27 @@ const createWindow = () => {
   })
 
   ipcMain.on('start', (event, args) => {
-    const sender = new BulkSender((bulkMsg) => event.sender.send(MessageType.DOWNLOADED_RECV, bulkMsg))
-    startQueue(app.getPath('userData'), 'queue.json', (msg) => sender.add(msg)).then((queue) => {
+    const sender = new BulkSender((bulkMsg) =>
+      event.sender.send(MessageType.DOWNLOADED_RECV, bulkMsg)
+    )
+    startQueue(app.getPath('userData'), 'queue.json', (msg) =>
+      sender.add(msg)
+    ).then((queue) => {
       // Setup ipc handlers after queue started.
-      ipcMain.on(MessageType.DOWNLOAD_CHAPTER_MSG, (event, args) => downloadChapter(event, args, queue))
-      ipcMain.on(MessageType.DELETE_CHAPTER_MSG, (event, args) => returnAsync(args, deleteChapter(basePath, args), event, MessageType.DELETE_CHAPTER_RECV))
-      ipcMain.on(MessageType.DELETE_MANGA_MSG, (_event, args) => deleteManga(basePath, args))
+      ipcMain.on(MessageType.DOWNLOAD_CHAPTER_MSG, (event, args) =>
+        downloadChapter(event, args, queue)
+      )
+      ipcMain.on(MessageType.DELETE_CHAPTER_MSG, (event, args) =>
+        returnAsync(
+          args,
+          deleteChapter(basePath, args),
+          event,
+          MessageType.DELETE_CHAPTER_RECV
+        )
+      )
+      ipcMain.on(MessageType.DELETE_MANGA_MSG, (_event, args) =>
+        deleteManga(basePath, args)
+      )
 
       // Signal to the renderer that the queue has finished starting.
       event.returnValue = null
@@ -113,8 +138,17 @@ if (process.env['PRELOADED'] === '1') {
 /**
  * Sends the return value when the promise completes.
  */
-function returnAsync<T>(args: any, promise: Promise<T>, event: Electron.IpcMainEvent, channel: string) {
+function returnAsync<T>(
+  args: any,
+  promise: Promise<T>,
+  event: Electron.IpcMainEvent,
+  channel: string
+) {
   promise
-    .then((result) => event.sender.send(channel, Object.assign({}, args, { err: null, result })))
-    .catch((err) => event.sender.send(channel, Object.assign({}, args, { err, result: null })))
+    .then((result) =>
+      event.sender.send(channel, Object.assign({}, args, { err: null, result }))
+    )
+    .catch((err) =>
+      event.sender.send(channel, Object.assign({}, args, { err, result: null }))
+    )
 }

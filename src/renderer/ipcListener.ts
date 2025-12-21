@@ -1,7 +1,7 @@
 import { DownloadStateType } from '../../utils/constants.ts'
 import { SET_DOWNLOAD_STATE, DOWNLOADED_PAGE } from './actions/manga.ts'
 import { AppStore } from './configureStore.ts'
-import { } from './window.ts'
+import {} from './window.ts'
 
 export const listenForIpc = (store: AppStore) => {
   window.electron.ipcRenderer.on('recv-download-chapter', (_event, args) => {
@@ -10,7 +10,7 @@ export const listenForIpc = (store: AppStore) => {
         type: SET_DOWNLOAD_STATE,
         state: DownloadStateType.DOWNLOADING,
         mangaName: args.mangaName,
-        chapterNum: args.chapterNum
+        chapterNum: args.chapterNum,
       })
     }
   })
@@ -22,14 +22,14 @@ export const listenForIpc = (store: AppStore) => {
           type: SET_DOWNLOAD_STATE,
           state: DownloadStateType.DOWNLOADED,
           mangaName: msg.mangaName,
-          chapterNum: msg.chapterNum
+          chapterNum: msg.chapterNum,
         })
       } else {
         store.dispatch({
           type: DOWNLOADED_PAGE,
           curr: msg.curr,
           mangaName: msg.mangaName,
-          chapterNum: msg.chapterNum
+          chapterNum: msg.chapterNum,
         })
       }
     }
@@ -41,7 +41,7 @@ export const listenForIpc = (store: AppStore) => {
         type: SET_DOWNLOAD_STATE,
         state: DownloadStateType.NOT_DOWNLOADED,
         mangaName: args.mangaName,
-        chapterNum: args.chapterNum
+        chapterNum: args.chapterNum,
       })
     }
   })

@@ -1,25 +1,34 @@
 import React from 'react'
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-import ListItemText from '@mui/material/ListItemText';
+import List from '@mui/material/List'
+import ListItem from '@mui/material/ListItem'
+import ListItemAvatar from '@mui/material/ListItemAvatar'
+import ListItemText from '@mui/material/ListItemText'
 import ListSubheader from '@mui/material/ListSubheader'
 import Divider from '@mui/material/Divider'
 import HeaderComponent from './HeaderComponent.tsx'
 import { Link } from 'react-router-dom'
 import ImageComponent from './ImageComponent.tsx'
-import { State as MangaState } from '../reducers/manga.ts';
-import { Manga } from '../../../utils/manga.ts';
+import { State as MangaState } from '../reducers/manga.ts'
+import { Manga } from '../../../utils/manga.ts'
 
 function mangaComponent(manga: Manga) {
   const type = `http://${manga.type}`
   const avatar = true
 
   return (
-    <Link key={manga.type + manga.name} to={'/manga/' + manga.name} style={{ textDecoration: 'none' }}>
+    <Link
+      key={manga.type + manga.name}
+      to={'/manga/' + manga.name}
+      style={{ textDecoration: 'none' }}
+    >
       <ListItem>
         <ListItemAvatar>
-          <ImageComponent src={manga.image} type={type} avatar={avatar} onImageClick={() => { }} />
+          <ImageComponent
+            src={manga.image}
+            type={type}
+            avatar={avatar}
+            onImageClick={() => {}}
+          />
         </ListItemAvatar>
         <ListItemText primary={manga.title} secondary={manga.description} />
       </ListItem>

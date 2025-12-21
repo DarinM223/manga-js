@@ -10,7 +10,7 @@ function hostnameFromURL(url: string): string {
 type AdapterMap = { readonly [hostname: string]: Adapter }
 
 export const hostnameAdapterMap: AdapterMap = {
-  'localhost': preloaded,
+  localhost: preloaded,
   '': preloaded,
 } as const
 
