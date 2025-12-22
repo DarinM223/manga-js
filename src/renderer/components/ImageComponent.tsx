@@ -34,17 +34,16 @@ export default function ImageComponent({
       window.scrollTo(0, 0)
     }
   }
-  const retrieveImage = (src: string) => {
-    adapter.sendRequest(src, true).then((buffer) => {
-      const fileType = mime.lookup(src)
-      const blob = new Blob([new Uint8Array(buffer).buffer], {
-        type: fileType === false ? undefined : fileType,
-      })
-      const url = URL.createObjectURL(blob)
-
-      scrollToTop()
-      setState({ src: url })
+  const retrieveImage = async (src: string) => {
+    const buffer = await adapter.sendRequest(src, true)
+    const fileType = mime.lookup(src)
+    const blob = new Blob([new Uint8Array(buffer).buffer], {
+      type: fileType === false ? undefined : fileType,
     })
+    const url = URL.createObjectURL(blob)
+
+    scrollToTop()
+    setState({ src: url })
   }
   useEffect(() => {
     if (!downloaded) {

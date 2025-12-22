@@ -72,11 +72,14 @@ const createWindow = () => {
   const basePath = app.getPath('userData')
   const initPath = path.join(basePath, 'init.json')
 
-  ipcMain.on('save-state', (event, state) => {
-    fs.open(initPath, 'a')
-      .then((fd) => fd.close())
-      .then(() => fs.writeFile(initPath, state, 'utf-8'))
-      .catch((err) => console.log(err))
+  ipcMain.on('save-state', async (_event, state) => {
+    try {
+      const fd = await fs.open(initPath, 'a')
+      await fd.close()
+      await fs.writeFile(initPath, state, 'utf-8')
+    } catch (err) {
+      console.log(err)
+    }
   })
 
   ipcMain.on('load-state', async (event, _arg) => {
@@ -143,7 +146,7 @@ function returnAsync<T>(
   promise: Promise<T>,
   event: Electron.IpcMainEvent,
   channel: string
-) {
+): void {
   promise
     .then((result) =>
       event.sender.send(channel, Object.assign({}, args, { err: null, result }))

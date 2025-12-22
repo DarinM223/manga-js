@@ -62,27 +62,25 @@ export function addManga(
 ): (dispatch: Dispatch<Action>) => Promise<Action> {
   const adapter = adapterFromURL(url)
 
-  return (dispatch) => {
-    return scraper
+  return (dispatch) =>
+    scraper
       .scrape(url, adapter)
       .then((manga) =>
         manga.name in mangaList
           ? dispatch({ type: 'ERROR', error: 'ALREADY_EXISTS' })
           : dispatch({ type: ADD_MANGA, manga })
       )
-  }
 }
 
 export function reloadManga(
   manga: Manga
-): (dispatch: Dispatch<Action>) => Promise<void> {
+): (dispatch: Dispatch<Action>) => Promise<Action> {
   const adapter = adapterFromHostname(manga.type)
   const url = adapter.mangaURL(manga.name)
-  return (dispatch) => {
-    return scraper.scrape(url, adapter).then((manga) => {
-      dispatch({ type: DIFF_CHANGES, manga })
-    })
-  }
+  return (dispatch) =>
+    scraper
+      .scrape(url, adapter)
+      .then((manga) => dispatch({ type: DIFF_CHANGES, manga }))
 }
 
 export function removeManga(

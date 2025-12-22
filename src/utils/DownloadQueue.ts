@@ -70,7 +70,7 @@ export class DownloadQueue {
     return result
   }
 
-  downloadImage(
+  async downloadImage(
     mangaName: string,
     chapterNum: number,
     url: string,
@@ -81,75 +81,67 @@ export class DownloadQueue {
     if (url.startsWith('/')) {
       url = process.env.ELECTRON_RENDERER_URL + url
     }
-    return adapter
-      .sendRequest(url, true)
-      .then((chunk) => fs.writeFile(imagePath, Buffer.from(chunk)))
-      .catch((err) => console.error(err))
+    try {
+      const chunk = await adapter.sendRequest(url, true)
+      await fs.writeFile(imagePath, Buffer.from(chunk))
+    } catch (err) {
+      console.error(err)
+    }
   }
 
-  isDownloadedImage(
+  async isDownloadedImage(
     mangaName: string,
     chapterNum: number,
     url: string
   ): Promise<boolean> {
     const imagePath = loc.imagePath(this.path, mangaName, chapterNum, url)
 
-    return new Promise((resolve, _reject) => {
-      return fs
-        .open(imagePath, 'r')
-        .then((fd) => fd.close())
-        .then(() => resolve(true))
-        .catch(() => resolve(false))
-    })
+    try {
+      const fd = await fs.open(imagePath, 'r')
+      await fd.close()
+      return true
+    } catch (_err) {
+      return false
+    }
   }
 
   reply(msg: Task): void {
     this.send(msg)
   }
 
-  start(): Promise<void> {
+  async start(): Promise<void> {
     const top = this.dequeue()
     if (top === null) {
       this.running = false
-      return Promise.resolve()
+      return
     }
 
-    return fs
-      .mkdir(loc.chapterPath(this.path, top.mangaName, top.chapterNum), {
-        recursive: true,
-      })
-      .then(() =>
-        this.isDownloadedImage(top.mangaName, top.chapterNum, top.url)
-      )
-      .then((downloaded) => {
-        if (!downloaded) {
-          return this.downloadImage(
-            top.mangaName,
-            top.chapterNum,
-            top.url,
-            top.type
-          )
-        }
+    await fs.mkdir(loc.chapterPath(this.path, top.mangaName, top.chapterNum), {
+      recursive: true,
+    })
+    const downloaded = await this.isDownloadedImage(
+      top.mangaName,
+      top.chapterNum,
+      top.url
+    )
+    if (!downloaded) {
+      await this.downloadImage(top.mangaName, top.chapterNum, top.url, top.type)
+    }
 
-        return Promise.resolve()
-      })
-      .then(() => {
-        this.reply(top)
-        return this.write()
-      })
-      .then(() => this.start())
+    this.reply(top)
+    await this.write()
+    await this.start()
   }
 }
 
-export function startQueue(
+export async function startQueue(
   queuePath: string,
   file: string,
   send: (msg: Task) => void
-) {
+): Promise<DownloadQueue> {
   const completePath = path.join(queuePath, file)
-  return fs
-    .open(completePath, 'a')
-    .then((fd) => fd.close())
-    .then(() => fs.readFile(completePath, 'utf-8'))
-    .then((data) => new DownloadQueue(queuePath, file, send, data.trim()))
+  const fd = await fs.open(completePath, 'a')
+  await fd.close()
+  const data = await fs.readFile(completePath, 'utf-8')
+  return new DownloadQueue(queuePath, file, send, data.trim())
 }

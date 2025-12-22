@@ -31,19 +31,13 @@ export default function ChapterCellComponent({
   const currentChapter = manga.currentChapter
   const downloadState = chapter.download.state
 
-  const onDoubleClick = (manga: Manga, chapterNum: number) => {
-    dispatch(loadChapter(manga, chapterNum, navigate))
-  }
-  const onDownload = (manga: Manga, chapterNum: number) => {
+  const cellClicked = () => dispatch(loadChapter(manga, chapterNum, navigate))
+  const downloadClicked = () =>
     dispatch(loadChapter(manga, chapterNum, navigate, true)).then(() =>
       dispatch(downloadChapter(manga.name, chapterNum))
     )
-  }
-  const cellClicked = () => onDoubleClick(manga, chapterNum)
-  const downloadClicked = () => onDownload(manga, chapterNum)
-  const deleteDownloadClicked = () => {
+  const deleteDownloadClicked = () =>
     window.api.deleteChapter(mangaName, chapterNum)
-  }
 
   let chapterName = chapter.name
   // Add star to chapter name if it's the current chapter.
