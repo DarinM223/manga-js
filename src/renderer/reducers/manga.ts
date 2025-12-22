@@ -1,5 +1,5 @@
-import { LoadStateType, DownloadStateType } from '../../../utils/constants.ts'
-import { Manga } from '../../../utils/manga.ts'
+import { LoadStateType, DownloadStateType } from '../../utils/constants.ts'
+import { Manga } from '../../utils/manga.ts'
 import {
   ADD_MANGA,
   REMOVE_MANGA,

@@ -1,5 +1,5 @@
 import { vi, test, expect } from 'vitest'
-import BulkSender from '../utils/BulkSender.ts'
+import BulkSender from '../src/utils/BulkSender.ts'
 
 vi.useFakeTimers()
 

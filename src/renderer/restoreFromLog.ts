@@ -1,4 +1,4 @@
-import { LoadStateType } from '../../utils/constants.ts'
+import { LoadStateType } from '../utils/constants.ts'
 import { initState, State as LogState } from './reducers/log.ts'
 import { State as MangaState } from './reducers/manga.ts'
 import { produce } from 'immer'

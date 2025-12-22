@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Avatar from '@mui/material/Avatar'
-import { adapterFromURL } from '../../../utils/url.ts'
+import { adapterFromURL } from '../../utils/url.ts'
 import { Dimensions, useMeasure } from './utils.ts'
 import mime from 'mime-types'
 

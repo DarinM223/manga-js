@@ -22,7 +22,7 @@ export default defineConfig({
   main: {
     build: {
       lib: {
-        entry: resolve(__dirname, 'index.ts'),
+        entry: resolve(__dirname, 'src/main/index.ts'),
       },
     },
   },

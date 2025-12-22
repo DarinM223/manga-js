@@ -7,7 +7,7 @@
       "name": "ubunchu",
       "description": "Ubunchu! is a Japanese manga series featuring Ubuntu Linux. Three school students in a system-admin club  are getting into Ubuntu!",
       "new": true,
-      "image": "/preloaded/20090912.png",
+      "image": "/preloaded/ubunchu/20090912.png",
       "chapters": [
         {
           "name": "Chapter 1",
@@ -20,18 +20,18 @@
           },
           "currentPage": 0,
           "pages": [
-            "/preloaded/ubunchu01_ja/ubunchu01_00.png",
-            "/preloaded/ubunchu01_ja/ubunchu01_01.png",
-            "/preloaded/ubunchu01_ja/ubunchu01_02.png",
-            "/preloaded/ubunchu01_ja/ubunchu01_03.png",
-            "/preloaded/ubunchu01_ja/ubunchu01_04.png",
-            "/preloaded/ubunchu01_ja/ubunchu01_05.png",
-            "/preloaded/ubunchu01_ja/ubunchu01_06.png",
-            "/preloaded/ubunchu01_ja/ubunchu01_07.png",
-            "/preloaded/ubunchu01_ja/ubunchu01_08.png",
-            "/preloaded/ubunchu01_ja/ubunchu01_09.png",
-            "/preloaded/ubunchu01_ja/ubunchu01_10.png",
-            "/preloaded/ubunchu01_ja/ubunchu01_11.png"
+            "/preloaded/ubunchu/ubunchu01_ja/ubunchu01_00.png",
+            "/preloaded/ubunchu/ubunchu01_ja/ubunchu01_01.png",
+            "/preloaded/ubunchu/ubunchu01_ja/ubunchu01_02.png",
+            "/preloaded/ubunchu/ubunchu01_ja/ubunchu01_03.png",
+            "/preloaded/ubunchu/ubunchu01_ja/ubunchu01_04.png",
+            "/preloaded/ubunchu/ubunchu01_ja/ubunchu01_05.png",
+            "/preloaded/ubunchu/ubunchu01_ja/ubunchu01_06.png",
+            "/preloaded/ubunchu/ubunchu01_ja/ubunchu01_07.png",
+            "/preloaded/ubunchu/ubunchu01_ja/ubunchu01_08.png",
+            "/preloaded/ubunchu/ubunchu01_ja/ubunchu01_09.png",
+            "/preloaded/ubunchu/ubunchu01_ja/ubunchu01_10.png",
+            "/preloaded/ubunchu/ubunchu01_ja/ubunchu01_11.png"
           ]
         }
       ],

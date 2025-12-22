@@ -9,7 +9,7 @@ import HeaderComponent from './HeaderComponent.tsx'
 import { Link } from 'react-router-dom'
 import ImageComponent from './ImageComponent.tsx'
 import { State as MangaState } from '../reducers/manga.ts'
-import { Manga } from '../../../utils/manga.ts'
+import { Manga } from '../../utils/manga.ts'
 
 function mangaComponent(manga: Manga) {
   const type = `http://${manga.type}`

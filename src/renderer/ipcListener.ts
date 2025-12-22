@@ -1,4 +1,4 @@
-import { DownloadStateType } from '../../utils/constants.ts'
+import { DownloadStateType } from '../utils/constants.ts'
 import { SET_DOWNLOAD_STATE, DOWNLOADED_PAGE } from './actions/manga.ts'
 import { AppStore } from './configureStore.ts'
 import {} from './window.ts'

@@ -1,6 +1,6 @@
 import { test, expect } from 'vitest'
 import { restoreFromLog } from '../src/renderer/restoreFromLog.ts'
-import { LoadStateType } from '../utils/constants.ts'
+import { LoadStateType } from '../src/utils/constants.ts'
 
 test('restoreFromLog', () => {
   const state = {

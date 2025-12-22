@@ -1,5 +1,5 @@
 import configureStore, { AppStore } from '../src/renderer/configureStore.ts'
-import { LoadStateType, DownloadStateType } from '../utils/constants.ts'
+import { LoadStateType, DownloadStateType } from '../src/utils/constants.ts'
 import {
   addManga,
   removeManga,
@@ -9,11 +9,11 @@ import {
   DIFF_CHANGES,
 } from '../src/renderer/actions/manga.ts'
 import { test, expect, beforeAll, afterAll, vi } from 'vitest'
-import { app as preloadedServer } from '../preload-server.ts'
+import { app as preloadedServer } from '../src/main/preload-server.ts'
 import * as http from 'http'
 import { produce } from 'immer'
-import * as url from '../utils/url.ts'
-import * as preloaded from '../utils/sites/preloaded.ts'
+import * as url from '../src/utils/url.ts'
+import * as preloaded from '../src/utils/sites/preloaded.ts'
 
 const port = 3000
 let server: http.Server | null = null

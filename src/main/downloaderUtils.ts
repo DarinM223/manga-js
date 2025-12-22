@@ -1,6 +1,7 @@
+import Electron from 'electron'
 import fs from 'fs/promises'
-import * as loc from './utils/location.ts'
-import { DownloadQueue } from './utils/DownloadQueue.ts'
+import * as loc from '../utils/location.ts'
+import { DownloadQueue } from '../utils/DownloadQueue.ts'
 
 type DeleteChapterArgs = {
   readonly mangaName: string

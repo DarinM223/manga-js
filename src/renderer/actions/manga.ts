@@ -1,8 +1,8 @@
 import { NavigateFunction } from 'react-router-dom'
-import { DownloadStateType, LoadStateType } from '../../../utils/constants.ts'
-import { adapterFromURL, adapterFromHostname } from '../../../utils/url.ts'
-import * as scraper from '../../../utils/scraper.ts'
-import { Manga } from '../../../utils/manga.ts'
+import { DownloadStateType, LoadStateType } from '../../utils/constants.ts'
+import { adapterFromURL, adapterFromHostname } from '../../utils/url.ts'
+import * as scraper from '../../utils/scraper.ts'
+import { Manga } from '../../utils/manga.ts'
 import { Dispatch } from '@reduxjs/toolkit'
 import { State as MangaState } from '../reducers/manga.ts'
 

@@ -10,9 +10,9 @@ import {
   deleteChapter,
   deleteManga,
 } from './downloaderUtils.ts'
-import BulkSender from './utils/BulkSender.ts'
-import { startQueue } from './utils/DownloadQueue.ts'
-import { MessageType } from './utils/constants.ts'
+import BulkSender from '../utils/BulkSender.ts'
+import { startQueue } from '../utils/DownloadQueue.ts'
+import { MessageType } from '../utils/constants.ts'
 import { app as preloadedServer } from './preload-server.ts'
 
 // Global reference to the main window.

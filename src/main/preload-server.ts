@@ -1,10 +1,10 @@
 import express from 'express'
-import initJson from './init.json'
-import { Manga } from './utils/manga'
+import initJson from '../../init.json'
+import { Manga } from '../utils/manga'
 
 export const app = express()
 
-app.use(express.static('ubunchu'))
+app.use(express.static('resources'))
 
 const manga = initJson.manga as { [mangaName: string]: Manga }
 
