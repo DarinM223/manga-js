@@ -5,8 +5,6 @@ import {
   removeManga,
   updatePage,
   loadChapter,
-  VISIT_MANGA,
-  DIFF_CHANGES,
 } from '../src/renderer/actions/manga.ts'
 import { test, expect, beforeAll, afterAll, vi } from 'vitest'
 import { app as preloadedServer } from '../src/main/preload-server.ts'
@@ -72,7 +70,7 @@ test('manga reducer', async () => {
 
   // Test if visiting the manga sets the 'new' property to false.
   expect(getManga(store).new).toEqual(true)
-  store.dispatch({ type: VISIT_MANGA, mangaName })
+  store.dispatch({ type: 'VISIT_MANGA', mangaName })
   expect(getManga(store).new).toEqual(false)
 
   // Test loading a chapter.
@@ -112,7 +110,7 @@ test('manga reducer', async () => {
     })
   })
 
-  store.dispatch({ type: DIFF_CHANGES, manga: newManga })
+  store.dispatch({ type: 'DIFF_CHANGES', manga: newManga })
   // Check if all of the old chapters are still the same.
   for (let i = 0; i < oldManga.chapters.length; i++) {
     const oldChapter = oldManga.chapters[i]

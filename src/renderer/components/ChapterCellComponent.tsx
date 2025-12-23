@@ -76,6 +76,8 @@ export default function ChapterCellComponent({
         </IconButton>
       )
       break
+    default:
+      throw downloadState satisfies never
   }
 
   return (

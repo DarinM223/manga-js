@@ -6,22 +6,7 @@ import { Manga } from '../../utils/manga.ts'
 import { Dispatch } from '@reduxjs/toolkit'
 import { State as MangaState } from '../reducers/manga.ts'
 
-export const ADD_MANGA = 'ADD_MANGA'
-export const REMOVE_MANGA = 'REMOVE_MANGA'
-export const VISIT_MANGA = 'VISIT_MANGA'
-export const UPDATE_PAGE = 'UPDATE_PAGE'
-export const UPDATE_CHAPTER = 'UPDATE_CHAPTER'
-export const LOAD_CHAPTER = 'LOAD_CHAPTER'
-export const SET_DOWNLOAD_STATE = 'SET_DOWNLOAD_STATE'
-export const DOWNLOAD_CHAPTER = 'DOWNLOAD_CHAPTER'
-export const DOWNLOADED_PAGE = 'DOWNLOADED_PAGE'
-export const SET_LOADING = 'SET_LOADING'
-export const DIFF_CHANGES = 'DIFF_CHANGES'
-export const ALREADY_EXISTS = 'ALREADY_EXISTS'
-export const EMPTY_CHAPTER = 'EMPTY_CHAPTER'
-export const ERROR = 'ERROR'
-
-export type Error = typeof ALREADY_EXISTS | typeof EMPTY_CHAPTER
+export type Error = 'ALREADY_EXISTS' | 'EMPTY_CHAPTER'
 export type Action =
   | { type: 'ADD_MANGA'; manga: Manga }
   | { type: 'REMOVE_MANGA'; name: string }
@@ -68,7 +53,7 @@ export function addManga(
       .then((manga) =>
         manga.name in mangaList
           ? dispatch({ type: 'ERROR', error: 'ALREADY_EXISTS' })
-          : dispatch({ type: ADD_MANGA, manga })
+          : dispatch({ type: 'ADD_MANGA', manga })
       )
 }
 
@@ -80,7 +65,7 @@ export function reloadManga(
   return (dispatch) =>
     scraper
       .scrape(url, adapter)
-      .then((manga) => dispatch({ type: DIFF_CHANGES, manga }))
+      .then((manga) => dispatch({ type: 'DIFF_CHANGES', manga }))
 }
 
 export function removeManga(
@@ -89,13 +74,13 @@ export function removeManga(
 ): (dispatch: Dispatch<Action>) => Promise<Action> {
   return async (dispatch) => {
     await navigate('/')
-    return await dispatch({ type: REMOVE_MANGA, name: mangaName })
+    return await dispatch({ type: 'REMOVE_MANGA', name: mangaName })
   }
 }
 
 export function visitManga(mangaName: string): Action {
   return {
-    type: VISIT_MANGA,
+    type: 'VISIT_MANGA',
     mangaName,
   }
 }
@@ -106,7 +91,7 @@ export function updatePage(
   amount: number
 ): Action {
   return {
-    type: UPDATE_PAGE,
+    type: 'UPDATE_PAGE',
     mangaName: manga.name,
     chapterNum,
     amount,
@@ -115,7 +100,7 @@ export function updatePage(
 
 export function updateChapter(mangaName: string, chapterNum: number): Action {
   return {
-    type: UPDATE_CHAPTER,
+    type: 'UPDATE_CHAPTER',
     mangaName,
     chapterNum,
   }
@@ -123,7 +108,7 @@ export function updateChapter(mangaName: string, chapterNum: number): Action {
 
 export function setLoading(mangaName: string, chapterNum: number): Action {
   return {
-    type: SET_LOADING,
+    type: 'SET_LOADING',
     mangaName,
     chapterNum,
   }
@@ -131,7 +116,7 @@ export function setLoading(mangaName: string, chapterNum: number): Action {
 
 export function downloadChapter(mangaName: string, chapterNum: number): Action {
   return {
-    type: DOWNLOAD_CHAPTER,
+    type: 'DOWNLOAD_CHAPTER',
     mangaName,
     chapterNum,
   }
@@ -170,7 +155,7 @@ export function loadChapter(
           await dispatch({ type: 'ERROR', error: 'EMPTY_CHAPTER' })
         } else {
           await dispatch({
-            type: LOAD_CHAPTER,
+            type: 'LOAD_CHAPTER',
             mangaName: mangaName,
             chapterNum,
             pages: links,
@@ -180,6 +165,9 @@ export function loadChapter(
             await dispatch(updateChapter(mangaName, chapterNum))
           }
         }
+        break
+      default:
+        throw loadState satisfies never
     }
   }
 }
