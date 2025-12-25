@@ -39,18 +39,15 @@ export default function HeaderComponent() {
       setState({ ...state, error: action.error })
     }
   }
-  const onReload = (mangaList: MangaState) => {
-    for (const name in mangaList) {
-      const manga = mangaList[name]
-      dispatch(reloadManga(manga))
+  const handleReload = () => {
+    for (const name in manga) {
+      const specificManga = manga[name]
+      dispatch(reloadManga(specificManga))
     }
   }
-  const handleClose = () => {
+  const handleClose = () =>
     setState({ open: false, text: '', error: 'NO_ERROR' })
-  }
-  const handleOpen = () => {
-    setState({ ...state, open: true, error: 'NO_ERROR' })
-  }
+  const handleOpen = () => setState({ ...state, open: true, error: 'NO_ERROR' })
   const handleChange: React.ChangeEventHandler<
     HTMLInputElement | HTMLTextAreaElement
   > = (e) => {
@@ -69,9 +66,6 @@ export default function HeaderComponent() {
 
     onAddManga(state.text, manga)
     handleClose()
-  }
-  const handleReload = () => {
-    onReload(manga)
   }
   let errorText: string | undefined = undefined
   switch (state.error) {
